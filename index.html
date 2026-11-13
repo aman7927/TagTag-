@@ -146,7 +146,7 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- VIEW 1: DROP MODE (3D NOTEPAD / MIC / FOLDER + CUSTOM LINK SLUG)      -->
+  <!-- VIEW 1: DROP MODE (SINGLE ENCRYPT BUTTON -> OPENS TOUCH-TO-PLACE AR)  -->
   <!-- ===================================================================== -->
   <main id="viewDropMode" class="flex-1 w-full max-w-md mx-auto px-5 py-2.5 flex flex-col justify-between gap-3">
 
@@ -170,7 +170,7 @@
         </p>
       </div>
 
-      <!-- 3 Mode Pills (Each Maps to Its Own Dedicated 3D Object!) -->
+      <!-- 3 Mode Pills -->
       <div class="grid grid-cols-3 gap-1.5 p-1 rounded-full bg-[#09090c] border border-zinc-800/90 text-xs font-display font-bold">
         <button id="tabQuote" type="button" class="py-2 rounded-full bg-white text-black tracking-wider transition">
           3D TEXT
@@ -183,13 +183,13 @@
         </button>
       </div>
 
-      <!-- Surface 1: 3D TEXT (3D Notepad -> Solid Bevel-Extruded 3D Text) -->
+      <!-- Surface 1: 3D TEXT -->
       <div id="surfaceQuote" class="space-y-1.5">
         <textarea id="inputSecretQuote" rows="3" maxlength="240"
           class="w-full rounded-2xl bg-[#08080b] border border-zinc-800 focus:border-white p-3.5 font-mono-tech text-sm text-white placeholder-zinc-600 leading-relaxed transition"
-          placeholder="Write secret note (hides inside a 3D Notepad &amp; unlocks into solid 3D bevel text)..."></textarea>
+          placeholder="Write secret note (tap Encrypt to place 3D Notepad anywhere with your finger)..."></textarea>
         <div class="flex justify-between px-1 font-mono-tech text-[10px] text-zinc-500">
-          <span>3D NOTEPAD → SOLID 3D EXTRUDED TEXT</span>
+          <span>3D NOTEPAD → COMPACT SOLID 3D TEXT</span>
           <span id="charCountLabel">0 / 240</span>
         </div>
       </div>
@@ -205,12 +205,10 @@
             <span id="voiceTimeTag" class="text-white font-bold tracking-wider">00:00 / 00:30</span>
           </div>
 
-          <!-- Ultra-Clean Minimal Hairline Waveform Pill -->
           <div class="relative w-full h-11 rounded-full bg-black border border-zinc-800/90 px-4 flex items-center justify-center overflow-hidden">
             <canvas id="voiceWaveCanvas" width="320" height="40" class="w-full h-9"></canvas>
           </div>
 
-          <!-- Minimal Single-Line Controls -->
           <div class="flex items-center justify-between gap-2 font-display font-bold text-[11px]">
             <button id="btnRecordVoiceToggle" type="button" class="flex-1 py-2.5 rounded-full n-btn-red tracking-wider flex items-center justify-center gap-2 transition">
               <span id="btnRecordVoiceLabel">START RECORDING</span>
@@ -254,22 +252,19 @@
 
       <div class="n-card rounded-2xl px-3 py-2 flex items-center gap-2">
         <span class="font-display font-bold text-[10px] text-[#d71921] tracking-wider uppercase whitespace-nowrap">CLUE:</span>
-        <input id="inputRadarClue" type="text" maxlength="60" placeholder="Optional radar hint (e.g. On corner desk near lamp)..."
+        <input id="inputRadarClue" type="text" maxlength="60" placeholder="Optional radar hint (e.g. On wooden door)..."
           class="w-full bg-transparent border-0 font-mono-tech text-xs text-white placeholder-zinc-600" />
       </div>
     </div>
 
-    <!-- Bottom Action: Creator AR Anchor Placement + Direct Encrypt -->
+    <!-- Single Unified Action Button (Directly Opens AR Camera for Finger Touch Placement!) -->
     <div class="space-y-2 pb-2">
-      <div class="grid grid-cols-12 gap-2">
-        <button id="btnCreatorPlaceAr" type="button" class="col-span-5 py-3.5 px-3 rounded-full bg-[#111116] border border-zinc-700 hover:border-white text-white font-display font-bold text-[11px] tracking-wider uppercase transition flex items-center justify-center gap-1.5">
-          <span>◎</span>
-          <span id="creatorArBtnLabel">PLACE IN AR</span>
-        </button>
-        <button id="btnLockStashMain" type="button" class="col-span-7 py-3.5 px-4 rounded-full n-btn-red font-display font-bold text-xs tracking-widest uppercase transition">
-          ENCRYPT &amp; LOCK DEAD-DROP
-        </button>
-      </div>
+      <button id="btnCreatorPlaceAr" type="button" class="hidden">
+        <span id="creatorArBtnLabel">PLACE IN AR</span>
+      </button>
+      <button id="btnLockStashMain" type="button" class="w-full py-4 rounded-full n-btn-red font-display font-bold text-sm tracking-widest uppercase transition">
+        ENCRYPT &amp; LOCK DEAD-DROP
+      </button>
     </div>
   </main>
 
@@ -288,23 +283,23 @@
         </span>
       </div>
 
-      <!-- Summary Badges -->
+      <!-- Summary Badges (3D Model + Exact Spatial Angle Lock) -->
       <div class="grid grid-cols-2 gap-2 font-mono-tech text-[11px]">
         <div class="bg-black border border-zinc-800/90 rounded-2xl p-3">
           <div class="text-[9px] text-zinc-500 uppercase">3D WORLD OBJECT</div>
           <div id="sealedObjectBadge" class="text-white font-bold mt-0.5">3D NOTEPAD</div>
         </div>
         <div class="bg-black border border-zinc-800/90 rounded-2xl p-3">
-          <div class="text-[9px] text-zinc-500 uppercase">CUSTOM CODE / SLUG</div>
-          <div id="sealedSlugBadge" class="text-[#d71921] font-bold mt-0.5 truncate">aman-secret</div>
+          <div class="text-[9px] text-zinc-500 uppercase">EXACT ANGLE LOCK</div>
+          <div id="sealedSlugBadge" class="text-[#d71921] font-bold mt-0.5 truncate">COMPASS LOCKED</div>
         </div>
       </div>
 
-      <!-- Non-Selectable Clean Custom Share URL (Zero Blue Highlight!) -->
+      <!-- Non-Selectable Clean Share URL (Zero Blue Highlight!) -->
       <div class="space-y-1.5">
         <div class="flex justify-between font-mono-tech text-[10px] text-zinc-400 px-1">
           <span>SHAREABLE DEAD-DROP LINK</span>
-          <span>10M PROXIMITY + 6DOF AR</span>
+          <span>10M PROXIMITY + 3D AR</span>
         </div>
         <div id="displayGeneratedUrl"
           class="w-full bg-black border border-zinc-700 rounded-2xl px-4 py-3 font-mono-tech text-xs text-white truncate pointer-events-none">
@@ -332,15 +327,15 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- VIEW 2: HIGH-DPI AVIONICS RADAR (SUPPORTS CUSTOM CODE OR FULL LINK!)  -->
+  <!-- VIEW 2: REFINED NOTHING OS 3.0 AVIONICS COMPASS RADAR (🧭)            -->
   <!-- ===================================================================== -->
   <main id="viewHuntRadar" class="hidden flex-1 w-full max-w-md mx-auto px-5 py-3 flex flex-col justify-between items-center">
 
-    <!-- Paste Link OR Custom Code Bar -->
-    <div class="w-full flex items-center gap-2">
-      <input id="inputPasteHuntUrl" type="text" placeholder="Enter Custom Code (e.g. aman-secret) or Paste Link"
-        class="flex-1 bg-[#09090c] border border-zinc-800 rounded-full px-4 py-2 font-mono-tech text-xs text-white placeholder-zinc-600" />
-      <button id="btnGoHuntUrl" type="button" class="px-4 py-2 rounded-full bg-white text-black font-display font-bold text-xs tracking-wider">
+    <!-- Clean Minimal Link / Code Bar -->
+    <div class="w-full flex items-center gap-2 bg-[#09090c] border border-zinc-800/90 rounded-full p-1 pl-4">
+      <input id="inputPasteHuntUrl" type="text" placeholder="Paste Geo-Stash Link or Drop Code..."
+        class="flex-1 bg-transparent border-0 font-mono-tech text-xs text-white placeholder-zinc-500" />
+      <button id="btnGoHuntUrl" type="button" class="px-4 py-2 rounded-full bg-white text-black font-display font-bold text-[11px] tracking-wider uppercase transition">
         TRACK
       </button>
     </div>
@@ -358,17 +353,17 @@
         <p class="font-mono-tech text-[11px] text-zinc-400 mt-1">CALIBRATING SATELLITES...</p>
       </div>
 
-      <div class="relative w-[300px] h-[300px] flex items-center justify-center">
+      <div class="relative w-[300px] h-[300px] flex items-center justify-center rounded-full shadow-[0_0_50px_rgba(0,0,0,0.9)]">
         <canvas id="avionicsRadarCanvas" class="w-[300px] h-[300px] rounded-full"></canvas>
       </div>
 
       <!-- Distance & Bearing Readouts -->
-      <div class="text-center mt-3 space-y-1.5">
+      <div class="text-center mt-3.5 space-y-1.5">
         <div class="flex items-baseline justify-center gap-2">
           <span id="radarBigDistance" class="font-dot text-5xl text-white tracking-wider">---.-</span>
           <span class="font-dot text-lg text-[#d71921]">M</span>
         </div>
-        <div class="inline-flex items-center gap-3 px-4 py-1 rounded-full bg-[#09090c] border border-zinc-800 font-mono-tech text-[11px] text-zinc-400">
+        <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#09090c] border border-zinc-800/90 font-mono-tech text-[11px] text-zinc-400">
           <span id="radarBearingText" class="text-white">BRG ---°</span>
           <span class="text-zinc-700">|</span>
           <span id="radarHeadingText">HDG ---°</span>
@@ -378,25 +373,25 @@
       </div>
     </div>
 
-    <!-- Bottom Hint / Direct User Gesture 10m WebXR Launch Button -->
+    <!-- Bottom Sleek 10m Proximity Action Bar -->
     <div class="w-full text-center pb-2 space-y-2">
-      <button id="btnEnterWebXrHunt" type="button" class="hidden w-full py-4 rounded-full n-btn-red font-display font-bold text-xs tracking-widest uppercase transition">
+      <button id="btnEnterWebXrHunt" type="button" class="hidden w-full py-3.5 rounded-full n-btn-red font-display font-bold text-xs tracking-widest uppercase transition">
         WITHIN 10M — LAUNCH WORLD-LOCKED AR
       </button>
       <div id="radarZoneHintText" class="font-display font-semibold text-[11px] text-zinc-500 tracking-wider uppercase">
-        WALK WITHIN 10M TO UNLOCK WORLD-LOCKED 3D AR
+        ENTER 10M ZONE TO ENGAGE 3D ARTIFACT &amp; SECRET PIN LOCK
       </div>
     </div>
   </main>
 
   <!-- ===================================================================== -->
-  <!-- VIEW 3: WORLD-LOCKED WEBXR + SOLID 3D NOTEPAD/MIC/FOLDER + SHADOWS    -->
+  <!-- VIEW 3: TOUCH-TO-PLACE & EXACT COMPASS/TILT LOCKED 3D AR VIEW         -->
   <!-- ===================================================================== -->
   <section id="viewArCamera" class="hidden fixed inset-0 z-50 bg-black overflow-hidden">
-    <!-- Tier-2 Camera Feed (Automatically hidden when Hardware WebXR Session is active) -->
+    <!-- Live Camera Feed -->
     <video id="arFullscreenVideo" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover"></video>
 
-    <!-- Three.js WebXR + PCFSoftShadowMap Mount -->
+    <!-- Three.js WebGL + Ground Shadow Mount -->
     <div id="threeArMount" class="absolute inset-0 w-full h-full z-10"></div>
 
     <!-- Compatibility Reference Canvas -->
@@ -407,15 +402,15 @@
       <div id="silentBurnHairlineFill" class="h-full bg-[#d71921] transition-all duration-100" style="width: 100%"></div>
     </div>
 
-    <!-- Minimal Top Camera Bar (Protected by beforexrselect so clicks NEVER move 3D Anchor!) -->
+    <!-- Minimal Top Camera Bar -->
     <div id="arTopChrome" class="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none">
       <div id="arStatusPill" class="px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md border border-white/15 flex items-center gap-2 pointer-events-auto">
         <span id="xrStatusDot" class="w-2 h-2 rounded-full bg-[#38ef7d] dot-pulse"></span>
-        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">WORLD-LOCKED 3D AR</span>
+        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">TOUCH SCREEN TO PLACE 3D OBJECT</span>
       </div>
 
       <div class="flex items-center gap-1.5 pointer-events-auto">
-        <button id="btnStartHardwareXr" type="button" class="px-3 py-1.5 rounded-full bg-[#d71921] text-white font-display font-bold text-[10px] tracking-wider uppercase shadow-lg">
+        <button id="btnStartHardwareXr" type="button" class="hidden px-3 py-1.5 rounded-full bg-[#d71921] text-white font-display font-bold text-[10px] tracking-wider uppercase shadow-lg">
           WEBXR 6DOF
         </button>
         <button id="btnCloseArView" type="button" class="w-8 h-8 rounded-full bg-black/75 backdrop-blur-md border border-white/20 text-white text-xs flex items-center justify-center">
@@ -424,22 +419,22 @@
       </div>
     </div>
 
-    <!-- Surface Aiming / Freeze Status Pill -->
+    <!-- Surface Aiming / Touch Hint Pill -->
     <div id="xrSurfaceHintPill" class="hidden absolute top-16 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full bg-black/80 border border-white/15 font-mono-tech text-[11px] text-zinc-200 whitespace-nowrap pointer-events-none">
-      AIM AT SURFACE &amp; TAP PLACE HERE ◎
+      TAP OR DRAG ANYWHERE ON CAMERA TO PLACE OBJECT
     </div>
 
-    <!-- Off-Screen Wayfinder Indicator (Appears ONLY when User turns camera away from Frozen Stash!) -->
-    <div id="arOffscreenWayfinder" class="hidden absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-full bg-black/85 border border-[#d71921] font-mono-tech text-xs text-white tracking-wider shadow-2xl pointer-events-none">
-      ◄ TURN CAMERA BACK TO STASH SPOT ►
+    <!-- Off-Screen Wayfinder Indicator (Guides Hunter to exact Compass & Tilt Angle where Stash was hidden!) -->
+    <div id="arOffscreenWayfinder" class="hidden absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-30 px-5 py-2.5 rounded-full bg-black/90 border border-[#d71921] font-mono-tech text-xs text-white tracking-wider shadow-2xl pointer-events-none text-center">
+      ◄ POINT CAMERA AT HIDDEN SPOT ►
     </div>
 
     <!-- =================================================================== -->
-    <!-- CREATOR AR PLACEMENT OVERLAY (AIM -> PLACE HERE -> LOCK & ENCRYPT)  -->
+    <!-- CREATOR TOUCH-TO-PLACE OVERLAY                                      -->
     <!-- =================================================================== -->
     <div id="arCreatorPlaceOverlay" class="hidden absolute inset-x-0 bottom-7 z-30 flex flex-col items-center justify-center gap-2.5 px-5 pointer-events-none">
-      <div id="creatorFreezeHintText" class="font-mono-tech text-[11px] text-zinc-200 bg-black/80 px-4 py-1.5 rounded-full border border-white/15">
-        AIM AT FLOOR/TABLE &amp; TAP "PLACE HERE ◎" TO FREEZE
+      <div id="creatorFreezeHintText" class="font-mono-tech text-[11px] text-zinc-200 bg-black/80 px-4 py-1.5 rounded-full border border-white/15 text-center">
+        TOUCH ANYWHERE ON CAMERA SCREEN TO PLACE &amp; FREEZE
       </div>
       <div class="flex items-center gap-2.5 pointer-events-auto">
         <button id="btnCreatorSnapHere" type="button" class="px-5 py-3 rounded-full bg-white text-black font-display font-bold text-xs tracking-wider uppercase shadow-xl">
@@ -452,7 +447,7 @@
     </div>
 
     <!-- =================================================================== -->
-    <!-- HUNTER 0-9 SECRET PIN LOCK (PROTECTED BY beforexrselect!)           -->
+    <!-- HUNTER 0-9 SECRET PIN LOCK (ONLY VISIBLE WHEN AIMED AT HIDDEN SPOT) -->
     <!-- =================================================================== -->
     <div id="arSecretPinLockOverlay" class="hidden absolute inset-x-0 bottom-5 z-30 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-150">
       <div id="arPinAttemptStatus" class="font-display font-bold text-[11px] text-white tracking-widest uppercase mb-1.5 air-key-btn">
@@ -515,7 +510,7 @@
   </section>
 
   <!-- ===================================================================== -->
-  <!-- CLEAN MODULAR PRODUCTION ENGINE (ZERO STATE LEAKS, ZERO ID MISMATCH)  -->
+  <!-- CLEAN MODULAR PRODUCTION ENGINE (TOUCH-TO-PLACE + EXACT ANGLE LOCK)   -->
   <!-- ===================================================================== -->
   <script>
     const firebaseConfig = {
@@ -564,10 +559,12 @@
       bestGpsAcc: Infinity,
       rejectedOutliers: 0,
 
-      // Module 2: Creator Draft Spatial Placement State (Reset after every drop!)
-      creatorPlacedOffset: [0, -0.18, -1.65],
+      // Module 2: Creator Touch-to-Place Spatial State (Reset after every drop!)
+      creatorPlacedOffset: [0, -0.05, -1.85],
       creatorPlacedYaw: 0,
       creatorCompassAzimuth: 0,
+      creatorPitchBeta: 75,
+      creatorPlacedQuatArray: null,
       hasCreatorCustomAnchor: false,
 
       // Module 3: Active Stash & Hunt Session State
@@ -578,9 +575,9 @@
       generatedShareUrl: '',
       targetMeta: null,
       metaRef: null,
-      localMetaCache: safeGetLocal('gs_meta_v5', {}),
-      localVaultCache: safeGetLocal('gs_vault_v5', {}),
-      burnedStashIds: safeGetLocal('gs_burned_v5', {}),
+      localMetaCache: safeGetLocal('gs_meta_v6', {}),
+      localVaultCache: safeGetLocal('gs_vault_v6', {}),
+      burnedStashIds: safeGetLocal('gs_burned_v6', {}),
       hunterToken: 'H-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
 
       stealthMuted: false,
@@ -589,35 +586,34 @@
       distanceMeters: null,
       targetBearingDeg: 0,
       compassHeadingDeg: 0,
+      deviceBetaDeg: 75,
       latestAccuracy: 12,
 
-      // Module 4: Clean Three.js + WebXR World-Lock State
+      // Module 4: Clean Three.js World-Locked State
       xrSupported: false,
       xrSession: null,
       xrRefSpace: null,
       xrHitTestSource: null,
       xrAnchor: null,
       lastHitResult: null,
-      lastHitPoseMatrix: null,
       isWorldFrozen: false,
       hunterStableHits: 0,
 
-      // Tier-2 World-Space Camera Orientation & Touch Inspect Offset
+      // True Compass + Tilt Quaternion Reference (Ensures Hunter sees object at the EXACT Door/Wall/Table angle!)
       hasGyro: false,
       initialDeviceQuat: null,
       latestDeviceQuat: null,
       smoothedDeviceQuat: null,
       inspectYawOffset: 0,
       inspectPitchOffset: 0,
-      inspectDistScale: 1.0,
       targetInspectYaw: 0,
       targetInspectPitch: 0,
-      targetInspectDist: 1.0,
 
       enteredPin: '',
       pinAttemptsRemaining: 3,
       isClaiming: false,
       isUnlocked3D: false,
+      unlockSessionToken: 0,
       unboxAnimProgress: 0,
       isUnboxing: false,
       burnTimerId: null,
@@ -690,14 +686,16 @@
     }
 
     // =========================================================================
-    // CLEAN CREATOR DRAFT RESET (ENSURES EVERY NEW DROP STARTS 100% FRESH!)
+    // CLEAN CREATOR DRAFT RESET
     // =========================================================================
     function resetCreatorPlacementState() {
       state.isWorldFrozen = false;
       state.hasCreatorCustomAnchor = false;
-      state.creatorPlacedOffset = [0, -0.18, -1.65];
+      state.creatorPlacedOffset = [0, -0.05, -1.85];
       state.creatorPlacedYaw = 0;
       state.creatorCompassAzimuth = 0;
+      state.creatorPitchBeta = 75;
+      state.creatorPlacedQuatArray = null;
       state.hunterStableHits = 0;
 
       const btnLabel = document.getElementById('creatorArBtnLabel');
@@ -707,7 +705,7 @@
       if (snapBtn) snapBtn.textContent = 'PLACE HERE ◎';
 
       const hintText = document.getElementById('creatorFreezeHintText');
-      if (hintText) hintText.textContent = 'AIM AT FLOOR/TABLE & TAP "PLACE HERE ◎" TO FREEZE';
+      if (hintText) hintText.textContent = 'TOUCH ANYWHERE ON CAMERA SCREEN TO PLACE & FREEZE';
     }
 
     function resetFullCreatorComposerForNewDrop() {
@@ -773,7 +771,7 @@
     }
 
     // =========================================================================
-    // MODULE 2: CRYPTOGRAPHY & NORMALIZED STASH ID ENGINE (ZERO CASE MISMATCH!)
+    // CRYPTOGRAPHY & NORMALIZED STASH ID ENGINE
     // =========================================================================
     function normalizeStashId(raw) {
       return (raw || '')
@@ -817,7 +815,7 @@
       const enc = new TextEncoder();
       const baseMaterial = await window.crypto.subtle.importKey(
         'raw',
-        enc.encode(`GEOSTASH_V5:${cleanId}:${pinStr || 'NOPIN'}`),
+        enc.encode(`GEOSTASH_V6:${cleanId}:${pinStr || 'NOPIN'}`),
         { name: 'PBKDF2' },
         false,
         ['deriveKey']
@@ -901,7 +899,7 @@
     }
 
     // =========================================================================
-    // MODULE 1: ALWAYS-HOT PERSISTENT KALMAN GPS ENGINE
+    // ALWAYS-HOT PERSISTENT KALMAN GPS ENGINE
     // =========================================================================
     function haversineMeters(lat1, lon1, lat2, lon2) {
       const R = 6371000;
@@ -996,10 +994,10 @@
 
         if (state.distanceMeters <= unlockRadius) {
           if (btnEnterXr) btnEnterXr.classList.remove('hidden');
-          if (hintZone) hintZone.textContent = 'TARGET WITHIN 10M — TAP RED BUTTON ABOVE FOR 3D AR';
+          if (hintZone) hintZone.textContent = '10M ZONE UNLOCKED — TAP BUTTON ABOVE TO OPEN AR';
         } else {
           if (btnEnterXr) btnEnterXr.classList.add('hidden');
-          if (hintZone) hintZone.textContent = 'WALK WITHIN 10M TO UNLOCK WORLD-LOCKED 3D AR';
+          if (hintZone) hintZone.textContent = 'ENTER 10M ZONE TO ENGAGE 3D ARTIFACT & SECRET PIN LOCK';
           if (state.distanceMeters > 18 && state.activeView === 'ar' && state.arRole === 'hunter' && !state.isUnlocked3D) {
             switchView('radar');
             notify('MOVED OUTSIDE 10M ZONE — RETURN TO SPOT');
@@ -1198,7 +1196,7 @@
     }
 
     // =========================================================================
-    // ENCRYPT & LOCK STASH TO FIREBASE (NORMALIZED LOWERCASE ID + FRESH STATE)
+    // ENCRYPT & LOCK STASH TO FIREBASE (SAVES EXACT COMPASS + TILT + QUAT!)
     // =========================================================================
     function validateCreatorInputs() {
       if (state.mediaType === 'text') {
@@ -1229,13 +1227,14 @@
         return notify('ACQUIRING GPS — TAP AGAIN IN 1S');
       }
 
-      const btn = document.getElementById('btnLockStashMain');
-      btn.disabled = true;
-      btn.textContent = 'ENCRYPTING...';
+      const btn = document.getElementById('btnCreatorConfirmLock');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'ENCRYPTING...';
+      }
 
       try {
         const customSlug = normalizeStashId(document.getElementById('inputCustomSlug').value);
-        // Generate 100% lowercase normalized ID so creation & lookup NEVER mismatch!
         const legacyPrefix = 'GS';
         const id = customSlug || normalizeStashId(legacyPrefix + '-' + Date.now().toString(36).slice(-4) + Math.random().toString(36).substring(2, 5));
 
@@ -1250,6 +1249,20 @@
         });
         const enc = await encryptStashPayload(plainJson, hasPin ? rawPin : '', id);
 
+        // Record exact device orientation quaternion at the moment of placement so Hunter sees it at the EXACT same wall/door/table angle!
+        let savedQuatArr = state.creatorPlacedQuatArray;
+        if (!savedQuatArr && state.latestDeviceQuat) {
+          savedQuatArr = [
+            +state.latestDeviceQuat.x.toFixed(5),
+            +state.latestDeviceQuat.y.toFixed(5),
+            +state.latestDeviceQuat.z.toFixed(5),
+            +state.latestDeviceQuat.w.toFixed(5)
+          ];
+        }
+
+        const savedCompass = Math.round(state.creatorCompassAzimuth || state.compassHeadingDeg || 0);
+        const savedPitch = Math.round(state.creatorPitchBeta || state.deviceBetaDeg || 75);
+
         const metaObj = {
           lat: state.lockedGps.lat,
           lng: state.lockedGps.lng,
@@ -1258,9 +1271,11 @@
           requiresPin: hasPin,
           pinHash: pinHash,
           clue: clueText || null,
-          placedPos: state.hasCreatorCustomAnchor ? [...state.creatorPlacedOffset] : [0, -0.18, -1.65],
+          placedPos: state.hasCreatorCustomAnchor ? [...state.creatorPlacedOffset] : [0, -0.05, -1.85],
           placedYaw: state.hasCreatorCustomAnchor ? +state.creatorPlacedYaw.toFixed(4) : 0,
-          compassAzimuth: Math.round(state.creatorCompassAzimuth || state.compassHeadingDeg || 0),
+          placedQuat: savedQuatArr || null,
+          compassAzimuth: savedCompass,
+          pitchBeta: savedPitch,
           status: 'ACTIVE',
           claimToken: null,
           createdAt: Date.now(),
@@ -1271,14 +1286,13 @@
           wrappedKeyToken: enc.wrappedKeyToken
         };
 
-        // Clear any previous burn flag if Creator is reusing a custom slug name!
         delete state.burnedStashIds[id];
-        safeSetLocal('gs_burned_v5', state.burnedStashIds);
+        safeSetLocal('gs_burned_v6', state.burnedStashIds);
 
         state.localMetaCache[id] = metaObj;
         state.localVaultCache[id] = vaultObj;
-        safeSetLocal('gs_meta_v5', state.localMetaCache);
-        safeSetLocal('gs_vault_v5', state.localVaultCache);
+        safeSetLocal('gs_meta_v6', state.localMetaCache);
+        safeSetLocal('gs_vault_v6', state.localVaultCache);
 
         if (db && navigator.onLine) {
           try {
@@ -1295,7 +1309,6 @@
         state.lastCreatedId = id;
         state.lastCreatedKeyIv = keyIv;
 
-        // Clean Custom Short URL (?drop=aman-secret)
         const baseUrl = location.href.split('?')[0].split('#')[0];
         const shareLink = `${baseUrl}?drop=${id}`;
         state.generatedShareUrl = shareLink;
@@ -1307,12 +1320,11 @@
             : '3D CLASSIFIED FOLDER';
 
         document.getElementById('sealedObjectBadge').textContent = modelName;
-        document.getElementById('sealedSlugBadge').textContent = id;
+        document.getElementById('sealedSlugBadge').textContent = `${savedCompass}° // TILT ${savedPitch}°`;
         document.getElementById('displayGeneratedUrl').textContent = shareLink;
         document.getElementById('inputPasteHuntUrl').value = id;
         document.getElementById('sharePinNotice').textContent = hasPin ? 'PIN ARMED (3-STRIKE BURN)' : 'DIRECT 10M UNLOCK';
 
-        // Reset Creator placement state immediately so the NEXT drop starts 100% fresh (not frozen)!
         resetCreatorPlacementState();
 
         if (state.activeView === 'ar') {
@@ -1322,12 +1334,14 @@
 
         playSynthTone(880, 0.12, 'triangle', 0.15);
         setTimeout(() => playSynthTone(1318.5, 0.16, 'triangle', 0.15), 110);
-        notify('DEAD-DROP SEALED: ' + id.toUpperCase());
+        notify('LOCKED AT EXACT ANGLE & GPS');
       } catch (e) {
         notify('LOCK ERROR: ' + e.message);
       } finally {
-        btn.disabled = false;
-        btn.textContent = 'ENCRYPT & LOCK DEAD-DROP';
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'LOCK & ENCRYPT →';
+        }
       }
     }
 
@@ -1355,7 +1369,7 @@
         }
         btn.textContent = 'COPIED ✓';
         setTimeout(() => { btn.textContent = 'COPY LINK'; }, 1800);
-        notify('CUSTOM LINK COPIED');
+        notify('LINK COPIED CLEANLY');
       } catch (e) {
         notify('COPY FAILED');
       }
@@ -1371,12 +1385,12 @@
       }
 
       state.burnedStashIds[id] = true;
-      safeSetLocal('gs_burned_v5', state.burnedStashIds);
+      safeSetLocal('gs_burned_v6', state.burnedStashIds);
 
       delete state.localMetaCache[id];
       delete state.localVaultCache[id];
-      safeSetLocal('gs_meta_v5', state.localMetaCache);
-      safeSetLocal('gs_vault_v5', state.localVaultCache);
+      safeSetLocal('gs_meta_v6', state.localMetaCache);
+      safeSetLocal('gs_vault_v6', state.localVaultCache);
 
       if (state.stashId === id) {
         state.stashId = null;
@@ -1400,7 +1414,7 @@
     }
 
     // =========================================================================
-    // MODULE 3: HIGH-DPI AVIONICS RADAR & CLEAN HUNT INITIALIZER
+    // REFINED NOTHING OS 3.0 AVIONICS COMPASS RADAR (🧭)
     // =========================================================================
     function startAvionicsRadarLoop() {
       const canvas = document.getElementById('avionicsRadarCanvas');
@@ -1422,20 +1436,23 @@
 
         const cx = cssSize / 2;
         const cy = cssSize / 2;
-        const outerR = cx - 6;
+        const outerR = cx - 4;
         const innerR = outerR - 22;
 
-        ctx.fillStyle = '#060608';
+        // Deep Obsidian Dial Base
+        ctx.fillStyle = '#050507';
         ctx.beginPath();
         ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-        ctx.lineWidth = 1;
+        // Outer Precision Bezel Ring
+        ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+        ctx.lineWidth = 1.2;
         ctx.beginPath();
         ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
         ctx.stroke();
 
+        // Rotating 360° Compass Bezel
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate((-state.compassHeadingDeg * Math.PI) / 180);
@@ -1457,9 +1474,9 @@
             : isCardinal
               ? '#ffffff'
               : isMajor
-                ? 'rgba(255,255,255,0.65)'
-                : 'rgba(255,255,255,0.2)';
-          ctx.lineWidth = isCardinal ? 1.6 : isMajor ? 1.1 : 0.7;
+                ? 'rgba(255,255,255,0.68)'
+                : 'rgba(255,255,255,0.22)';
+          ctx.lineWidth = isCardinal ? 1.7 : isMajor ? 1.1 : 0.7;
           ctx.beginPath();
           ctx.moveTo(x1, y1);
           ctx.lineTo(x2, y2);
@@ -1473,7 +1490,7 @@
             ctx.translate(lx, ly);
             ctx.rotate(rad + Math.PI / 2);
             ctx.font = isCardinal ? '700 10px "Space Grotesk"' : '500 8px "JetBrains Mono"';
-            ctx.fillStyle = deg === 0 ? '#d71921' : isCardinal ? '#ffffff' : 'rgba(255,255,255,0.5)';
+            ctx.fillStyle = deg === 0 ? '#d71921' : isCardinal ? '#ffffff' : 'rgba(255,255,255,0.52)';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             const txt = deg === 0 ? 'N' : deg === 90 ? 'E' : deg === 180 ? 'S' : deg === 270 ? 'W' : String(deg / 10);
@@ -1483,6 +1500,7 @@
         }
         ctx.restore();
 
+        // Top Lubber Triangle Pointer
         ctx.fillStyle = '#d71921';
         ctx.beginPath();
         ctx.moveTo(cx, cy - innerR + 3);
@@ -1491,10 +1509,11 @@
         ctx.closePath();
         ctx.fill();
 
+        // Range Rings
         const rings = [
-          { r: innerR * 0.28, label: '10M LOCK', color: 'rgba(215, 25, 33, 0.55)', dash: [2, 3] },
+          { r: innerR * 0.28, label: '10M LOCK', color: 'rgba(215, 25, 33, 0.6)', dash: [2, 3] },
           { r: innerR * 0.62, label: '25M', color: 'rgba(255, 255, 255, 0.16)', dash: [4, 4] },
-          { r: innerR * 0.96, label: '50M', color: 'rgba(255, 255, 255, 0.22)', dash: [] }
+          { r: innerR * 0.96, label: '50M', color: 'rgba(255, 255, 255, 0.24)', dash: [] }
         ];
         rings.forEach(rg => {
           ctx.strokeStyle = rg.color;
@@ -1505,12 +1524,13 @@
           ctx.stroke();
           ctx.setLineDash([]);
 
-          ctx.fillStyle = 'rgba(255,255,255,0.35)';
+          ctx.fillStyle = 'rgba(255,255,255,0.38)';
           ctx.font = '500 8px "JetBrains Mono"';
           ctx.textAlign = 'left';
           ctx.fillText(rg.label, cx + 4, cy - rg.r + 9);
         });
 
+        // Crosshairs
         ctx.strokeStyle = 'rgba(255,255,255,0.12)';
         ctx.lineWidth = 0.8;
         ctx.beginPath();
@@ -1518,7 +1538,8 @@
         ctx.moveTo(cx, cy - innerR * 0.96); ctx.lineTo(cx, cy + innerR * 0.96);
         ctx.stroke();
 
-        sweepRad = (sweepRad + 0.032) % (Math.PI * 2);
+        // Radar Sweep Cone
+        sweepRad = (sweepRad + 0.03) % (Math.PI * 2);
         const sweepGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, innerR * 0.96);
         sweepGrad.addColorStop(0, 'rgba(215, 25, 33, 0.28)');
         sweepGrad.addColorStop(1, 'rgba(215, 25, 33, 0.0)');
@@ -1529,10 +1550,17 @@
         ctx.closePath();
         ctx.fill();
 
+        // Center Hunter Dot
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Target Vector & Lock Box
         if (state.distanceMeters !== null) {
           const relDeg = (state.targetBearingDeg - state.compassHeadingDeg + 360) % 360;
           const relRad = ((relDeg - 90) * Math.PI) / 180;
-          const clampedRatio = Math.min(0.92, Math.max(0.08, state.distanceMeters / 60));
+          const clampedRatio = Math.min(0.92, Math.max(0.06, state.distanceMeters / 60));
           const tx = cx + Math.cos(relRad) * (innerR * clampedRatio);
           const ty = cy + Math.sin(relRad) * (innerR * clampedRatio);
 
@@ -1572,14 +1600,12 @@
         return showDestroyedView('[ LINK DESTROYED ]', 'THIS DEAD-DROP LINK HAS ALREADY SELF-DESTRUCTED AND CANNOT BE REOPENED.');
       }
 
-      // Cleanly detach any old Firebase listener from a previous hunt
       if (state.metaRef) {
         try { state.metaRef.off(); } catch (e) {}
         state.metaRef = null;
       }
 
       state.stashId = stashId;
-      // Never leak an older stash's key into a different stash!
       state.keyIv = optionalKeyIv || (state.lastCreatedId === stashId ? state.lastCreatedKeyIv : null);
       state.isUnlocked3D = false;
       state.isClaiming = false;
@@ -1587,7 +1613,6 @@
       state.pinAttemptsRemaining = 3;
 
       let meta = null;
-      // Check local cache first for instant zero-latency response if created on this device
       if (state.localMetaCache[stashId]) {
         meta = state.localMetaCache[stashId];
       }
@@ -1602,7 +1627,7 @@
       }
 
       if (!meta || meta.status === 'DESTROYED' || (meta.expiresAt && Date.now() > meta.expiresAt)) {
-        return showDestroyedView('[ STASH NOT FOUND ]', 'NO ACTIVE DEAD-DROP FOUND FOR CODE "' + stashId.toUpperCase() + '". CHECK THE CODE OR CREATE A NEW DROP.');
+        return showDestroyedView('[ STASH NOT FOUND ]', 'NO ACTIVE DEAD-DROP FOUND FOR CODE "' + stashId.toUpperCase() + '".');
       }
 
       state.targetMeta = meta;
@@ -1619,10 +1644,9 @@
       if (state.metaRef) {
         state.metaRef.on('value', (s) => {
           const val = s.val();
-          // Only trigger intercepted if another hunter destroyed it while we are NOT unlocking or viewing!
           if (val && val.status === 'DESTROYED' && !state.isUnlocked3D && !state.isClaiming) {
             state.burnedStashIds[stashId] = true;
-            safeSetLocal('gs_burned_v5', state.burnedStashIds);
+            safeSetLocal('gs_burned_v6', state.burnedStashIds);
             showDestroyedView('[ INTERCEPTED ]', 'ANOTHER HUNTER JUST CLAIMED & BURNED THIS STASH.');
           }
         });
@@ -1643,7 +1667,8 @@
     }
 
     // =========================================================================
-    // MODULE 4: WORLD-LOCKED WEBXR + SHADOW CATCHER + 3 CUSTOM 3D ARTIFACTS
+    // MODULE 4: TOUCH-TO-PLACE & EXACT COMPASS/TILT LOCKED 3D AR ENGINE
+    // Strictly 1 Object at a time (Never Overlaps Notepad & Text, Never Auto-Zooms!)
     // =========================================================================
     let threeRenderer = null;
     let threeScene = null;
@@ -1653,8 +1678,6 @@
     let shadowReceiverMesh = null;
     let contactShadowMesh = null;
     let reticleGroup = null;
-    let artifactMeshGroup = null;
-    let unlockedContentGroup = null;
     let voiceSonicRings = [];
 
     const _zee = new THREE.Vector3(0, 0, 1);
@@ -1757,23 +1780,33 @@
       return tex;
     }
 
+    // Helper: Strictly wipes all children inside hoverFloatGroup so Notepad and Text can NEVER overlap!
+    function clearHoverFloatChildren() {
+      if (!hoverFloatGroup) return;
+      voiceSonicRings = [];
+      while (hoverFloatGroup.children.length > 0) {
+        const child = hoverFloatGroup.children[0];
+        hoverFloatGroup.remove(child);
+      }
+    }
+
     function build3DNotepadArtifact(group) {
-      const boardGeo = new THREE.BoxGeometry(0.46, 0.60, 0.032);
+      const boardGeo = new THREE.BoxGeometry(0.38, 0.50, 0.026);
       const boardMat = new THREE.MeshStandardMaterial({ color: 0x121217, roughness: 0.35, metalness: 0.65 });
       const boardMesh = new THREE.Mesh(boardGeo, boardMat);
       boardMesh.castShadow = true;
       boardMesh.receiveShadow = true;
       group.add(boardMesh);
 
-      const railGeo = new THREE.BoxGeometry(0.48, 0.62, 0.022);
+      const railGeo = new THREE.BoxGeometry(0.40, 0.52, 0.018);
       const railMat = new THREE.MeshStandardMaterial({ color: 0xd71921, roughness: 0.25, metalness: 0.8 });
       const railMesh = new THREE.Mesh(railGeo, railMat);
-      railMesh.position.z = -0.006;
+      railMesh.position.z = -0.005;
       railMesh.castShadow = true;
       group.add(railMesh);
 
       const pageTex = createNotepadSheetTexture();
-      const pageGeo = new THREE.BoxGeometry(0.40, 0.50, 0.016);
+      const pageGeo = new THREE.BoxGeometry(0.33, 0.42, 0.014);
       const pageMaterials = [
         new THREE.MeshStandardMaterial({ color: 0xe4e4e7 }),
         new THREE.MeshStandardMaterial({ color: 0xe4e4e7 }),
@@ -1783,52 +1816,50 @@
         new THREE.MeshStandardMaterial({ map: pageTex, roughness: 0.4 })
       ];
       const pageMesh = new THREE.Mesh(pageGeo, pageMaterials);
-      pageMesh.position.set(0, -0.02, 0.018);
+      pageMesh.position.set(0, -0.015, 0.015);
       pageMesh.castShadow = true;
       group.add(pageMesh);
 
-      const clipGeo = new THREE.BoxGeometry(0.20, 0.065, 0.052);
+      const clipGeo = new THREE.BoxGeometry(0.16, 0.055, 0.044);
       const clipMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f7, roughness: 0.2, metalness: 0.9 });
       const clipMesh = new THREE.Mesh(clipGeo, clipMat);
-      clipMesh.position.set(0, 0.27, 0.018);
+      clipMesh.position.set(0, 0.22, 0.015);
       clipMesh.castShadow = true;
       group.add(clipMesh);
     }
 
     function build3DVoiceMicArtifact(group) {
-      voiceSonicRings = [];
-
-      const bodyGeo = new THREE.CylinderGeometry(0.11, 0.11, 0.28, 32);
+      const bodyGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.24, 32);
       const bodyMat = new THREE.MeshStandardMaterial({ color: 0x14141a, roughness: 0.28, metalness: 0.82 });
       const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
-      bodyMesh.position.y = -0.08;
+      bodyMesh.position.y = -0.06;
       bodyMesh.castShadow = true;
       group.add(bodyMesh);
 
-      const collarGeo = new THREE.TorusGeometry(0.115, 0.014, 16, 48);
+      const collarGeo = new THREE.TorusGeometry(0.095, 0.012, 16, 48);
       collarGeo.rotateX(Math.PI / 2);
       const collarMat = new THREE.MeshStandardMaterial({ color: 0xd71921, emissive: 0x550408, roughness: 0.2, metalness: 0.8 });
       const collarMesh = new THREE.Mesh(collarGeo, collarMat);
-      collarMesh.position.y = 0.06;
+      collarMesh.position.y = 0.05;
       group.add(collarMesh);
 
-      const grilleGeo = new THREE.SphereGeometry(0.125, 24, 24);
+      const grilleGeo = new THREE.SphereGeometry(0.105, 24, 24);
       grilleGeo.scale(1, 1.35, 1);
       const grilleMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f7, roughness: 0.22, metalness: 0.92 });
       const grilleMesh = new THREE.Mesh(grilleGeo, grilleMat);
-      grilleMesh.position.y = 0.17;
+      grilleMesh.position.y = 0.14;
       grilleMesh.castShadow = true;
       group.add(grilleMesh);
 
-      const cageGeo = new THREE.SphereGeometry(0.132, 16, 12);
+      const cageGeo = new THREE.SphereGeometry(0.112, 16, 12);
       cageGeo.scale(1, 1.35, 1);
       const cageMat = new THREE.MeshBasicMaterial({ color: 0x27272a, wireframe: true });
       const cageMesh = new THREE.Mesh(cageGeo, cageMat);
-      cageMesh.position.y = 0.17;
+      cageMesh.position.y = 0.14;
       group.add(cageMesh);
 
-      [0.24, 0.34].forEach((r, idx) => {
-        const waveGeo = new THREE.TorusGeometry(r, 0.009, 16, 64);
+      [0.20, 0.28].forEach((r, idx) => {
+        const waveGeo = new THREE.TorusGeometry(r, 0.008, 16, 64);
         const waveMat = new THREE.MeshStandardMaterial({
           color: idx === 0 ? 0xd71921 : 0xffffff,
           emissive: idx === 0 ? 0x440407 : 0x111111,
@@ -1836,7 +1867,7 @@
           metalness: 0.8
         });
         const ring = new THREE.Mesh(waveGeo, waveMat);
-        ring.position.y = 0.06;
+        ring.position.y = 0.05;
         ring.castShadow = true;
         group.add(ring);
         voiceSonicRings.push(ring);
@@ -1847,19 +1878,19 @@
       const folderDarkMat = new THREE.MeshStandardMaterial({ color: 0x16161d, roughness: 0.35, metalness: 0.65 });
       const folderRedMat = new THREE.MeshStandardMaterial({ color: 0xd71921, roughness: 0.28, metalness: 0.75 });
 
-      const backGeo = new THREE.BoxGeometry(0.56, 0.42, 0.022);
+      const backGeo = new THREE.BoxGeometry(0.46, 0.34, 0.018);
       const backMesh = new THREE.Mesh(backGeo, folderDarkMat);
-      backMesh.position.set(0, 0, -0.018);
+      backMesh.position.set(0, 0, -0.015);
       backMesh.castShadow = true;
       group.add(backMesh);
 
-      const tabGeo = new THREE.BoxGeometry(0.20, 0.06, 0.022);
+      const tabGeo = new THREE.BoxGeometry(0.16, 0.05, 0.018);
       const tabMesh = new THREE.Mesh(tabGeo, folderRedMat);
-      tabMesh.position.set(-0.16, 0.23, -0.018);
+      tabMesh.position.set(-0.13, 0.19, -0.015);
       tabMesh.castShadow = true;
       group.add(tabMesh);
 
-      const innerDocGeo = new THREE.BoxGeometry(0.50, 0.38, 0.024);
+      const innerDocGeo = new THREE.BoxGeometry(0.41, 0.31, 0.02);
       const innerDocMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f7, roughness: 0.3 });
       const innerDocMesh = new THREE.Mesh(innerDocGeo, innerDocMat);
       innerDocMesh.position.set(0, 0.01, 0);
@@ -1872,50 +1903,42 @@
         new THREE.MeshStandardMaterial({ map: labelTex, roughness: 0.35 }),
         new THREE.MeshStandardMaterial({ map: labelTex, roughness: 0.35 })
       ];
-      const frontGeo = new THREE.BoxGeometry(0.56, 0.39, 0.022);
+      const frontGeo = new THREE.BoxGeometry(0.46, 0.32, 0.018);
       const frontMesh = new THREE.Mesh(frontGeo, frontMaterials);
-      frontMesh.position.set(0, -0.015, 0.018);
+      frontMesh.position.set(0, -0.01, 0.015);
       frontMesh.castShadow = true;
       group.add(frontMesh);
     }
 
     function rebuildLocked3DArtifactForType(mediaType) {
       if (!hoverFloatGroup) return;
-      if (artifactMeshGroup) {
-        hoverFloatGroup.remove(artifactMeshGroup);
-        artifactMeshGroup = null;
-      }
-      if (unlockedContentGroup) {
-        hoverFloatGroup.remove(unlockedContentGroup);
-        unlockedContentGroup = null;
-      }
+      clearHoverFloatChildren();
 
-      artifactMeshGroup = new THREE.Group();
-      artifactMeshGroup.position.set(0, 0.34, 0);
+      const artGroup = new THREE.Group();
+      artGroup.position.set(0, 0.28, 0);
 
       if (mediaType === 'audio') {
-        build3DVoiceMicArtifact(artifactMeshGroup);
+        build3DVoiceMicArtifact(artGroup);
       } else if (mediaType === 'image') {
-        build3DFolderArtifact(artifactMeshGroup);
+        build3DFolderArtifact(artGroup);
       } else {
-        build3DNotepadArtifact(artifactMeshGroup);
+        build3DNotepadArtifact(artGroup);
       }
 
-      hoverFloatGroup.add(artifactMeshGroup);
+      hoverFloatGroup.add(artGroup);
     }
 
+    // COMPACT SOLID WATERTIGHT 3D EXTRUDED TEXT (Strictly Replaces Notepad, Never Overlaps, Never Auto-Zooms!)
     function buildSolidWatertight3DText(secretString) {
       if (!hoverFloatGroup) return;
-      if (artifactMeshGroup) {
-        hoverFloatGroup.remove(artifactMeshGroup);
-        artifactMeshGroup = null;
-      }
-      if (unlockedContentGroup) {
-        hoverFloatGroup.remove(unlockedContentGroup);
-      }
+      const myToken = ++state.unlockSessionToken;
 
-      unlockedContentGroup = new THREE.Group();
-      unlockedContentGroup.position.set(0, 0.36, 0);
+      // Immediately remove the 3D Notepad so they NEVER overlap!
+      clearHoverFloatChildren();
+
+      const outerPopGroup = new THREE.Group();
+      outerPopGroup.position.set(0, 0.28, 0);
+      hoverFloatGroup.add(outerPopGroup);
 
       const words = (secretString || 'GEO-STASH').trim().split(/\s+/);
       const lines = [];
@@ -1931,20 +1954,23 @@
       if (cur) lines.push(cur);
       const finalLines = lines.slice(0, 5);
 
-      const buildSolidMonolithSlab = () => {
+      const populateSolidMonolithSlab = () => {
+        if (state.unlockSessionToken !== myToken) return;
+        while (outerPopGroup.children.length) outerPopGroup.remove(outerPopGroup.children[0]);
+
         const c = document.createElement('canvas');
-        c.width = 2048;
-        c.height = 1024;
+        c.width = 1600;
+        c.height = 800;
         const ctx = c.getContext('2d');
 
         ctx.fillStyle = '#09090d';
         ctx.fillRect(0, 0, c.width, c.height);
         ctx.strokeStyle = '#d71921';
-        ctx.lineWidth = 24;
-        ctx.strokeRect(24, 24, c.width - 48, c.height - 48);
+        ctx.lineWidth = 20;
+        ctx.strokeRect(20, 20, c.width - 40, c.height - 40);
 
-        const fs = finalLines.length === 1 ? 180 : finalLines.length === 2 ? 145 : 110;
-        const lh = fs * 1.26;
+        const fs = finalLines.length === 1 ? 140 : finalLines.length === 2 ? 110 : 86;
+        const lh = fs * 1.25;
         ctx.font = `700 ${fs}px "Space Grotesk", "JetBrains Mono", sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -1956,25 +1982,26 @@
         });
 
         const tex = new THREE.CanvasTexture(c);
-        if (threeRenderer) {
-          tex.anisotropy = threeRenderer.capabilities.getMaxAnisotropy();
-        }
+        if (threeRenderer) tex.anisotropy = threeRenderer.capabilities.getMaxAnisotropy();
         tex.needsUpdate = true;
 
         const sideMat = new THREE.MeshStandardMaterial({ color: 0xd71921, roughness: 0.25, metalness: 0.85 });
         const faceMat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.22, metalness: 0.15 });
 
-        const slabGeo = new THREE.BoxGeometry(1.15, 0.58, 0.075);
+        // Compact 0.44m wide solid 3D plaque (same width as Notepad — never huge!)
+        const slabGeo = new THREE.BoxGeometry(0.46, 0.24, 0.036);
         const slabMesh = new THREE.Mesh(slabGeo, [sideMat, sideMat, sideMat, sideMat, faceMat, faceMat]);
         slabMesh.castShadow = true;
         slabMesh.receiveShadow = true;
-        unlockedContentGroup.add(slabMesh);
+        outerPopGroup.add(slabMesh);
       };
 
-      const buildTrueExtrudedLetters = (font) => {
-        while (unlockedContentGroup.children.length) {
-          unlockedContentGroup.remove(unlockedContentGroup.children[0]);
-        }
+      const populateTrueExtrudedLetters = (font) => {
+        if (state.unlockSessionToken !== myToken) return;
+        while (outerPopGroup.children.length) outerPopGroup.remove(outerPopGroup.children[0]);
+
+        // Inner holder keeps fitted scale separate from outerPopGroup's unbox animation so it NEVER blows up!
+        const innerFittedHolder = new THREE.Group();
 
         const faceMat = new THREE.MeshStandardMaterial({
           color: 0xffffff,
@@ -1989,18 +2016,18 @@
           metalness: 0.82
         });
 
-        const lineStepY = 0.22;
+        const lineStepY = 0.095;
         const totalHeight = (finalLines.length - 1) * lineStepY;
 
         finalLines.forEach((lineStr, idx) => {
           const textGeo = new THREE.TextGeometry(lineStr, {
             font: font,
-            size: 0.15,
-            height: 0.065,
+            size: 0.068,
+            height: 0.028,
             curveSegments: 12,
             bevelEnabled: true,
-            bevelThickness: 0.012,
-            bevelSize: 0.008,
+            bevelThickness: 0.005,
+            bevelSize: 0.0035,
             bevelOffset: 0,
             bevelSegments: 4
           });
@@ -2015,35 +2042,38 @@
           mesh.position.y = (totalHeight / 2) - idx * lineStepY;
           mesh.castShadow = true;
           mesh.receiveShadow = true;
-          unlockedContentGroup.add(mesh);
+          innerFittedHolder.add(mesh);
         });
 
-        const groupBox = new THREE.Box3().setFromObject(unlockedContentGroup);
-        const width3D = groupBox.max.x - groupBox.min.x;
-        if (width3D > 1.35) {
-          const s = 1.35 / width3D;
-          unlockedContentGroup.scale.set(s, s, s);
+        // Strictly cap total 3D width to 0.44m (compact Notepad size) so 1 word or 10 words always look balanced!
+        const groupBox = new THREE.Box3().setFromObject(innerFittedHolder);
+        const width3D = Math.max(0.01, groupBox.max.x - groupBox.min.x);
+        const maxAllowedWidth = 0.44;
+        if (width3D > maxAllowedWidth) {
+          innerFittedHolder.scale.setScalar(maxAllowedWidth / width3D);
         }
+
+        outerPopGroup.add(innerFittedHolder);
       };
 
       const isAsciiPrintable = /^[\x20-\x7E\s]+$/.test(secretString || '');
       if (state.loadedThreeFont && isAsciiPrintable) {
-        buildTrueExtrudedLetters(state.loadedThreeFont);
+        populateTrueExtrudedLetters(state.loadedThreeFont);
       } else {
-        buildSolidMonolithSlab();
+        populateSolidMonolithSlab();
         if (isAsciiPrintable && typeof THREE !== 'undefined' && THREE.FontLoader) {
           const loader = new THREE.FontLoader();
           loader.load(
             'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_bold.typeface.json',
             (font) => {
               state.loadedThreeFont = font;
-              buildTrueExtrudedLetters(font);
+              if (state.isUnlocked3D && state.unlockSessionToken === myToken) {
+                populateTrueExtrudedLetters(font);
+              }
             }
           );
         }
       }
-
-      hoverFloatGroup.add(unlockedContentGroup);
     }
 
     function initThreeWorldLockedScene() {
@@ -2064,20 +2094,20 @@
         threeScene = new THREE.Scene();
 
         threeCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.05, 60);
-        threeCamera.position.set(0, 0.38, 0);
+        threeCamera.position.set(0, 0.28, 0);
         threeScene.add(threeCamera);
 
-        const ambLight = new THREE.AmbientLight(0xffffff, 0.88);
+        const ambLight = new THREE.AmbientLight(0xffffff, 0.9);
         threeScene.add(ambLight);
 
         const shadowDirLight = new THREE.DirectionalLight(0xffffff, 1.55);
-        shadowDirLight.position.set(0.6, 2.8, 1.1);
+        shadowDirLight.position.set(0.5, 2.5, 1.0);
         shadowDirLight.castShadow = true;
         shadowDirLight.shadow.mapSize.width = 1024;
         shadowDirLight.shadow.mapSize.height = 1024;
         shadowDirLight.shadow.camera.near = 0.2;
-        shadowDirLight.shadow.camera.far = 6.0;
-        const d = 1.4;
+        shadowDirLight.shadow.camera.far = 5.0;
+        const d = 1.1;
         shadowDirLight.shadow.camera.left = -d;
         shadowDirLight.shadow.camera.right = d;
         shadowDirLight.shadow.camera.top = d;
@@ -2086,21 +2116,23 @@
         shadowDirLight.shadow.radius = 4;
 
         worldAnchorGroup = new THREE.Group();
-        worldAnchorGroup.position.set(0, -0.18, -1.65);
+        worldAnchorGroup.position.set(0, -0.05, -1.85);
         threeScene.add(worldAnchorGroup);
 
         worldAnchorGroup.add(shadowDirLight);
         worldAnchorGroup.add(shadowDirLight.target);
 
-        const shadowPlaneGeo = new THREE.PlaneGeometry(2.6, 2.6);
+        // 1. Transparent Ground Shadow Catcher Plane
+        const shadowPlaneGeo = new THREE.PlaneGeometry(2.0, 2.0);
         shadowPlaneGeo.rotateX(-Math.PI / 2);
-        const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.48 });
+        const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.45 });
         shadowReceiverMesh = new THREE.Mesh(shadowPlaneGeo, shadowPlaneMat);
         shadowReceiverMesh.position.y = 0.001;
         shadowReceiverMesh.receiveShadow = true;
         worldAnchorGroup.add(shadowReceiverMesh);
 
-        const aoPlaneGeo = new THREE.PlaneGeometry(0.75, 0.75);
+        // 2. Soft Radial Ambient Occlusion Contact Shadow
+        const aoPlaneGeo = new THREE.PlaneGeometry(0.58, 0.58);
         aoPlaneGeo.rotateX(-Math.PI / 2);
         const aoPlaneMat = new THREE.MeshBasicMaterial({
           map: createSoftAOShadowTexture(),
@@ -2112,12 +2144,13 @@
         contactShadowMesh.position.y = 0.002;
         worldAnchorGroup.add(contactShadowMesh);
 
-        const lockRingGeo = new THREE.RingGeometry(0.32, 0.34, 64);
+        // Single Clean Red Ground Ring Under Shadow (No Duplicate Rings!)
+        const lockRingGeo = new THREE.RingGeometry(0.25, 0.268, 64);
         lockRingGeo.rotateX(-Math.PI / 2);
         const lockRingMat = new THREE.MeshBasicMaterial({
           color: 0xd71921,
           transparent: true,
-          opacity: 0.55,
+          opacity: 0.6,
           side: THREE.DoubleSide
         });
         const lockRingMesh = new THREE.Mesh(lockRingGeo, lockRingMat);
@@ -2128,16 +2161,6 @@
         worldAnchorGroup.add(hoverFloatGroup);
 
         reticleGroup = new THREE.Group();
-        const rOuter = new THREE.Mesh(
-          new THREE.RingGeometry(0.18, 0.21, 48).rotateX(-Math.PI / 2),
-          new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
-        );
-        const rInner = new THREE.Mesh(
-          new THREE.RingGeometry(0.10, 0.12, 48).rotateX(-Math.PI / 2),
-          new THREE.MeshBasicMaterial({ color: 0xd71921, side: THREE.DoubleSide })
-        );
-        reticleGroup.add(rOuter);
-        reticleGroup.add(rInner);
         reticleGroup.visible = false;
         threeScene.add(reticleGroup);
 
@@ -2149,7 +2172,6 @@
         });
       }
 
-      // Always reset transform & rebuild fresh 3D Artifact on entry!
       const activeType = state.arRole === 'creator'
         ? state.mediaType
         : (state.targetMeta && state.targetMeta.type) || 'text';
@@ -2159,18 +2181,19 @@
       if (hoverFloatGroup) {
         hoverFloatGroup.rotation.set(0, 0, 0);
         hoverFloatGroup.position.set(0, 0, 0);
+        hoverFloatGroup.scale.setScalar(1.0);
       }
       worldAnchorGroup.scale.setScalar(1.0);
       threeCamera.quaternion.identity();
 
       if (state.arRole === 'creator') {
-        worldAnchorGroup.position.set(0, -0.18, -1.65);
+        worldAnchorGroup.position.set(0, -0.05, -1.85);
         worldAnchorGroup.rotation.set(0, 0, 0);
       } else {
         const savedOff = (state.targetMeta && Array.isArray(state.targetMeta.placedPos))
           ? state.targetMeta.placedPos
-          : [0, -0.18, -1.65];
-        worldAnchorGroup.position.set(savedOff[0] || 0, savedOff[1] || -0.18, savedOff[2] || -1.65);
+          : [0, -0.05, -1.85];
+        worldAnchorGroup.position.set(savedOff[0] || 0, savedOff[1] || -0.05, savedOff[2] || -1.85);
         worldAnchorGroup.rotation.set(0, (state.targetMeta && state.targetMeta.placedYaw) || 0, 0);
       }
 
@@ -2182,10 +2205,8 @@
         if (state.activeView !== 'ar') return;
         const t = (timestamp || performance.now()) * 0.001;
 
-        // 1. Hardware WebXR Hit-Test & Freeze-Lock Handling
         if (xrFrame && state.xrSession && state.xrRefSpace) {
           const pose = xrFrame.getViewerPose(state.xrRefSpace);
-
           if (!state.isWorldFrozen && state.xrHitTestSource) {
             const hits = xrFrame.getHitTestResults(state.xrHitTestSource);
             if (hits.length > 0) {
@@ -2193,24 +2214,15 @@
               const hitPose = hit.getPose(state.xrRefSpace);
               if (hitPose) {
                 state.lastHitResult = hit;
-                state.lastHitPoseMatrix = hitPose.transform.matrix;
-
                 const hp = hitPose.transform.position;
-                reticleGroup.visible = true;
-                reticleGroup.position.lerp(new THREE.Vector3(hp.x, hp.y, hp.z), 0.35);
-
                 worldAnchorGroup.position.lerp(new THREE.Vector3(hp.x, hp.y, hp.z), 0.25);
                 if (pose) {
                   const vp = pose.transform.position;
                   worldAnchorGroup.rotation.y = Math.atan2(vp.x - hp.x, vp.z - hp.z);
                 }
-
-                // In Hunter Mode: Auto-Freeze after 4 stable surface hit frames!
                 if (state.arRole === 'hunter') {
                   state.hunterStableHits++;
-                  if (state.hunterStableHits >= 4) {
-                    freezeWorldAnchorNow();
-                  }
+                  if (state.hunterStableHits >= 4) freezeWorldAnchorNow();
                 }
               }
             }
@@ -2225,78 +2237,68 @@
             }
           }
         } else {
-          // 2. Tier-2 World-Space Camera Orientation:
-          // - While AIMING (!state.isWorldFrozen in Creator Mode): camera stays aligned with the aiming reticle so Creator can point at any spot in their room!
-          // - The instant Creator taps "PLACE HERE ◎" (or in Hunter Mode): state.isWorldFrozen = true locks state.initialDeviceQuat so turning the phone rotates threeCamera in world-space and the 3D object stays 100% frozen at that spot!
-          reticleGroup.visible = !state.isWorldFrozen && state.arRole === 'creator';
-          if (reticleGroup.visible) {
-            reticleGroup.position.copy(worldAnchorGroup.position);
-          }
-
+          // Tier-2 World-Space Camera Orientation:
+          // - In Creator Mode BEFORE finger tap (!state.isWorldFrozen): object follows camera center so Creator can aim & tap anywhere on screen!
+          // - Once Finger-Placed (state.isWorldFrozen === true) OR in Hunter Mode (where initialDeviceQuat is set to Creator's exact saved Quaternion!):
+          //   threeCamera rotates relative to the exact saved orientation so the object is ONLY visible at the exact Door/Wall/Table spot where Creator placed it!
           state.inspectYawOffset += (state.targetInspectYaw - state.inspectYawOffset) * 0.12;
           state.inspectPitchOffset += (state.targetInspectPitch - state.inspectPitchOffset) * 0.12;
-          state.inspectDistScale += (state.targetInspectDist - state.inspectDistScale) * 0.12;
 
           if (!state.isWorldFrozen) {
-            // Live Aiming Phase: keep reference quaternion synced to current phone direction
             if (state.latestDeviceQuat) {
               state.initialDeviceQuat = state.latestDeviceQuat.clone();
             }
             threeCamera.quaternion.identity();
           } else if (state.hasGyro && state.latestDeviceQuat && state.initialDeviceQuat) {
-            // Frozen World-Locked Phase: camera rotates relative to the frozen spot!
             const qDelta = state.initialDeviceQuat.clone().invert().multiply(state.latestDeviceQuat);
             if (!state.smoothedDeviceQuat) state.smoothedDeviceQuat = new THREE.Quaternion();
-            if (state.smoothedDeviceQuat.angleTo(qDelta) > 0.006) {
-              state.smoothedDeviceQuat.slerp(qDelta, 0.14);
+            if (state.smoothedDeviceQuat.angleTo(qDelta) > 0.005) {
+              state.smoothedDeviceQuat.slerp(qDelta, 0.15);
             }
             threeCamera.quaternion.copy(state.smoothedDeviceQuat);
           }
 
           if (hoverFloatGroup) {
             hoverFloatGroup.rotation.y = state.inspectYawOffset;
-            hoverFloatGroup.rotation.x = state.inspectPitchOffset * 0.5;
+            hoverFloatGroup.rotation.x = state.inspectPitchOffset * 0.4;
           }
-          worldAnchorGroup.scale.setScalar(state.inspectDistScale);
         }
 
-        // 3. Subtle Levitation Breathing + Dynamic Ground Contact Shadow Scale
+        // Subtle Levitation Breathing + Dynamic Ground Shadow
         if (hoverFloatGroup && contactShadowMesh) {
-          const hoverY = Math.sin(t * 2.2) * 0.016;
+          const hoverY = Math.sin(t * 2.2) * 0.012;
           hoverFloatGroup.position.y = hoverY;
-          const shadowScale = 1.0 - hoverY * 2.2;
+          const shadowScale = 1.0 - hoverY * 2.0;
           contactShadowMesh.scale.set(shadowScale, shadowScale, 1);
-          contactShadowMesh.material.opacity = 0.62 - hoverY * 4.0;
+          contactShadowMesh.material.opacity = 0.62 - hoverY * 3.5;
         }
 
-        // 4. Animate Sonic Rings in Voice Mode
         if (voiceSonicRings.length > 0) {
           voiceSonicRings.forEach((rg, i) => {
             const speed = state.isUnlocked3D ? 3.8 : 1.2;
             rg.rotation.x = Math.sin(t * speed + i) * 0.45;
             rg.rotation.y = t * speed * (i % 2 === 0 ? 1 : -1);
-            if (state.isUnlocked3D) {
-              const s = 1 + Math.sin(t * 8 + i * 2) * 0.08;
-              rg.scale.set(s, s, s);
-            }
           });
         }
 
-        // 5. Smooth 3D Unbox Morph Animation
-        if (state.isUnboxing && unlockedContentGroup) {
-          state.unboxAnimProgress = Math.min(1, state.unboxAnimProgress + 0.06);
+        // Smooth Pop-In without ever exceeding 1.0 scale!
+        if (state.isUnboxing && hoverFloatGroup) {
+          state.unboxAnimProgress = Math.min(1, state.unboxAnimProgress + 0.07);
           const ease = 1 - Math.pow(1 - state.unboxAnimProgress, 3);
-          unlockedContentGroup.scale.setScalar(ease);
-          if (state.unboxAnimProgress >= 1) state.isUnboxing = false;
+          hoverFloatGroup.scale.setScalar(ease);
+          if (state.unboxAnimProgress >= 1) {
+            hoverFloatGroup.scale.setScalar(1.0);
+            state.isUnboxing = false;
+          }
         }
 
-        // 6. Camera Frustum Check & Off-Screen Wayfinder Pill
+        // Camera Frustum Check & Directional Wayfinder to Hidden Spot
         threeCamera.updateMatrixWorld();
         projScreenMatrix.multiplyMatrices(threeCamera.projectionMatrix, threeCamera.matrixWorldInverse);
         frustum.setFromProjectionMatrix(projScreenMatrix);
 
         tempVec.copy(worldAnchorGroup.position);
-        tempVec.y += 0.32;
+        tempVec.y += 0.25;
         const inView = frustum.containsPoint(tempVec);
 
         const wayfinder = document.getElementById('arOffscreenWayfinder');
@@ -2306,8 +2308,12 @@
         if (!inView && state.isWorldFrozen) {
           wayfinder.classList.remove('hidden');
           const localPt = tempVec.clone().applyMatrix4(threeCamera.matrixWorldInverse);
-          const dirLabel = localPt.x < 0 ? '◄ TURN CAMERA LEFT TO STASH' : 'TURN CAMERA RIGHT TO STASH ►';
-          wayfinder.textContent = dirLabel;
+          const horiz = Math.abs(localPt.x) > Math.abs(localPt.y);
+          if (horiz) {
+            wayfinder.textContent = localPt.x < 0 ? '◄ TURN CAMERA LEFT TO HIDDEN SPOT' : 'TURN CAMERA RIGHT TO HIDDEN SPOT ►';
+          } else {
+            wayfinder.textContent = localPt.y > 0 ? '▲ TILT CAMERA UP TO HIDDEN SPOT' : '▼ TILT CAMERA DOWN TO HIDDEN SPOT';
+          }
           if (!state.isUnlocked3D) {
             pinOverlay.style.opacity = '0';
             noPinOverlay.style.opacity = '0';
@@ -2325,26 +2331,74 @@
     }
 
     // =========================================================================
-    // TRUE FREEZE / UNFREEZE ENGINE FOR CREATOR & AUTO-FREEZE FOR HUNTER
+    // CREATOR FINGER TOUCH-TO-PLACE ANYWHERE ON SCREEN
     // =========================================================================
-    async function freezeWorldAnchorNow() {
-      // If Creator taps button while already frozen, toggle back to Unfrozen Re-Aim mode!
-      if (state.arRole === 'creator' && state.isWorldFrozen) {
+    const _raycaster = new THREE.Raycaster();
+    const _ndc = new THREE.Vector2();
+
+    function placeCreatorObjectAtScreenPoint(clientX, clientY) {
+      if (state.arRole !== 'creator' || !threeCamera || !worldAnchorGroup) return;
+
+      const rect = threeRenderer.domElement.getBoundingClientRect();
+      _ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      _ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+      // Reset camera quaternion momentarily if placing a fresh point relative to current view
+      if (state.latestDeviceQuat) {
+        state.initialDeviceQuat = state.latestDeviceQuat.clone();
+        state.smoothedDeviceQuat = new THREE.Quaternion();
+        threeCamera.quaternion.identity();
+        threeCamera.updateMatrixWorld();
+      }
+
+      _raycaster.setFromCamera(_ndc, threeCamera);
+      const targetPos = new THREE.Vector3();
+      _raycaster.ray.at(1.85, targetPos);
+      targetPos.y -= 0.25; // Center artifact height on finger point
+
+      worldAnchorGroup.position.copy(targetPos);
+      worldAnchorGroup.rotation.set(0, 0, 0);
+
+      freezeWorldAnchorNow(true);
+    }
+
+    async function freezeWorldAnchorNow(fromFingerTouch = false) {
+      if (state.arRole === 'creator' && state.isWorldFrozen && !fromFingerTouch) {
         state.isWorldFrozen = false;
-        if (reticleGroup) reticleGroup.visible = true;
+        worldAnchorGroup.position.set(0, -0.05, -1.85);
         document.getElementById('btnCreatorSnapHere').textContent = 'PLACE HERE ◎';
-        document.getElementById('creatorFreezeHintText').textContent = 'AIM AT NEW SPOT & TAP "PLACE HERE ◎" TO FREEZE';
-        document.getElementById('arAngleReadout').textContent = 'AIMING // MOVE TO NEW SPOT';
-        notify('UNFROZEN — AIM AT NEW SPOT');
+        document.getElementById('creatorFreezeHintText').textContent = 'TOUCH ANYWHERE ON CAMERA SCREEN TO PLACE & FREEZE';
+        document.getElementById('arAngleReadout').textContent = 'TOUCH SCREEN TO PLACE 3D OBJECT';
+        notify('UNFROZEN — TOUCH SCREEN TO PLACE');
         return;
       }
 
       state.isWorldFrozen = true;
-      if (reticleGroup) reticleGroup.visible = false;
 
-      if (state.latestDeviceQuat) {
-        state.initialDeviceQuat = state.latestDeviceQuat.clone();
-        state.smoothedDeviceQuat = new THREE.Quaternion();
+      if (state.arRole === 'creator') {
+        if (state.latestDeviceQuat) {
+          state.initialDeviceQuat = state.latestDeviceQuat.clone();
+          state.smoothedDeviceQuat = new THREE.Quaternion();
+          state.creatorPlacedQuatArray = [
+            +state.latestDeviceQuat.x.toFixed(5),
+            +state.latestDeviceQuat.y.toFixed(5),
+            +state.latestDeviceQuat.z.toFixed(5),
+            +state.latestDeviceQuat.w.toFixed(5)
+          ];
+        }
+        state.creatorPlacedOffset = [
+          +worldAnchorGroup.position.x.toFixed(3),
+          +worldAnchorGroup.position.y.toFixed(3),
+          +worldAnchorGroup.position.z.toFixed(3)
+        ];
+        state.creatorPlacedYaw = +worldAnchorGroup.rotation.y.toFixed(4);
+        state.creatorCompassAzimuth = Math.round(state.compassHeadingDeg || 0);
+        state.creatorPitchBeta = Math.round(state.deviceBetaDeg || 75);
+        state.hasCreatorCustomAnchor = true;
+
+        document.getElementById('creatorArBtnLabel').textContent = 'SPOT FROZEN ✓';
+        document.getElementById('btnCreatorSnapHere').textContent = 'RESET AIM ↻';
+        document.getElementById('creatorFreezeHintText').textContent = 'FROZEN AT EXACT SPOT // TAP SCREEN TO ADJUST OR LOCK & ENCRYPT';
       }
 
       if (state.xrHitTestSource) {
@@ -2358,40 +2412,18 @@
         } catch (e) {}
       }
 
-      if (state.arRole === 'creator' && worldAnchorGroup) {
-        state.creatorPlacedOffset = [
-          +worldAnchorGroup.position.x.toFixed(3),
-          +worldAnchorGroup.position.y.toFixed(3),
-          +worldAnchorGroup.position.z.toFixed(3)
-        ];
-        state.creatorPlacedYaw = +worldAnchorGroup.rotation.y.toFixed(4);
-        state.creatorCompassAzimuth = Math.round(state.compassHeadingDeg || 0);
-        state.hasCreatorCustomAnchor = true;
-
-        document.getElementById('creatorArBtnLabel').textContent = 'SPOT FROZEN ✓';
-        document.getElementById('btnCreatorSnapHere').textContent = 'RE-AIM SPOT ↻';
-        document.getElementById('creatorFreezeHintText').textContent = 'SPOT FROZEN IN 3D // WALK AROUND OR TAP LOCK & ENCRYPT';
-        notify('SPOT FROZEN — WALK AROUND OR LOCK');
-      }
-
       document.getElementById('xrSurfaceHintPill').classList.add('hidden');
-      document.getElementById('arAngleReadout').textContent = 'FROZEN IN 3D SPACE // WALK 360°';
-      playSynthTone(1320, 0.1, 'triangle', 0.15);
+      document.getElementById('arAngleReadout').textContent = 'LOCKED IN 3D SPACE // WALK OR TURN 360°';
+      playSynthTone(1320, 0.08, 'triangle', 0.14);
     }
 
     async function startHardwareWebXrSession() {
-      if (!navigator.xr) {
-        return false;
-      }
+      if (!navigator.xr) return false;
       if (state.xrSession) return true;
 
       try {
         const supported = await navigator.xr.isSessionSupported('immersive-ar');
-        if (!supported) {
-          return false;
-        }
-
-        initThreeWorldLockedScene();
+        if (!supported) return false;
 
         const session = await navigator.xr.requestSession('immersive-ar', {
           requiredFeatures: ['hit-test'],
@@ -2402,7 +2434,6 @@
         state.xrSession = session;
         stopArCameraStream();
         document.getElementById('arFullscreenVideo').classList.add('hidden');
-        document.getElementById('btnStartHardwareXr').classList.add('hidden');
 
         threeRenderer.xr.setReferenceSpaceType('local-floor');
         await threeRenderer.xr.setSession(session);
@@ -2417,9 +2448,7 @@
         state.xrHitTestSource = await session.requestHitTestSource({ space: viewerSpace });
 
         session.addEventListener('select', () => {
-          if (!state.isWorldFrozen) {
-            freezeWorldAnchorNow();
-          }
+          if (!state.isWorldFrozen) freezeWorldAnchorNow(true);
         });
 
         session.addEventListener('end', () => {
@@ -2427,10 +2456,7 @@
           state.xrHitTestSource = null;
           state.xrAnchor = null;
           document.getElementById('arFullscreenVideo').classList.remove('hidden');
-          document.getElementById('btnStartHardwareXr').classList.remove('hidden');
-          if (state.activeView === 'ar') {
-            startFallbackCameraVideo();
-          }
+          if (state.activeView === 'ar') startFallbackCameraVideo();
         });
 
         return true;
@@ -2462,13 +2488,17 @@
     }
 
     // =========================================================================
-    // CREATOR AR PLACEMENT (ALWAYS STARTS FRESH UNFROZEN FOR NEW PLACEMENT!)
+    // CREATOR AR PLACEMENT & HUNTER EXACT-ANGLE AR LAUNCH
     // =========================================================================
     async function launchCreatorArPlacement() {
       const payloadData = validateCreatorInputs();
       if (!payloadData) return;
 
-      // Always reset freeze state when opening Creator AR Placement so it never shows an old frozen spot!
+      const rawPin = (document.getElementById('inputSecretPin').value || '').replace(/\D/g, '');
+      if (rawPin.length > 0 && rawPin.length !== 4) {
+        return notify('SECRET PIN MUST BE EXACTLY 4 DIGITS');
+      }
+
       state.arRole = 'creator';
       state.isUnlocked3D = false;
       state.isWorldFrozen = false;
@@ -2478,11 +2508,10 @@
       state.smoothedDeviceQuat = new THREE.Quaternion();
       state.targetInspectYaw = 0;
       state.targetInspectPitch = 0;
-      state.targetInspectDist = 1.0;
 
       document.getElementById('btnCreatorSnapHere').textContent = 'PLACE HERE ◎';
-      document.getElementById('creatorFreezeHintText').textContent = 'AIM AT FLOOR/TABLE & TAP "PLACE HERE ◎" TO FREEZE';
-      document.getElementById('arAngleReadout').textContent = 'AIMING // TAP PLACE HERE TO FREEZE';
+      document.getElementById('creatorFreezeHintText').textContent = 'TOUCH ANYWHERE ON CAMERA SCREEN TO PLACE & FREEZE';
+      document.getElementById('arAngleReadout').textContent = 'TOUCH SCREEN TO PLACE 3D OBJECT';
 
       switchView('ar');
 
@@ -2492,25 +2521,38 @@
       document.getElementById('silentBurnHairlineWrap').classList.add('hidden');
       document.getElementById('xrSurfaceHintPill').classList.remove('hidden');
 
-      const startedXr = await startHardwareWebXrSession();
-      if (!startedXr) {
-        await startFallbackCameraVideo();
-      }
+      await startFallbackCameraVideo();
+      notify('TOUCH SCREEN WHERE YOU WANT TO HIDE IT');
     }
 
     async function launchHunterArExperience() {
       state.arRole = 'hunter';
       state.isUnlocked3D = false;
-      state.isWorldFrozen = false;
+      state.isWorldFrozen = true;
       state.hunterStableHits = 0;
       state.xrAnchor = null;
       state.enteredPin = '';
       state.pinAttemptsRemaining = 3;
-      state.initialDeviceQuat = state.latestDeviceQuat ? state.latestDeviceQuat.clone() : null;
-      state.smoothedDeviceQuat = new THREE.Quaternion();
       state.targetInspectYaw = 0;
       state.targetInspectPitch = 0;
-      state.targetInspectDist = 1.0;
+
+      // CRITICAL FIX: Restore Creator's EXACT saved Quaternion (Compass + Tilt) so the object appears on the Door/Wall where Creator placed it, NOT on the Hunter's bed!
+      if (state.targetMeta && Array.isArray(state.targetMeta.placedQuat) && state.targetMeta.placedQuat.length === 4) {
+        state.initialDeviceQuat = new THREE.Quaternion(
+          state.targetMeta.placedQuat[0],
+          state.targetMeta.placedQuat[1],
+          state.targetMeta.placedQuat[2],
+          state.targetMeta.placedQuat[3]
+        );
+      } else if (state.targetMeta && typeof state.targetMeta.compassAzimuth === 'number') {
+        const savedAlpha = (360 - state.targetMeta.compassAzimuth) % 360;
+        const savedBeta = typeof state.targetMeta.pitchBeta === 'number' ? state.targetMeta.pitchBeta : 75;
+        const orientDeg = (window.screen && window.screen.orientation && window.screen.orientation.angle) || window.orientation || 0;
+        state.initialDeviceQuat = computeW3CQuaternion(savedAlpha, savedBeta, 0, orientDeg);
+      } else {
+        state.initialDeviceQuat = state.latestDeviceQuat ? state.latestDeviceQuat.clone() : null;
+      }
+      state.smoothedDeviceQuat = new THREE.Quaternion();
 
       updateAirPinSlotsUI();
       document.getElementById('arPinAttemptStatus').textContent = 'ENTER SECRET 4-DIGIT PIN TO UNLOCK 3D ARTIFACT';
@@ -2522,6 +2564,8 @@
       document.getElementById('arCreatorPlaceOverlay').classList.add('hidden');
       document.getElementById('silentBurnHairlineWrap').classList.add('hidden');
       document.getElementById('arStatusPill').classList.remove('hidden');
+      document.getElementById('xrSurfaceHintPill').classList.add('hidden');
+      document.getElementById('arAngleReadout').textContent = 'LOCKED AT CREATOR SPOT // AIM CAMERA';
 
       const requiresPin = state.targetMeta && state.targetMeta.requiresPin;
       if (requiresPin) {
@@ -2532,17 +2576,11 @@
         document.getElementById('arNoPinTapOverlay').classList.remove('hidden');
       }
 
-      const startedXr = await startHardwareWebXrSession();
-      if (!startedXr) {
-        // In Tier-2 World-Space Gyro Mode, lock reference quaternion immediately so object stays world-locked!
-        state.isWorldFrozen = true;
-        document.getElementById('arAngleReadout').textContent = 'WORLD-LOCKED 3D AR // WALK 360°';
-        await startFallbackCameraVideo();
-      }
+      await startFallbackCameraVideo();
     }
 
     // =========================================================================
-    // SECRET PIN VERIFICATION, 3-STRIKE BURN & 18S 3D UNBOX CLIMAX
+    // SECRET PIN VERIFICATION, 3-STRIKE BURN & CLEAN 18S UNBOX
     // =========================================================================
     function updateAirPinSlotsUI() {
       for (let i = 0; i < 4; i++) {
@@ -2619,7 +2657,6 @@
         return;
       }
 
-      // Immediately detach metaRef listener so our own claim/burn NEVER triggers [ INTERCEPTED ]!
       if (state.metaRef) {
         try { state.metaRef.off(); } catch (e) {}
         state.metaRef = null;
@@ -2655,7 +2692,6 @@
           return showDestroyedView('[ LINK DESTROYED ]', 'VAULT PAYLOAD ALREADY BURNED.');
         }
 
-        // First unwrap wrappedKeyToken via PBKDF2(id + verifiedPinStr), falling back to state.keyIv if needed
         let resolvedKeyIv = null;
         if (vault.wrappedKeyToken) {
           resolvedKeyIv = await unwrapKeyIvFromVault(vault.wrappedKeyToken, id, verifiedPinStr);
@@ -2670,7 +2706,7 @@
 
         state.isUnlocked3D = true;
         state.isWorldFrozen = true;
-        state.unboxAnimProgress = 0.05;
+        state.unboxAnimProgress = 0.08;
         state.isUnboxing = true;
         playSynthTone(1567.98, 0.22, 'triangle', 0.16);
 
@@ -2685,29 +2721,25 @@
         } else if (secret.type === 'audio') {
           playDirectWebAudio(secret.data);
         } else if (secret.type === 'image') {
-          if (artifactMeshGroup && hoverFloatGroup) {
-            hoverFloatGroup.remove(artifactMeshGroup);
-            artifactMeshGroup = null;
-          }
+          clearHoverFloatChildren();
           const img = new Image();
           img.onload = () => {
             const tex = new THREE.Texture(img);
             tex.needsUpdate = true;
             const aspect = (img.width || 4) / (img.height || 3);
-            const w = Math.min(1.1, 0.72 * aspect);
+            const w = Math.min(0.56, 0.42 * aspect);
             const h = w / aspect;
             const frameMat = new THREE.MeshStandardMaterial({ color: 0x14141a, roughness: 0.3, metalness: 0.8 });
             const photoMat = new THREE.MeshBasicMaterial({ map: tex });
-            const boxGeo = new THREE.BoxGeometry(w, h, 0.045);
-            unlockedContentGroup = new THREE.Mesh(boxGeo, [frameMat, frameMat, frameMat, frameMat, photoMat, photoMat]);
-            unlockedContentGroup.position.set(0, 0.36, 0);
-            unlockedContentGroup.castShadow = true;
-            hoverFloatGroup.add(unlockedContentGroup);
+            const boxGeo = new THREE.BoxGeometry(w, h, 0.032);
+            const photoMesh = new THREE.Mesh(boxGeo, [frameMat, frameMat, frameMat, frameMat, photoMat, photoMat]);
+            photoMesh.position.set(0, 0.28, 0);
+            photoMesh.castShadow = true;
+            hoverFloatGroup.add(photoMesh);
           };
           img.src = secret.data;
         }
 
-        // Wipe vault from Firebase in background while keeping 3D projection alive for full 18s!
         await destroyStashAndInvalidateLinkForever(id);
 
         let remainingMs = 18000;
@@ -2745,6 +2777,9 @@
         state.compassHeadingDeg = e.webkitCompassHeading;
       } else if (typeof e.alpha === 'number') {
         state.compassHeadingDeg = (360 - e.alpha) % 360;
+      }
+      if (typeof e.beta === 'number') {
+        state.deviceBetaDeg = e.beta;
       }
 
       if (typeof e.alpha === 'number') {
@@ -2914,17 +2949,19 @@
         notify('RE-PINNING EXACT SATELLITE FIX');
       });
 
+      // Single Main Button on Drop Screen -> Opens AR Camera for Finger Touch Placement!
       document.getElementById('btnCreatorPlaceAr').addEventListener('click', launchCreatorArPlacement);
+      document.getElementById('btnLockStashMain').addEventListener('click', launchCreatorArPlacement);
+
       document.getElementById('btnCreatorSnapHere').addEventListener('click', (e) => {
         e.stopPropagation();
-        freezeWorldAnchorNow();
+        freezeWorldAnchorNow(false);
       });
       document.getElementById('btnCreatorConfirmLock').addEventListener('click', (e) => {
         e.stopPropagation();
-        if (!state.isWorldFrozen) freezeWorldAnchorNow();
+        if (!state.isWorldFrozen) freezeWorldAnchorNow(true);
         lockStashToFirebase();
       });
-      document.getElementById('btnLockStashMain').addEventListener('click', lockStashToFirebase);
 
       document.getElementById('btnCopyLink').addEventListener('click', copyGeneratedLinkCleanly);
 
@@ -2974,44 +3011,44 @@
         unlockAndProjectPure3DText('');
       });
 
+      // Touch-to-Place in Creator Mode & 360° Inspect in Hunter Mode
       const mount = document.getElementById('threeArMount');
-      let dragging = false, lx = 0, ly = 0, pinchDist = null;
+      let dragging = false, lx = 0, ly = 0;
 
       mount.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
-          dragging = true;
-          lx = e.touches[0].clientX;
-          ly = e.touches[0].clientY;
-        } else if (e.touches.length === 2) {
-          dragging = false;
-          pinchDist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
+          const tx = e.touches[0].clientX;
+          const ty = e.touches[0].clientY;
+          if (state.arRole === 'creator') {
+            placeCreatorObjectAtScreenPoint(tx, ty);
+            dragging = true;
+          } else {
+            dragging = true;
+            lx = tx;
+            ly = ty;
+          }
         }
       }, { passive: true });
 
       mount.addEventListener('touchmove', (e) => {
         if (e.touches.length === 1 && dragging) {
-          const dx = e.touches[0].clientX - lx;
-          const dy = e.touches[0].clientY - ly;
-          state.targetInspectYaw += dx * 0.012;
-          state.targetInspectPitch = Math.max(-0.8, Math.min(0.8, state.targetInspectPitch + dy * 0.008));
-          lx = e.touches[0].clientX;
-          ly = e.touches[0].clientY;
-        } else if (e.touches.length === 2 && pinchDist) {
-          const d = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-          state.targetInspectDist = Math.max(0.55, Math.min(2.2, state.targetInspectDist + (d - pinchDist) * 0.004));
-          pinchDist = d;
+          const tx = e.touches[0].clientX;
+          const ty = e.touches[0].clientY;
+          if (state.arRole === 'creator') {
+            placeCreatorObjectAtScreenPoint(tx, ty);
+          } else {
+            const dx = tx - lx;
+            const dy = ty - ly;
+            state.targetInspectYaw += dx * 0.012;
+            state.targetInspectPitch = Math.max(-0.7, Math.min(0.7, state.targetInspectPitch + dy * 0.008));
+            lx = tx;
+            ly = ty;
+          }
         }
       }, { passive: true });
 
       mount.addEventListener('touchend', () => {
         dragging = false;
-        pinchDist = null;
       });
 
       let mDown = false, mx = 0, my = 0;
@@ -3019,13 +3056,20 @@
         mDown = true;
         mx = e.clientX;
         my = e.clientY;
+        if (state.arRole === 'creator') {
+          placeCreatorObjectAtScreenPoint(mx, my);
+        }
       });
       window.addEventListener('mousemove', (e) => {
         if (!mDown || state.activeView !== 'ar') return;
-        state.targetInspectYaw += (e.clientX - mx) * 0.01;
-        state.targetInspectPitch = Math.max(-0.8, Math.min(0.8, state.targetInspectPitch + (e.clientY - my) * 0.008));
-        mx = e.clientX;
-        my = e.clientY;
+        if (state.arRole === 'creator') {
+          placeCreatorObjectAtScreenPoint(e.clientX, e.clientY);
+        } else {
+          state.targetInspectYaw += (e.clientX - mx) * 0.01;
+          state.targetInspectPitch = Math.max(-0.7, Math.min(0.7, state.targetInspectPitch + (e.clientY - my) * 0.008));
+          mx = e.clientX;
+          my = e.clientY;
+        }
       });
       window.addEventListener('mouseup', () => { mDown = false; });
 
