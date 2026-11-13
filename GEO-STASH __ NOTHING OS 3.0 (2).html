@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>GEO-STASH // NOTHING OS 3.0</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-app-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-database-compat.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -webkit-touch-callout: none !important;
+    }
+    input, textarea {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
+    ::selection {
+      background: rgba(215, 25, 33, 0.35);
+      color: #ffffff;
+    }
+    :root {
+      --n-black: #000000;
+      --n-surface: #0a0a0d;
+      --n-border: #1f1f26;
+      --n-white: #f5f5f7;
+      --n-muted: #71717a;
+      --n-red: #d71921;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--n-black);
+      color: var(--n-white);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+    }
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.06em;
+    }
+    .font-dot {
+      font-family: 'DotGothic16', monospace;
+      letter-spacing: 0.08em;
+    }
+    .font-mono-tech {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .dot-matrix-bg {
+      background-color: #000000;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.075) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+    .n-card {
+      background: #09090c;
+      border: 1px solid #1e1e24;
+    }
+    .n-btn-red {
+      background: var(--n-red);
+      color: #ffffff;
+      box-shadow: 0 0 26px rgba(215, 25, 33, 0.32);
+    }
+    .n-btn-red:active {
+      transform: scale(0.97);
+    }
+    .n-btn-white {
+      background: var(--n-white);
+      color: #000000;
+    }
+    .n-btn-white:active {
+      transform: scale(0.97);
+    }
+    @keyframes redPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.88); }
+    }
+    .dot-pulse {
+      animation: redPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-9px); }
+      40% { transform: translateX(9px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+    .shake-anim {
+      animation: shakeError 0.32s ease-in-out;
+    }
+    .air-key-btn {
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 22px rgba(0, 0, 0, 0.9);
+      transition: transform 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+    }
+    .air-key-btn:active {
+      transform: scale(1.22);
+      color: #d71921;
+    }
+  </style>
+</head>
+<body class="dot-matrix-bg min-h-screen flex flex-col justify-between" oncontextmenu="return false;">
+
+  <!-- ===================================================================== -->
+  <!-- TOP NOTHING OS 3.0 HEADER                                             -->
+  <!-- ===================================================================== -->
+  <header id="mainTopBar" class="w-full max-w-md mx-auto px-5 pt-5 pb-2 flex items-center justify-between z-30">
+    <div class="flex items-center gap-2.5">
+      <span class="w-2.5 h-2.5 rounded-full bg-[#d71921] dot-pulse"></span>
+      <span class="font-dot text-lg tracking-widest text-white">GEO//STASH</span>
+    </div>
+
+    <div class="flex items-center gap-1.5">
+      <button id="btnModeDrop" type="button" class="px-3.5 py-1.5 rounded-full text-[11px] font-display font-bold tracking-wider bg-white text-black transition">
+        DROP
+      </button>
+      <button id="btnModeHunt" type="button" class="px-3.5 py-1.5 rounded-full text-[11px] font-display font-semibold tracking-wider bg-[#111116] text-zinc-400 border border-zinc-800 transition">
+        HUNT
+      </button>
+      <button id="btnToggleStealthAudio" type="button" class="px-3 py-1.5 rounded-full text-[11px] font-mono-tech bg-[#111116] text-white border border-zinc-800 transition">
+        BEEP: ON
+      </button>
+    </div>
+  </header>
+
+  <!-- Floating Status Toast -->
+  <div id="toastPill" class="hidden fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-zinc-950/95 border border-zinc-700 text-white px-4 py-2 rounded-full text-xs font-mono-tech tracking-wide shadow-2xl flex items-center gap-2.5 whitespace-nowrap pointer-events-none">
+    <span class="w-2 h-2 rounded-full bg-[#d71921]"></span>
+    <span id="toastText">READY</span>
+  </div>
+
+  <!-- In-App Browser Notice -->
+  <div id="webviewAlert" class="hidden max-w-md mx-auto px-5 pt-2">
+    <div class="px-3 py-2 rounded-xl bg-[#d71921]/15 border border-[#d71921] text-[11px] font-mono-tech text-white text-center">
+      OPEN IN SYSTEM BROWSER (CHROME / SAFARI) FOR FULL 3D AR &amp; SENSORS.
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 1: DROP MODE (ALWAYS-HOT KALMAN GPS + SECRET PIN + CLUE)         -->
+  <!-- ===================================================================== -->
+  <main id="viewDropMode" class="flex-1 w-full max-w-md mx-auto px-5 py-3 flex flex-col justify-between gap-4">
+
+    <!-- 1-Line Always-Hot Kalman GPS Lock Pill -->
+    <div class="n-card rounded-full px-4 py-2.5 flex items-center justify-between text-xs font-mono-tech">
+      <div class="flex items-center gap-2">
+        <span id="gpsLockDot" class="w-2 h-2 rounded-full bg-[#d71921] dot-pulse"></span>
+        <span id="gpsStatusShort" class="text-zinc-300 text-[11px]">HOT GPS LOCKING...</span>
+      </div>
+      <button id="btnResampleGps" type="button" class="text-[11px] text-zinc-400 hover:text-white">
+        <span id="gpsAccShort">±--M</span> ↻
+      </button>
+    </div>
+
+    <!-- Main Composer Stack -->
+    <div class="space-y-3.5 my-auto">
+      <div class="text-center space-y-0.5">
+        <h1 class="font-display font-bold text-2xl text-white tracking-wider uppercase">LOCK PHYSICAL DROP</h1>
+        <p class="font-mono-tech text-[10px] text-zinc-500 tracking-widest uppercase">KALMAN PIN-POINT GPS // OPTICAL-FLOW 3D AR</p>
+      </div>
+
+      <!-- 3 Mode Pills -->
+      <div class="grid grid-cols-3 gap-1.5 p-1 rounded-full bg-[#09090c] border border-zinc-800/90 text-xs font-display font-bold">
+        <button id="tabQuote" type="button" class="py-2 rounded-full bg-white text-black tracking-wider transition">
+          3D TEXT
+        </button>
+        <button id="tabVoice" type="button" class="py-2 rounded-full text-zinc-400 hover:text-white tracking-wider transition">
+          VOICE
+        </button>
+        <button id="tabPhoto" type="button" class="py-2 rounded-full text-zinc-400 hover:text-white tracking-wider transition">
+          PHOTO
+        </button>
+      </div>
+
+      <!-- Surface 1: 3D TEXT -->
+      <div id="surfaceQuote" class="space-y-1.5">
+        <textarea id="inputSecretQuote" rows="3" maxlength="240"
+          class="w-full rounded-2xl bg-[#08080b] border border-zinc-800 focus:border-white p-3.5 font-mono-tech text-sm text-white placeholder-zinc-600 leading-relaxed transition"
+          placeholder="Write your secret note (renders in solid 360° 3D geometry)..."></textarea>
+        <div class="flex justify-between px-1 font-mono-tech text-[10px] text-zinc-500">
+          <span>SOLID 3D EXTRUDED MESH</span>
+          <span id="charCountLabel">0 / 240</span>
+        </div>
+      </div>
+
+      <!-- Surface 2: VOICE (Single-Stream Echo-Free Recorder) -->
+      <div id="surfaceVoice" class="hidden">
+        <div class="rounded-2xl bg-[#08080b] border border-zinc-800 p-4 text-center space-y-3">
+          <div class="flex justify-between font-mono-tech text-[11px] text-zinc-400">
+            <span id="voiceMimeTag">CLEAN MONO STREAM</span>
+            <span id="voiceTimeTag" class="text-white font-bold">00:00 / 00:30</span>
+          </div>
+          <canvas id="voiceWaveCanvas" width="360" height="52" class="w-full h-12 bg-black rounded-xl border border-zinc-900"></canvas>
+          <div class="flex items-center justify-center gap-2.5 font-display font-bold text-xs">
+            <button id="btnRecordVoiceToggle" type="button" class="px-5 py-2.5 rounded-full n-btn-red tracking-wider flex items-center gap-2 transition">
+              <span id="recDotIndicator" class="w-2 h-2 rounded-full bg-white"></span>
+              <span id="btnRecordVoiceLabel">START RECORDING</span>
+            </button>
+            <button id="btnPreviewVoice" type="button" disabled class="px-4 py-2.5 rounded-full bg-zinc-900 text-zinc-200 border border-zinc-700 disabled:opacity-30 tracking-wider">
+              PLAY ONCE
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Surface 3: PHOTO (1080p Auto-Compressor) -->
+      <div id="surfacePhoto" class="hidden">
+        <div class="rounded-2xl bg-[#08080b] border border-zinc-800 p-4 text-center space-y-3">
+          <label class="w-full py-4 rounded-xl border border-dashed border-zinc-700 hover:border-white cursor-pointer flex flex-col items-center justify-center gap-1 transition">
+            <span class="font-display font-bold text-xs text-white tracking-wider uppercase">SELECT OR CAPTURE PHOTO</span>
+            <span id="photoSizeSubtext" class="font-mono-tech text-[10px] text-zinc-500">AUTO-RESIZED TO MAX 1080P JPEG</span>
+            <input id="inputPhotoFile" type="file" accept="image/*" class="hidden" />
+          </label>
+          <img id="imgCompressedPreview" alt="Preview" class="hidden max-h-28 mx-auto rounded-xl border border-zinc-800" />
+        </div>
+      </div>
+
+      <!-- Secret 4-Digit PIN + Optional Radar Clue Row -->
+      <div class="grid grid-cols-12 gap-2">
+        <div class="col-span-5 n-card rounded-2xl p-3 flex flex-col justify-between">
+          <label for="inputSecretPin" class="font-display font-bold text-[10px] text-zinc-400 tracking-wider uppercase">
+            SECRET PIN (4 DIGITS)
+          </label>
+          <input id="inputSecretPin" type="password" inputmode="numeric" maxlength="4" placeholder="e.g. 4580"
+            class="mt-1 w-full bg-black border border-zinc-800 focus:border-[#d71921] rounded-xl px-2.5 py-1.5 text-center font-mono-tech font-bold text-sm text-white tracking-widest placeholder-zinc-600" />
+        </div>
+        <div class="col-span-7 n-card rounded-2xl p-3 flex flex-col justify-between">
+          <label for="inputRadarClue" class="font-display font-bold text-[10px] text-zinc-400 tracking-wider uppercase">
+            RADAR CLUE (OPTIONAL)
+          </label>
+          <input id="inputRadarClue" type="text" maxlength="60" placeholder="Near red postbox..."
+            class="mt-1 w-full bg-black border border-zinc-800 focus:border-white rounded-xl px-3 py-1.5 font-mono-tech text-xs text-white placeholder-zinc-600" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Action & Zero-Highlight Share Card -->
+    <div class="space-y-3 pb-2">
+      <button id="btnLockStashMain" type="button" class="w-full py-4 rounded-full n-btn-red font-display font-bold text-sm tracking-widest uppercase transition">
+        ENCRYPT &amp; LOCK DEAD-DROP
+      </button>
+
+      <!-- Share Sheet (Non-Selectable URL Div = Zero Blue Highlight!) -->
+      <div id="shareResultSheet" class="hidden rounded-3xl bg-[#0a0a0e] border border-zinc-800 p-4 space-y-3">
+        <div class="flex items-center justify-between font-mono-tech text-[11px]">
+          <span class="text-[#d71921] font-bold">● STASH ARMED IN FIREBASE</span>
+          <span id="sharePinNotice" class="text-zinc-400">PIN LOCKED (3-STRIKE BURN)</span>
+        </div>
+
+        <div id="displayGeneratedUrl"
+          class="w-full bg-black border border-zinc-800/90 rounded-full px-3.5 py-2 font-mono-tech text-[11px] text-zinc-300 truncate pointer-events-none">
+          https://...
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 font-display font-bold text-xs">
+          <button id="btnCopyLink" type="button" class="py-2.5 rounded-full n-btn-white tracking-wider transition">
+            COPY LINK
+          </button>
+          <button id="btnWhatsappLink" type="button" class="py-2.5 rounded-full bg-zinc-900 text-white border border-zinc-700 tracking-wider transition">
+            WHATSAPP
+          </button>
+          <button id="btnTestHuntDirect" type="button" class="py-2.5 rounded-full n-btn-red tracking-wider transition">
+            HUNT →
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 2: HIGH-DPI AVIONICS RADAR (NO PIN SHOWN OUTSIDE 10M!)           -->
+  <!-- ===================================================================== -->
+  <main id="viewHuntRadar" class="hidden flex-1 w-full max-w-md mx-auto px-5 py-3 flex flex-col justify-between items-center">
+
+    <!-- Paste Link Bar -->
+    <div class="w-full flex items-center gap-2">
+      <input id="inputPasteHuntUrl" type="text" placeholder="Paste Geo-Stash Link (?id=...#KEY)"
+        class="flex-1 bg-[#09090c] border border-zinc-800 rounded-full px-4 py-2 font-mono-tech text-xs text-white placeholder-zinc-600" />
+      <button id="btnGoHuntUrl" type="button" class="px-4 py-2 rounded-full bg-white text-black font-display font-bold text-xs tracking-wider">
+        TRACK
+      </button>
+    </div>
+
+    <!-- Public Radar Clue Banner -->
+    <div id="radarCluePill" class="hidden w-full n-card rounded-2xl px-4 py-2 text-center">
+      <span class="font-display font-bold text-[10px] text-[#d71921] uppercase tracking-wider">CLUE: </span>
+      <span id="radarClueText" class="font-mono-tech text-xs text-zinc-200"></span>
+    </div>
+
+    <!-- High-DPI Super-Sampled Avionics Radar -->
+    <div class="relative flex flex-col items-center justify-center my-auto py-1">
+      <div id="radarSignalLost" class="hidden absolute inset-0 z-20 bg-black/90 rounded-full flex flex-col items-center justify-center text-center p-6">
+        <div class="font-dot text-lg text-[#d71921] tracking-widest">SIGNAL LOST</div>
+        <p class="font-mono-tech text-[11px] text-zinc-400 mt-1">CALIBRATING SATELLITES...</p>
+      </div>
+
+      <div class="relative w-[300px] h-[300px] flex items-center justify-center">
+        <canvas id="avionicsRadarCanvas" class="w-[300px] h-[300px] rounded-full"></canvas>
+      </div>
+
+      <!-- Distance & Bearing Readouts -->
+      <div class="text-center mt-3 space-y-1.5">
+        <div class="flex items-baseline justify-center gap-2">
+          <span id="radarBigDistance" class="font-dot text-5xl text-white tracking-wider">---.-</span>
+          <span class="font-dot text-lg text-[#d71921]">M</span>
+        </div>
+        <div class="inline-flex items-center gap-3 px-4 py-1 rounded-full bg-[#09090c] border border-zinc-800 font-mono-tech text-[11px] text-zinc-400">
+          <span id="radarBearingText" class="text-white">BRG ---°</span>
+          <span class="text-zinc-700">|</span>
+          <span id="radarHeadingText">HDG ---°</span>
+          <span class="text-zinc-700">|</span>
+          <span id="radarAccText" class="text-[#d71921]">±--M</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Hint -->
+    <div class="w-full text-center pb-2">
+      <div class="font-display font-semibold text-[11px] text-zinc-500 tracking-wider uppercase">
+        ENTER 10M ZONE TO ENGAGE 3D ARTIFACT &amp; SECRET PIN LOCK
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 3: FULLSCREEN OPTICAL-FLOW SLAM + GYRO FUSION 3D AR CAMERA       -->
+  <!-- ===================================================================== -->
+  <section id="viewArCamera" class="hidden fixed inset-0 z-50 bg-black overflow-hidden">
+    <!-- Fullscreen Back Camera Feed -->
+    <video id="arFullscreenVideo" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover"></video>
+
+    <!-- Silent 2px Burn Progress Hairline at Very Top Edge -->
+    <div id="silentBurnHairlineWrap" class="hidden absolute top-0 left-0 right-0 h-1 bg-black/50 z-40">
+      <div id="silentBurnHairlineFill" class="h-full bg-[#d71921] transition-all duration-100" style="width: 100%"></div>
+    </div>
+
+    <!-- Three.js WebGL World-Pinned Free-Look Viewport -->
+    <div id="threeArMount" class="absolute inset-0 w-full h-full z-10"></div>
+
+    <!-- Minimal Top Camera Controls -->
+    <div id="arTopChrome" class="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none">
+      <div id="arStatusPill" class="px-3.5 py-1.5 rounded-full bg-black/65 backdrop-blur-md border border-white/15 flex items-center gap-2 pointer-events-auto">
+        <span class="w-2 h-2 rounded-full bg-[#d71921] dot-pulse"></span>
+        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">SLAM LOCKED // 000° FRONT</span>
+      </div>
+
+      <div class="flex items-center gap-1.5 pointer-events-auto">
+        <button id="btnResetCameraOrbit" type="button" class="px-3 py-1.5 rounded-full bg-black/65 backdrop-blur-md border border-white/20 font-display font-bold text-[10px] text-white tracking-wider">
+          RE-PIN HERE
+        </button>
+        <button id="btnCloseArView" type="button" class="w-8 h-8 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-white text-xs flex items-center justify-center">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- ON-ARTIFACT 0-9 SECRET PIN LOCK (ONLY VISIBLE WHEN AIMED AT SPOT!)  -->
+    <!-- =================================================================== -->
+    <div id="arSecretPinLockOverlay" class="hidden absolute inset-x-0 bottom-5 z-30 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-150">
+      <div id="arPinAttemptStatus" class="font-display font-bold text-[11px] text-white tracking-widest uppercase mb-1.5 air-key-btn">
+        ENTER SECRET 4-DIGIT PIN ON ARTIFACT
+      </div>
+
+      <div id="airPinSlotsRow" class="flex items-center gap-4 mb-3 pointer-events-none">
+        <span id="pinSlot0" class="font-mono-tech font-bold text-2xl text-white border-b-2 border-white/60 w-7 text-center pb-0.5 air-key-btn">_</span>
+        <span id="pinSlot1" class="font-mono-tech font-bold text-2xl text-white border-b-2 border-white/60 w-7 text-center pb-0.5 air-key-btn">_</span>
+        <span id="pinSlot2" class="font-mono-tech font-bold text-2xl text-white border-b-2 border-white/60 w-7 text-center pb-0.5 air-key-btn">_</span>
+        <span id="pinSlot3" class="font-mono-tech font-bold text-2xl text-white border-b-2 border-white/60 w-7 text-center pb-0.5 air-key-btn">_</span>
+      </div>
+
+      <div class="grid grid-cols-5 gap-x-4 gap-y-2 pointer-events-auto px-4 py-1">
+        <button type="button" data-digit="1" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">1</button>
+        <button type="button" data-digit="2" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">2</button>
+        <button type="button" data-digit="3" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">3</button>
+        <button type="button" data-digit="4" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">4</button>
+        <button type="button" data-digit="5" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">5</button>
+        <button type="button" data-digit="6" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">6</button>
+        <button type="button" data-digit="7" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">7</button>
+        <button type="button" data-digit="8" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">8</button>
+        <button type="button" data-digit="9" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">9</button>
+        <button type="button" data-digit="0" class="air-key-btn font-mono-tech font-bold text-xl text-white w-11 h-10 rounded-full border border-white/25 bg-black/45 backdrop-blur-sm flex items-center justify-center">0</button>
+      </div>
+
+      <div class="flex items-center gap-4 mt-1.5 pointer-events-auto">
+        <button id="btnClearAirPin" type="button" class="air-key-btn font-display font-bold text-[11px] text-zinc-300 tracking-widest px-3 py-1">
+          [ CLEAR ]
+        </button>
+      </div>
+    </div>
+
+    <!-- Single-Tap Unlock Button (Used Only When Stash Has No PIN Set) -->
+    <div id="arNoPinTapOverlay" class="hidden absolute inset-x-0 bottom-8 z-30 flex justify-center pointer-events-none transition-opacity duration-150">
+      <button id="btnTapOpenNoPin" type="button" class="pointer-events-auto px-6 py-3 rounded-full n-btn-red font-display font-bold text-xs tracking-widest uppercase">
+        UNLOCK 3D ARTIFACT
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 4: PITCH-BLACK DESTROYED SCREEN                                  -->
+  <!-- ===================================================================== -->
+  <section id="viewDestroyedBlackout" class="hidden fixed inset-0 z-50 bg-black dot-matrix-bg flex flex-col items-center justify-center p-6 text-center">
+    <div class="space-y-4 max-w-sm">
+      <div class="w-3 h-3 rounded-full bg-[#d71921] mx-auto"></div>
+      <div id="destroyedMainTitle" class="font-dot text-3xl text-white tracking-widest">
+        [ ARTIFACT DESTROYED ]
+      </div>
+      <p id="destroyedSubMsg" class="font-mono-tech text-xs text-zinc-400 leading-relaxed">
+        LINK &amp; PAYLOAD PERMANENTLY WIPED FROM FIREBASE.
+      </p>
+      <div class="pt-4">
+        <button id="btnBackToNewDrop" type="button" class="px-6 py-3 rounded-full n-btn-white font-display font-bold text-xs tracking-widest uppercase">
+          + CREATE NEW DROP
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- MASTER PRODUCTION ENGINE (KALMAN GPS + OPTICAL-FLOW SLAM + 3D AR)     -->
+  <!-- ===================================================================== -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYdnJBeGDteeevqKU-qs6B1kByBz9V6Q4",
+      authDomain: "tagtag-e1e01.firebaseapp.com",
+      databaseURL: "https://tagtag-e1e01-default-rtdb.firebaseio.com",
+      projectId: "tagtag-e1e01",
+      storageBucket: "tagtag-e1e01.firebasestorage.app",
+      messagingSenderId: "205481785807",
+      appId: "1:205481785807:web:0e42e0e8850ad9b24c7aba",
+      measurementId: "G-29XH1PK62N"
+    };
+
+    let db = null;
+    try {
+      if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+      }
+    } catch (e) {}
+
+    function safeGetLocal(key, fallback) {
+      try {
+        const v = localStorage.getItem(key);
+        return v ? JSON.parse(v) : fallback;
+      } catch (e) { return fallback; }
+    }
+    function safeSetLocal(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+    }
+
+    const state = {
+      activeView: 'drop',
+      mediaType: 'text',
+      voiceBase64: null,
+      voiceMime: 'audio/webm',
+      imageBase64: null,
+
+      // Always-Hot Persistent Kalman GPS State
+      masterGpsWatchId: null,
+      lockedGps: null,
+      kalmanLat: null,
+      kalmanLng: null,
+      kalmanVar: 100,
+      bestGpsAcc: Infinity,
+      rejectedOutliers: 0,
+
+      stashId: null,
+      keyIv: null,
+      generatedShareUrl: '',
+      targetMeta: null,
+      metaRef: null,
+      localMetaCache: safeGetLocal('gs_meta_v3', {}),
+      localVaultCache: safeGetLocal('gs_vault_v3', {}),
+      burnedStashIds: safeGetLocal('gs_burned_v3', {}),
+      hunterToken: 'H-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+
+      stealthMuted: false,
+      lastSonarPingTime: 0,
+
+      distanceMeters: null,
+      targetBearingDeg: 0,
+      compassHeadingDeg: 0,
+      latestAccuracy: 12,
+
+      // Hybrid Sensor Fusion + Real-Time Camera Optical-Flow SLAM State
+      hasHardwareGyro: false,
+      devAlpha: 0,
+      devBeta: 90,
+      devGamma: 0,
+      screenOrientDeg: 0,
+      baseGyroAlpha: null,
+      baseGyroBeta: null,
+
+      // Live Camera Video Optical-Flow State (Works 100% Even When Iframe Blocks Gyro!)
+      camYawRad: 0,          // Camera Left/Right Free-Look Angle (Turns away -> Artifact goes off-screen!)
+      camPitchRad: 0,        // Camera Up/Down Free-Look Angle (Tilts away -> Artifact goes off-screen!)
+      camLateralX: 0,        // 6-DoF Camera Left/Right Parallax Walk
+      camForwardZ: 0,        // 6-DoF Camera Forward/Back Walk
+      prevFlowGray: null,
+
+      // 4-Sided 360° Inspection Rotation & Zoom While Aimed at the World-Pinned Spot
+      touchOrbitYawRad: 0,
+      touchOrbitPitchRad: 0,
+      cameraOrbitRadius: 2.35,
+
+      enteredPin: '',
+      pinAttemptsRemaining: 3,
+      isClaiming: false,
+      isUnlocked3D: false,
+      glitchFrames: 0,
+      burnTimerId: null,
+
+      arVideoStream: null,
+      radarAnimId: null,
+      threeAnimId: null,
+      micAnimId: null,
+      audioCtx: null,
+      activeAudioSource: null,
+      isRecording: false,
+      mediaRecorder: null,
+      recChunks: [],
+      recInterval: null,
+      micStream: null,
+      loadedThreeFont: null
+    };
+
+    function notify(msg) {
+      const pill = document.getElementById('toastPill');
+      const txt = document.getElementById('toastText');
+      if (!pill || !txt) return;
+      txt.textContent = msg.toUpperCase();
+      pill.classList.remove('hidden');
+      clearTimeout(pill._t);
+      pill._t = setTimeout(() => pill.classList.add('hidden'), 3000);
+    }
+
+    function preloadThreeVectorFont() {
+      if (typeof THREE === 'undefined' || !THREE.FontLoader) return;
+      const loader = new THREE.FontLoader();
+      loader.load(
+        'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_bold.typeface.json',
+        (font) => {
+          state.loadedThreeFont = font;
+        }
+      );
+    }
+
+    function playSynthTone(freq, durationSec, type = 'sine', gainVal = 0.12) {
+      if (state.stealthMuted) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!state.audioCtx) state.audioCtx = new AudioCtx();
+        if (state.audioCtx.state === 'suspended') state.audioCtx.resume();
+        const osc = state.audioCtx.createOscillator();
+        const gain = state.audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, state.audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, state.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + durationSec);
+        osc.connect(gain);
+        gain.connect(state.audioCtx.destination);
+        osc.start();
+        osc.stop(state.audioCtx.currentTime + durationSec);
+      } catch (e) {}
+    }
+
+    function triggerProximitySonarPulse(distMeters) {
+      if (state.stealthMuted || state.activeView !== 'radar' || distMeters === null) return;
+      const now = Date.now();
+      const intervalMs = Math.max(280, Math.min(2200, distMeters * 35));
+      if (now - state.lastSonarPingTime >= intervalMs) {
+        state.lastSonarPingTime = now;
+        const pitch = distMeters <= 12 ? 1320 : distMeters <= 25 ? 980 : 660;
+        playSynthTone(pitch, 0.07, 'sine', 0.09);
+        if (navigator.vibrate) {
+          try { navigator.vibrate(distMeters <= 12 ? 40 : 18); } catch (e) {}
+        }
+      }
+    }
+
+    function switchView(viewName) {
+      state.activeView = viewName;
+      cancelAnimationFrame(state.radarAnimId);
+      cancelAnimationFrame(state.threeAnimId);
+
+      const topBar = document.getElementById('mainTopBar');
+      const vDrop = document.getElementById('viewDropMode');
+      const vRadar = document.getElementById('viewHuntRadar');
+      const vAr = document.getElementById('viewArCamera');
+      const vDest = document.getElementById('viewDestroyedBlackout');
+      const btnDrop = document.getElementById('btnModeDrop');
+      const btnHunt = document.getElementById('btnModeHunt');
+
+      vDrop.classList.add('hidden');
+      vRadar.classList.add('hidden');
+      vAr.classList.add('hidden');
+      vDest.classList.add('hidden');
+
+      if (viewName !== 'ar') {
+        topBar.classList.remove('hidden');
+        stopArCameraStream();
+      } else {
+        topBar.classList.add('hidden');
+      }
+
+      if (viewName === 'drop') {
+        vDrop.classList.remove('hidden');
+        btnDrop.className = 'px-3.5 py-1.5 rounded-full text-[11px] font-display font-bold tracking-wider bg-white text-black transition';
+        btnHunt.className = 'px-3.5 py-1.5 rounded-full text-[11px] font-display font-semibold tracking-wider bg-[#111116] text-zinc-400 border border-zinc-800 transition';
+      } else if (viewName === 'radar') {
+        vRadar.classList.remove('hidden');
+        btnHunt.className = 'px-3.5 py-1.5 rounded-full text-[11px] font-display font-bold tracking-wider bg-white text-black transition';
+        btnDrop.className = 'px-3.5 py-1.5 rounded-full text-[11px] font-display font-semibold tracking-wider bg-[#111116] text-zinc-400 border border-zinc-800 transition';
+        startAvionicsRadarLoop();
+      } else if (viewName === 'ar') {
+        vAr.classList.remove('hidden');
+        initAndStartThreeArScene();
+      } else if (viewName === 'destroyed') {
+        vDest.classList.remove('hidden');
+      }
+    }
+
+    function bufToB64Url(buf) {
+      const bytes = new Uint8Array(buf);
+      let bin = '';
+      for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
+      return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    function b64UrlToBuf(b64url) {
+      let b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      const bin = atob(b64);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return bytes.buffer;
+    }
+
+    async function sha256Bytes(str) {
+      const data = new TextEncoder().encode(str);
+      const hashBuf = await window.crypto.subtle.digest('SHA-256', data);
+      return new Uint8Array(hashBuf);
+    }
+
+    async function sha256Hex(str) {
+      const bytes = await sha256Bytes(str);
+      return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function derivePinMixedKeyBuffer(rawKeyBytes, pinStr) {
+      if (!pinStr) return rawKeyBytes.buffer;
+      const pinDigest = await sha256Bytes('GEOSTASH_PIN_SALT:' + pinStr);
+      const mixed = new Uint8Array(32);
+      for (let i = 0; i < 32; i++) {
+        mixed[i] = rawKeyBytes[i] ^ pinDigest[i];
+      }
+      return mixed.buffer;
+    }
+
+    async function encryptWithPin(plainStr, pinStr) {
+      const iv = window.crypto.getRandomValues(new Uint8Array(12));
+      const baseKeyBytes = window.crypto.getRandomValues(new Uint8Array(32));
+      const finalKeyBuf = await derivePinMixedKeyBuffer(baseKeyBytes, pinStr);
+      const cryptoKey = await window.crypto.subtle.importKey('raw', finalKeyBuf, { name: 'AES-GCM' }, false, ['encrypt']);
+      const enc = new TextEncoder().encode(plainStr);
+      const cipherBuf = await window.crypto.subtle.encrypt({ name: 'AES-GCM', iv }, cryptoKey, enc);
+      return {
+        ciphertext: bufToB64Url(cipherBuf),
+        keyB64: bufToB64Url(baseKeyBytes.buffer),
+        ivB64: bufToB64Url(iv.buffer)
+      };
+    }
+
+    async function decryptWithPin(cipherB64, keyB64, ivB64, pinStr) {
+      const baseKeyBytes = new Uint8Array(b64UrlToBuf(keyB64));
+      const finalKeyBuf = await derivePinMixedKeyBuffer(baseKeyBytes, pinStr);
+      const iv = b64UrlToBuf(ivB64);
+      const cipher = b64UrlToBuf(cipherB64);
+      const cryptoKey = await window.crypto.subtle.importKey('raw', finalKeyBuf, { name: 'AES-GCM' }, false, ['decrypt']);
+      const plainBuf = await window.crypto.subtle.decrypt({ name: 'AES-GCM', iv: new Uint8Array(iv) }, cryptoKey, cipher);
+      return new TextDecoder().decode(plainBuf);
+    }
+
+    // =========================================================================
+    // ALWAYS-HOT PERSISTENT KALMAN GPS ENGINE (FAST + ZERO INDOOR JUMP!)
+    // =========================================================================
+    function haversineMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const rad = (d) => (d * Math.PI) / 180;
+      const dLat = rad(lat2 - lat1);
+      const dLon = rad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function forwardBearingDeg(lat1, lon1, lat2, lon2) {
+      const rad = (d) => (d * Math.PI) / 180;
+      const deg = (r) => (r * 180) / Math.PI;
+      const dLon = rad(lon2 - lon1);
+      const y = Math.sin(dLon) * Math.cos(rad(lat2));
+      const x = Math.cos(rad(lat1)) * Math.sin(rad(lat2)) - Math.sin(rad(lat1)) * Math.cos(rad(lat2)) * Math.cos(dLon);
+      return (deg(Math.atan2(y, x)) + 360) % 360;
+    }
+
+    function processIncomingGpsFix(pos) {
+      const rawLat = pos.coords.latitude;
+      const rawLng = pos.coords.longitude;
+      const acc = Math.max(2.0, pos.coords.accuracy || 12);
+      const speed = pos.coords.speed || 0;
+
+      if (state.kalmanLat === null || state.kalmanLng === null) {
+        state.kalmanLat = rawLat;
+        state.kalmanLng = rawLng;
+        state.kalmanVar = acc * acc;
+        state.bestGpsAcc = acc;
+      } else {
+        const jumpMeters = haversineMeters(state.kalmanLat, state.kalmanLng, rawLat, rawLng);
+
+        // Reject degraded cell-tower / indoor multipath bounces
+        if (state.bestGpsAcc <= 20 && acc > state.bestGpsAcc * 1.45 && jumpMeters > 12 && speed < 1.5) {
+          state.rejectedOutliers++;
+          return;
+        }
+
+        if (acc < state.bestGpsAcc) {
+          state.bestGpsAcc = acc;
+          state.kalmanLat = state.kalmanLat * 0.25 + rawLat * 0.75;
+          state.kalmanLng = state.kalmanLng * 0.25 + rawLng * 0.75;
+          state.kalmanVar = acc * acc;
+        } else {
+          const processNoise = speed > 1.0 ? 8.0 : 0.4;
+          state.kalmanVar += processNoise;
+          const kGain = state.kalmanVar / (state.kalmanVar + acc * acc);
+          state.kalmanLat += kGain * (rawLat - state.kalmanLat);
+          state.kalmanLng += kGain * (rawLng - state.kalmanLng);
+          state.kalmanVar = (1 - kGain) * state.kalmanVar;
+        }
+      }
+
+      const finalLat = +state.kalmanLat.toFixed(7);
+      const finalLng = +state.kalmanLng.toFixed(7);
+      const finalAcc = +Math.min(acc, state.bestGpsAcc).toFixed(1);
+
+      state.lockedGps = { lat: finalLat, lng: finalLng, accuracy: finalAcc };
+      state.latestAccuracy = finalAcc;
+
+      const statusEl = document.getElementById('gpsStatusShort');
+      const accEl = document.getElementById('gpsAccShort');
+      const dotEl = document.getElementById('gpsLockDot');
+      if (statusEl && accEl && dotEl) {
+        statusEl.textContent = `EXACT LOCK (${finalLat.toFixed(5)}, ${finalLng.toFixed(5)})`;
+        accEl.textContent = `±${finalAcc}M`;
+        dotEl.className = 'w-2 h-2 rounded-full bg-white';
+      }
+
+      if (state.targetMeta && (state.activeView === 'radar' || state.activeView === 'ar')) {
+        const lostEl = document.getElementById('radarSignalLost');
+        if (acc > 75 && state.bestGpsAcc > 50) lostEl.classList.remove('hidden');
+        else lostEl.classList.add('hidden');
+
+        const rawDist = haversineMeters(finalLat, finalLng, state.targetMeta.lat, state.targetMeta.lng);
+        const brg = forwardBearingDeg(finalLat, finalLng, state.targetMeta.lat, state.targetMeta.lng);
+
+        const indoorMargin = Math.min(4.0, finalAcc * 0.25);
+        const effectiveDist = rawDist <= indoorMargin ? +(rawDist * 0.5).toFixed(1) : +(rawDist - indoorMargin * 0.5).toFixed(1);
+
+        state.distanceMeters = Math.max(0.2, effectiveDist);
+        if (rawDist > 3.5) state.targetBearingDeg = brg;
+
+        document.getElementById('radarBigDistance').textContent = state.distanceMeters.toFixed(1);
+        document.getElementById('radarBearingText').textContent = `BRG ${String(Math.round(state.targetBearingDeg)).padStart(3, '0')}°`;
+        document.getElementById('radarHeadingText').textContent = `HDG ${String(Math.round(state.compassHeadingDeg)).padStart(3, '0')}°`;
+        document.getElementById('radarAccText').textContent = `±${finalAcc.toFixed(0)}M`;
+
+        triggerProximitySonarPulse(state.distanceMeters);
+
+        const unlockRadius = Math.max(10, Math.min(finalAcc, 16));
+        if (state.distanceMeters <= unlockRadius && state.activeView === 'radar') {
+          launchThreeArExperience();
+        }
+      }
+    }
+
+    function sampleRealGpsCoordinates(resetKalman = false) {
+      if (!navigator.geolocation) {
+        document.getElementById('gpsStatusShort').textContent = 'GPS UNAVAILABLE';
+        return;
+      }
+
+      if (resetKalman) {
+        state.kalmanLat = null;
+        state.kalmanLng = null;
+        state.bestGpsAcc = Infinity;
+        document.getElementById('gpsStatusShort').textContent = 'RE-PINNING EXACT GPS...';
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        processIncomingGpsFix,
+        () => {},
+        { enableHighAccuracy: true, maximumAge: 3000, timeout: 4000 }
+      );
+
+      if (state.masterGpsWatchId === null) {
+        state.masterGpsWatchId = navigator.geolocation.watchPosition(
+          processIncomingGpsFix,
+          () => {
+            if (!state.lockedGps) {
+              document.getElementById('gpsStatusShort').textContent = 'ALLOW GPS PERMISSION';
+            }
+          },
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+        );
+      }
+    }
+
+    // =========================================================================
+    // ECHO-FREE SINGLE-STREAM VOICE RECORDER & SINGLE-INSTANCE WEBAUDIO PLAYER
+    // =========================================================================
+    function drawAnimatedMicBars(active) {
+      const canvas = document.getElementById('voiceWaveCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      function loop() {
+        if (!state.isRecording) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const bars = 28;
+        const step = canvas.width / bars;
+        const t = Date.now() * 0.012;
+        for (let i = 0; i < bars; i++) {
+          const h = active ? Math.max(4, Math.abs(Math.sin(t + i * 0.45)) * (canvas.height * 0.8) * (0.4 + Math.random() * 0.6)) : 4;
+          ctx.fillStyle = i % 2 === 0 ? '#d71921' : '#ffffff';
+          ctx.fillRect(i * step + 2, (canvas.height - h) / 2, step - 4, h);
+        }
+        state.micAnimId = requestAnimationFrame(loop);
+      }
+      cancelAnimationFrame(state.micAnimId);
+      if (active) state.micAnimId = requestAnimationFrame(loop);
+    }
+
+    async function toggleMicRecording() {
+      const label = document.getElementById('btnRecordVoiceLabel');
+      const dot = document.getElementById('recDotIndicator');
+
+      if (state.isRecording) {
+        state.isRecording = false;
+        clearInterval(state.recInterval);
+        cancelAnimationFrame(state.micAnimId);
+        if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
+          state.mediaRecorder.stop();
+        }
+        label.textContent = 'START RECORDING';
+        dot.className = 'w-2 h-2 rounded-full bg-white';
+        return;
+      }
+
+      stopActiveAudioPlayback();
+
+      try {
+        state.micStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+            channelCount: 1
+          }
+        });
+
+        let mime = '';
+        if (typeof MediaRecorder !== 'undefined') {
+          if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) mime = 'audio/webm;codecs=opus';
+          else if (MediaRecorder.isTypeSupported('audio/mp4')) mime = 'audio/mp4';
+          else if (MediaRecorder.isTypeSupported('audio/webm')) mime = 'audio/webm';
+        }
+        state.voiceMime = mime || 'audio/webm';
+        document.getElementById('voiceMimeTag').textContent = state.voiceMime.split(';')[0].toUpperCase();
+
+        state.mediaRecorder = mime ? new MediaRecorder(state.micStream, { mimeType: mime }) : new MediaRecorder(state.micStream);
+        state.recChunks = [];
+
+        state.mediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) state.recChunks.push(e.data);
+        };
+
+        state.mediaRecorder.onstop = () => {
+          if (state.micStream) {
+            state.micStream.getTracks().forEach(t => t.stop());
+            state.micStream = null;
+          }
+          const blob = new Blob(state.recChunks, { type: state.voiceMime });
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            state.voiceBase64 = reader.result;
+            document.getElementById('btnPreviewVoice').disabled = false;
+            notify('CLEAN VOICE LOCKED');
+          };
+          reader.readAsDataURL(blob);
+        };
+
+        state.mediaRecorder.start();
+        state.isRecording = true;
+        drawAnimatedMicBars(true);
+        label.textContent = 'STOP RECORDING';
+        dot.className = 'w-2 h-2 rounded-full bg-black animate-ping';
+
+        let s = 0;
+        document.getElementById('voiceTimeTag').textContent = '00:00 / 00:30';
+        state.recInterval = setInterval(() => {
+          s++;
+          document.getElementById('voiceTimeTag').textContent = `00:${String(s).padStart(2, '0')} / 00:30`;
+          if (s >= 30 && state.isRecording) toggleMicRecording();
+        }, 1000);
+      } catch (err) {
+        notify('ALLOW MICROPHONE PERMISSION');
+      }
+    }
+
+    function stopActiveAudioPlayback() {
+      if (state.activeAudioSource) {
+        try {
+          state.activeAudioSource.stop();
+          state.activeAudioSource.disconnect();
+        } catch (e) {}
+        state.activeAudioSource = null;
+      }
+    }
+
+    async function playDirectWebAudio(dataUrl) {
+      stopActiveAudioPlayback();
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!state.audioCtx) state.audioCtx = new AudioCtx();
+        if (state.audioCtx.state === 'suspended') await state.audioCtx.resume();
+        const b64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
+        const bin = atob(b64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        const buf = await state.audioCtx.decodeAudioData(bytes.buffer.slice(0));
+        const src = state.audioCtx.createBufferSource();
+        src.buffer = buf;
+        src.connect(state.audioCtx.destination);
+        state.activeAudioSource = src;
+        src.onended = () => {
+          if (state.activeAudioSource === src) state.activeAudioSource = null;
+        };
+        src.start(0);
+      } catch (e) {}
+    }
+
+    async function lockStashToFirebase() {
+      let payloadData = '';
+      if (state.mediaType === 'text') {
+        payloadData = document.getElementById('inputSecretQuote').value.trim();
+        if (!payloadData) return notify('WRITE A SECRET MESSAGE FIRST');
+      } else if (state.mediaType === 'audio') {
+        if (!state.voiceBase64) return notify('RECORD VOICE MESSAGE FIRST');
+        payloadData = state.voiceBase64;
+      } else if (state.mediaType === 'image') {
+        if (!state.imageBase64) return notify('SELECT A PHOTO FIRST');
+        payloadData = state.imageBase64;
+      }
+
+      const rawPin = (document.getElementById('inputSecretPin').value || '').replace(/\D/g, '');
+      if (rawPin.length > 0 && rawPin.length !== 4) {
+        return notify('SECRET PIN MUST BE EXACTLY 4 DIGITS');
+      }
+
+      if (!state.lockedGps) {
+        sampleRealGpsCoordinates();
+        return notify('ACQUIRING GPS — TAP AGAIN IN 1S');
+      }
+
+      const btn = document.getElementById('btnLockStashMain');
+      btn.disabled = true;
+      btn.textContent = 'ENCRYPTING...';
+
+      try {
+        const id = 'GS' + Date.now().toString(36).toUpperCase().slice(-4) + Math.random().toString(36).substring(2, 5).toUpperCase();
+        const hasPin = rawPin.length === 4;
+        const pinHash = hasPin ? await sha256Hex(rawPin + ':' + id) : null;
+        const clueText = (document.getElementById('inputRadarClue').value || '').trim();
+
+        const plainJson = JSON.stringify({
+          type: state.mediaType,
+          data: payloadData,
+          ts: Date.now()
+        });
+        const enc = await encryptWithPin(plainJson, hasPin ? rawPin : '');
+
+        const metaObj = {
+          lat: state.lockedGps.lat,
+          lng: state.lockedGps.lng,
+          accuracyRadius: state.lockedGps.accuracy,
+          type: state.mediaType,
+          requiresPin: hasPin,
+          pinHash: pinHash,
+          clue: clueText || null,
+          status: 'ACTIVE',
+          claimToken: null,
+          createdAt: Date.now(),
+          expiresAt: Date.now() + 72 * 3600 * 1000
+        };
+        const vaultObj = { ciphertext: enc.ciphertext };
+
+        state.localMetaCache[id] = metaObj;
+        state.localVaultCache[id] = vaultObj;
+        safeSetLocal('gs_meta_v3', state.localMetaCache);
+        safeSetLocal('gs_vault_v3', state.localVaultCache);
+
+        if (db && navigator.onLine) {
+          try {
+            await Promise.all([
+              db.ref('stashes_meta/' + id).set(metaObj),
+              db.ref('stashes_vault/' + id).set(vaultObj)
+            ]);
+          } catch (fbErr) {}
+        }
+
+        const keyIv = `${enc.keyB64}.${enc.ivB64}`;
+        state.stashId = id;
+        state.keyIv = keyIv;
+
+        const baseUrl = location.href.split('?')[0].split('#')[0];
+        const shareLink = `${baseUrl}?id=${id}#${keyIv}`;
+        state.generatedShareUrl = shareLink;
+
+        document.getElementById('displayGeneratedUrl').textContent = shareLink;
+        document.getElementById('inputPasteHuntUrl').value = shareLink;
+        document.getElementById('sharePinNotice').textContent = hasPin ? 'SECRET PIN ARMED (3-STRIKE BURN)' : 'NO PIN (DIRECT 10M UNLOCK)';
+        document.getElementById('shareResultSheet').classList.remove('hidden');
+
+        playSynthTone(880, 0.12, 'triangle', 0.15);
+        notify('LOCKED AT EXACT KALMAN COORDS');
+      } catch (e) {
+        notify('LOCK ERROR: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'ENCRYPT & LOCK DEAD-DROP';
+      }
+    }
+
+    async function copyGeneratedLinkCleanly() {
+      const url = state.generatedShareUrl;
+      if (!url) return;
+      const btn = document.getElementById('btnCopyLink');
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = url;
+          temp.setAttribute('readonly', '');
+          temp.style.position = 'fixed';
+          temp.style.left = '-9999px';
+          temp.style.opacity = '0';
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        }
+        if (window.getSelection) {
+          window.getSelection().removeAllRanges();
+        }
+        btn.textContent = 'COPIED ✓';
+        setTimeout(() => { btn.textContent = 'COPY LINK'; }, 1800);
+        notify('LINK COPIED CLEANLY');
+      } catch (e) {
+        notify('COPY FAILED');
+      }
+    }
+
+    async function destroyStashAndInvalidateLinkForever(id) {
+      if (!id) return;
+      state.burnedStashIds[id] = true;
+      safeSetLocal('gs_burned_v3', state.burnedStashIds);
+
+      delete state.localMetaCache[id];
+      delete state.localVaultCache[id];
+      safeSetLocal('gs_meta_v3', state.localMetaCache);
+      safeSetLocal('gs_vault_v3', state.localVaultCache);
+
+      if (state.stashId === id) {
+        state.stashId = null;
+        state.keyIv = null;
+        state.generatedShareUrl = '';
+      }
+      document.getElementById('shareResultSheet').classList.add('hidden');
+      document.getElementById('displayGeneratedUrl').textContent = '';
+      document.getElementById('inputPasteHuntUrl').value = '';
+      try { history.replaceState(null, '', location.pathname); } catch (e) {}
+
+      if (db && navigator.onLine) {
+        try {
+          await Promise.all([
+            db.ref('stashes_vault/' + id).remove(),
+            db.ref('stashes_meta/' + id).set({ status: 'DESTROYED', burnedAt: Date.now() })
+          ]);
+          await db.ref('stashes_meta/' + id).remove();
+        } catch (e) {}
+      }
+    }
+
+    function startAvionicsRadarLoop() {
+      const canvas = document.getElementById('avionicsRadarCanvas');
+      if (!canvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 2, 3);
+      const cssSize = 300;
+      if (canvas.width !== cssSize * dpr) {
+        canvas.width = cssSize * dpr;
+        canvas.height = cssSize * dpr;
+      }
+      const ctx = canvas.getContext('2d');
+      let sweepRad = 0;
+
+      function renderRadar() {
+        if (state.activeView !== 'radar') return;
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, cssSize, cssSize);
+
+        const cx = cssSize / 2;
+        const cy = cssSize / 2;
+        const outerR = cx - 6;
+        const innerR = outerR - 22;
+
+        ctx.fillStyle = '#060608';
+        ctx.beginPath();
+        ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate((-state.compassHeadingDeg * Math.PI) / 180);
+
+        for (let deg = 0; deg < 360; deg += 2) {
+          const rad = ((deg - 90) * Math.PI) / 180;
+          const isCardinal = deg % 90 === 0;
+          const isMajor = deg % 30 === 0;
+          const isMid = deg % 10 === 0;
+          const tickLen = isCardinal ? 10 : isMajor ? 7 : isMid ? 4.5 : 2.2;
+
+          const x1 = Math.cos(rad) * (outerR - 2);
+          const y1 = Math.sin(rad) * (outerR - 2);
+          const x2 = Math.cos(rad) * (outerR - 2 - tickLen);
+          const y2 = Math.sin(rad) * (outerR - 2 - tickLen);
+
+          ctx.strokeStyle = deg === 0
+            ? '#d71921'
+            : isCardinal
+              ? '#ffffff'
+              : isMajor
+                ? 'rgba(255,255,255,0.65)'
+                : 'rgba(255,255,255,0.2)';
+          ctx.lineWidth = isCardinal ? 1.6 : isMajor ? 1.1 : 0.7;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+
+          if (isMajor) {
+            const labelR = outerR - 15;
+            const lx = Math.cos(rad) * labelR;
+            const ly = Math.sin(rad) * labelR;
+            ctx.save();
+            ctx.translate(lx, ly);
+            ctx.rotate(rad + Math.PI / 2);
+            ctx.font = isCardinal ? '700 10px "Space Grotesk"' : '500 8px "JetBrains Mono"';
+            ctx.fillStyle = deg === 0 ? '#d71921' : isCardinal ? '#ffffff' : 'rgba(255,255,255,0.5)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const txt = deg === 0 ? 'N' : deg === 90 ? 'E' : deg === 180 ? 'S' : deg === 270 ? 'W' : String(deg / 10);
+            ctx.fillText(txt, 0, 0);
+            ctx.restore();
+          }
+        }
+        ctx.restore();
+
+        ctx.fillStyle = '#d71921';
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - innerR + 3);
+        ctx.lineTo(cx - 5, cy - innerR - 5);
+        ctx.lineTo(cx + 5, cy - innerR - 5);
+        ctx.closePath();
+        ctx.fill();
+
+        const rings = [
+          { r: innerR * 0.28, label: '10M LOCK', color: 'rgba(215, 25, 33, 0.55)', dash: [2, 3] },
+          { r: innerR * 0.62, label: '25M', color: 'rgba(255, 255, 255, 0.16)', dash: [4, 4] },
+          { r: innerR * 0.96, label: '50M', color: 'rgba(255, 255, 255, 0.22)', dash: [] }
+        ];
+        rings.forEach(rg => {
+          ctx.strokeStyle = rg.color;
+          ctx.lineWidth = 1;
+          ctx.setLineDash(rg.dash);
+          ctx.beginPath();
+          ctx.arc(cx, cy, rg.r, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = 'rgba(255,255,255,0.35)';
+          ctx.font = '500 8px "JetBrains Mono"';
+          ctx.textAlign = 'left';
+          ctx.fillText(rg.label, cx + 4, cy - rg.r + 9);
+        });
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(cx - innerR * 0.96, cy); ctx.lineTo(cx + innerR * 0.96, cy);
+        ctx.moveTo(cx, cy - innerR * 0.96); ctx.lineTo(cx, cy + innerR * 0.96);
+        ctx.stroke();
+
+        sweepRad = (sweepRad + 0.032) % (Math.PI * 2);
+        const sweepGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, innerR * 0.96);
+        sweepGrad.addColorStop(0, 'rgba(215, 25, 33, 0.28)');
+        sweepGrad.addColorStop(1, 'rgba(215, 25, 33, 0.0)');
+        ctx.fillStyle = sweepGrad;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, innerR * 0.96, sweepRad - 0.55, sweepRad);
+        ctx.closePath();
+        ctx.fill();
+
+        if (state.distanceMeters !== null) {
+          const relDeg = (state.targetBearingDeg - state.compassHeadingDeg + 360) % 360;
+          const relRad = ((relDeg - 90) * Math.PI) / 180;
+          const clampedRatio = Math.min(0.92, Math.max(0.08, state.distanceMeters / 60));
+          const tx = cx + Math.cos(relRad) * (innerR * clampedRatio);
+          const ty = cy + Math.sin(relRad) * (innerR * clampedRatio);
+
+          ctx.strokeStyle = '#d71921';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(tx, ty);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(tx, ty, 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = '#d71921';
+          ctx.lineWidth = 1.6;
+          const b = 9;
+          ctx.strokeRect(tx - b, ty - b, b * 2, b * 2);
+        }
+
+        ctx.restore();
+        state.radarAnimId = requestAnimationFrame(renderRadar);
+      }
+
+      cancelAnimationFrame(state.radarAnimId);
+      state.radarAnimId = requestAnimationFrame(renderRadar);
+    }
+
+    async function beginHuntForStash(stashId, keyIv) {
+      if (!stashId || !keyIv) return notify('INVALID STASH LINK');
+
+      if (state.burnedStashIds[stashId]) {
+        return showDestroyedView('[ LINK DESTROYED ]', 'THIS DEAD-DROP LINK HAS ALREADY SELF-DESTRUCTED AND CANNOT BE REOPENED.');
+      }
+
+      state.stashId = stashId;
+      state.keyIv = keyIv;
+      state.isUnlocked3D = false;
+      state.isClaiming = false;
+      state.enteredPin = '';
+      state.pinAttemptsRemaining = 3;
+
+      switchView('radar');
+
+      let meta = null;
+      if (db && navigator.onLine) {
+        try {
+          if (state.metaRef) state.metaRef.off();
+          state.metaRef = db.ref('stashes_meta/' + stashId);
+          const snap = await state.metaRef.get();
+          meta = snap.val();
+        } catch (e) {}
+      }
+      if (!meta && state.localMetaCache[stashId]) {
+        meta = state.localMetaCache[stashId];
+      }
+
+      if (!meta || meta.status === 'DESTROYED' || (meta.expiresAt && Date.now() > meta.expiresAt)) {
+        state.burnedStashIds[stashId] = true;
+        safeSetLocal('gs_burned_v3', state.burnedStashIds);
+        return showDestroyedView('[ LINK DESTROYED ]', 'THIS STASH HAS ALREADY BEEN CLAIMED OR BURNED FROM FIREBASE.');
+      }
+
+      state.targetMeta = meta;
+
+      const cluePill = document.getElementById('radarCluePill');
+      if (meta.clue) {
+        document.getElementById('radarClueText').textContent = meta.clue;
+        cluePill.classList.remove('hidden');
+      } else {
+        cluePill.classList.add('hidden');
+      }
+
+      if (state.metaRef) {
+        state.metaRef.on('value', (s) => {
+          const val = s.val();
+          if ((!val || val.status === 'DESTROYED') && !state.isUnlocked3D && !state.isClaiming) {
+            state.burnedStashIds[stashId] = true;
+            safeSetLocal('gs_burned_v3', state.burnedStashIds);
+            showDestroyedView('[ INTERCEPTED ]', 'ANOTHER HUNTER JUST CLAIMED & BURNED THIS STASH.');
+          }
+        });
+      }
+
+      if (state.lockedGps) {
+        processIncomingGpsFix({
+          coords: {
+            latitude: state.lockedGps.lat,
+            longitude: state.lockedGps.lng,
+            accuracy: state.lockedGps.accuracy,
+            speed: 0
+          }
+        });
+      } else {
+        sampleRealGpsCoordinates();
+      }
+    }
+
+    // =========================================================================
+    // PHASE 4 & 5: LIVE CAMERA OPTICAL-FLOW SLAM + GYRO FUSION 3D AR ENGINE
+    // =========================================================================
+    let threeRenderer = null;
+    let threeScene = null;
+    let threeCamera = null;
+    let worldAnchorGroup = null;
+    let envFloorGroup = null;
+    let artifactGroup = null;
+    let outerRingMesh = null;
+    let innerRingMesh = null;
+    let coreCrystalMesh = null;
+    let text3DGroup = null;
+
+    // Offscreen 80x60 Canvas for 60fps Live Camera Video Optical-Flow SLAM Tracking
+    const FLOW_W = 80;
+    const FLOW_H = 60;
+    const flowCanvas = document.createElement('canvas');
+    flowCanvas.width = FLOW_W;
+    flowCanvas.height = FLOW_H;
+    const flowCtx = flowCanvas.getContext('2d', { willReadFrequently: true });
+
+    // Compute Real-Time Camera Pan/Tilt/Parallax from Live <video> Pixels!
+    // Works 100% inside sandboxed iframes even when Android Chrome blocks gyroscope events!
+    function updateCameraPoseFromVideoOpticalFlow(videoEl) {
+      if (!videoEl || videoEl.readyState < 2 || videoEl.paused || videoEl.videoWidth === 0) return;
+
+      try {
+        flowCtx.drawImage(videoEl, 0, 0, FLOW_W, FLOW_H);
+        const imgData = flowCtx.getImageData(0, 0, FLOW_W, FLOW_H).data;
+        const currGray = new Uint8Array(FLOW_W * FLOW_H);
+
+        for (let i = 0, p = 0; i < currGray.length; i++, p += 4) {
+          currGray[i] = (imgData[p] * 77 + imgData[p + 1] * 150 + imgData[p + 2] * 29) >> 8;
+        }
+
+        const prevGray = state.prevFlowGray;
+        state.prevFlowGray = currGray;
+        if (!prevGray) return;
+
+        // Track 9 patches (3x3 grid across the camera frame) using Sum of Absolute Differences (SAD)
+        const patchCentersX = [22, 40, 58];
+        const patchCentersY = [17, 30, 43];
+        const halfP = 4; // 9x9 patch
+        const searchR = 6; // Search +-6 pixels per frame
+
+        const dxList = [];
+        const dyList = [];
+        let leftShift = 0, rightShift = 0;
+
+        for (let pyIdx = 0; pyIdx < 3; pyIdx++) {
+          for (let pxIdx = 0; pxIdx < 3; pxIdx++) {
+            const cx = patchCentersX[pxIdx];
+            const cy = patchCentersY[pyIdx];
+
+            // Check patch texture variance so blank walls don't create false zero motion
+            let minVal = 255, maxVal = 0;
+            for (let y = -halfP; y <= halfP; y += 2) {
+              const rowOff = (cy + y) * FLOW_W;
+              for (let x = -halfP; x <= halfP; x += 2) {
+                const v = prevGray[rowOff + cx + x];
+                if (v < minVal) minVal = v;
+                if (v > maxVal) maxVal = v;
+              }
+            }
+            if (maxVal - minVal < 14) continue; // Low contrast patch, skip
+
+            let bestSad = Infinity;
+            let bestDx = 0;
+            let bestDy = 0;
+
+            for (let dy = -searchR; dy <= searchR; dy++) {
+              for (let dx = -searchR; dx <= searchR; dx++) {
+                let sad = 0;
+                for (let y = -halfP; y <= halfP; y += 2) {
+                  const prevRow = (cy + y) * FLOW_W + cx;
+                  const currRow = (cy + y + dy) * FLOW_W + (cx + dx);
+                  for (let x = -halfP; x <= halfP; x += 2) {
+                    const diff = prevGray[prevRow + x] - currGray[currRow + x];
+                    sad += diff < 0 ? -diff : diff;
+                  }
+                }
+                // Slight preference for smaller motion on ties
+                sad += (Math.abs(dx) + Math.abs(dy)) * 2;
+                if (sad < bestSad) {
+                  bestSad = sad;
+                  bestDx = dx;
+                  bestDy = dy;
+                }
+              }
+            }
+
+            dxList.push(bestDx);
+            dyList.push(bestDy);
+            if (pxIdx === 0) leftShift += bestDx;
+            if (pxIdx === 2) rightShift += bestDx;
+          }
+        }
+
+        if (dxList.length >= 2) {
+          dxList.sort((a, b) => a - b);
+          dyList.sort((a, b) => a - b);
+          const medDx = dxList[Math.floor(dxList.length / 2)];
+          const medDy = dyList[Math.floor(dyList.length / 2)];
+
+          // Deadband filter (< 0.4px micro-noise ignored)
+          const cleanDx = Math.abs(medDx) >= 1 ? medDx : 0;
+          const cleanDy = Math.abs(medDy) >= 1 ? medDy : 0;
+
+          // Physics of Rear Camera:
+          // Phone pans LEFT (+camYawRad in Three.js) -> Real world image moves RIGHT (cleanDx > 0)
+          // Phone pans RIGHT (-camYawRad in Three.js) -> Real world image moves LEFT (cleanDx < 0)
+          // Phone tilts UP (+camPitchRad) -> Real world image moves DOWN (cleanDy > 0)
+          const radPerPixel = 0.0155;
+          if (!state.hasHardwareGyro) {
+            state.camYawRad += cleanDx * radPerPixel;
+            state.camPitchRad = Math.max(-1.25, Math.min(1.25, state.camPitchRad + cleanDy * radPerPixel));
+          }
+
+          // Lateral Walk-Around Parallax (Allows viewing Left/Right/Back 3D sides as you move!)
+          state.camLateralX = Math.max(-1.6, Math.min(1.6, state.camLateralX - cleanDx * 0.008));
+
+          // Forward/Back Scale Divergence (Walking closer vs stepping back)
+          const scaleDiv = (rightShift - leftShift) / 3;
+          if (Math.abs(scaleDiv) >= 1.5) {
+            state.camForwardZ = Math.max(-1.2, Math.min(1.2, state.camForwardZ - scaleDiv * 0.025));
+          }
+        }
+      } catch (e) {}
+    }
+
+    function build3DSpatialEnvironment() {
+      if (envFloorGroup) {
+        worldAnchorGroup.remove(envFloorGroup);
+      }
+      envFloorGroup = new THREE.Group();
+      envFloorGroup.position.set(0, -1.65, 0);
+
+      [0.65, 1.3, 2.0].forEach((radius, idx) => {
+        const ringGeo = new THREE.RingGeometry(radius - 0.012, radius, 64);
+        ringGeo.rotateX(-Math.PI / 2);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: idx === 0 ? 0xd71921 : 0xffffff,
+          transparent: true,
+          opacity: idx === 0 ? 0.55 : 0.16,
+          side: THREE.DoubleSide
+        });
+        envFloorGroup.add(new THREE.Mesh(ringGeo, ringMat));
+      });
+
+      const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 });
+      const ptsX = [new THREE.Vector3(-2.0, 0.002, 0), new THREE.Vector3(2.0, 0.002, 0)];
+      const ptsZ = [new THREE.Vector3(0, 0.002, -2.0), new THREE.Vector3(0, 0.002, 2.0)];
+      envFloorGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ptsX), lineMat));
+      envFloorGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ptsZ), lineMat));
+
+      const tetherMat = new THREE.LineBasicMaterial({ color: 0xd71921, transparent: true, opacity: 0.45 });
+      const tetherPts = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 1.65, 0)];
+      envFloorGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(tetherPts), tetherMat));
+
+      worldAnchorGroup.add(envFloorGroup);
+    }
+
+    function buildStationary3DArtifact() {
+      if (artifactGroup) {
+        worldAnchorGroup.remove(artifactGroup);
+      }
+      artifactGroup = new THREE.Group();
+      artifactGroup.position.set(0, 0, 0);
+
+      const octaGeo = new THREE.OctahedronGeometry(0.28, 0);
+      const octaMat = new THREE.MeshStandardMaterial({
+        color: 0xd71921,
+        emissive: 0x660508,
+        roughness: 0.18,
+        metalness: 0.85,
+        flatShading: true
+      });
+      coreCrystalMesh = new THREE.Mesh(octaGeo, octaMat);
+      artifactGroup.add(coreCrystalMesh);
+
+      const cageGeo = new THREE.IcosahedronGeometry(0.38, 1);
+      const cageMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.42
+      });
+      artifactGroup.add(new THREE.Mesh(cageGeo, cageMat));
+
+      const ring1Geo = new THREE.TorusGeometry(0.48, 0.012, 16, 72);
+      outerRingMesh = new THREE.Mesh(ring1Geo, new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 0.3,
+        metalness: 0.9
+      }));
+      artifactGroup.add(outerRingMesh);
+
+      const ring2Geo = new THREE.TorusGeometry(0.55, 0.01, 16, 72);
+      innerRingMesh = new THREE.Mesh(ring2Geo, new THREE.MeshBasicMaterial({ color: 0xd71921 }));
+      innerRingMesh.rotation.x = Math.PI / 3;
+      artifactGroup.add(innerRingMesh);
+
+      worldAnchorGroup.add(artifactGroup);
+    }
+
+    function buildTrueVector3DText(secretString) {
+      if (artifactGroup) {
+        worldAnchorGroup.remove(artifactGroup);
+        artifactGroup = null;
+      }
+      if (envFloorGroup) {
+        worldAnchorGroup.remove(envFloorGroup);
+        envFloorGroup = null;
+      }
+      if (text3DGroup) {
+        worldAnchorGroup.remove(text3DGroup);
+      }
+
+      text3DGroup = new THREE.Group();
+      text3DGroup.position.set(0, 0, 0);
+
+      const words = (secretString || '').trim().split(/\s+/);
+      const lines = [];
+      let cur = '';
+      words.forEach(w => {
+        if ((cur + ' ' + w).trim().length > 16) {
+          if (cur) lines.push(cur);
+          cur = w;
+        } else {
+          cur = (cur ? cur + ' ' : '') + w;
+        }
+      });
+      if (cur) lines.push(cur);
+      const finalLines = lines.slice(0, 5);
+
+      const renderHighResVolumetricFallback = () => {
+        if (!text3DGroup || text3DGroup.children.length > 0) return;
+        const makeTex = (fill, stroke) => {
+          const c = document.createElement('canvas');
+          c.width = 2048; c.height = 1024;
+          const ctx = c.getContext('2d');
+          const fs = finalLines.length <= 2 ? 156 : 112;
+          const lh = fs * 1.28;
+          const sy = (c.height - finalLines.length * lh) / 2 + fs / 2;
+          ctx.font = `700 ${fs}px "Space Grotesk", "JetBrains Mono", sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          finalLines.forEach((ln, i) => {
+            if (stroke) {
+              ctx.lineWidth = 14;
+              ctx.strokeStyle = stroke;
+              ctx.strokeText(ln, c.width / 2, sy + i * lh);
+            }
+            ctx.fillStyle = fill;
+            ctx.fillText(ln, c.width / 2, sy + i * lh);
+          });
+          const t = new THREE.CanvasTexture(c);
+          t.needsUpdate = true;
+          return t;
+        };
+        const fTex = makeTex('#ffffff', 'rgba(0,0,0,0.9)');
+        const sTex = makeTex('#d71921', null);
+        const geo = new THREE.PlaneGeometry(2.0, 1.0);
+        for (let i = 0; i < 32; i++) {
+          const isFace = (i === 0 || i === 31);
+          const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+            map: isFace ? fTex : sTex,
+            transparent: true,
+            alphaTest: 0.1,
+            side: isFace ? THREE.FrontSide : THREE.DoubleSide
+          }));
+          m.position.z = -0.07 + (i / 31) * 0.14;
+          if (i === 0) m.rotation.y = Math.PI;
+          text3DGroup.add(m);
+        }
+      };
+
+      const renderWithVectorFont = (font) => {
+        if (!text3DGroup) return;
+        while (text3DGroup.children.length) {
+          text3DGroup.remove(text3DGroup.children[0]);
+        }
+
+        const faceMat = new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          emissive: 0x282828,
+          roughness: 0.18,
+          metalness: 0.25
+        });
+        const sideExtrudeMat = new THREE.MeshStandardMaterial({
+          color: 0xd71921,
+          emissive: 0x600509,
+          roughness: 0.3,
+          metalness: 0.8
+        });
+
+        const lineStepY = 0.28;
+        const totalHeight = (finalLines.length - 1) * lineStepY;
+
+        finalLines.forEach((lineStr, idx) => {
+          const textGeo = new THREE.TextGeometry(lineStr, {
+            font: font,
+            size: 0.19,
+            height: 0.08,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 0.014,
+            bevelSize: 0.009,
+            bevelOffset: 0,
+            bevelSegments: 5
+          });
+
+          textGeo.computeBoundingBox();
+          const bb = textGeo.boundingBox;
+          const centerX = -0.5 * (bb.max.x - bb.min.x);
+          const centerZ = -0.5 * (bb.max.z - bb.min.z);
+          textGeo.translate(centerX, 0, centerZ);
+
+          const mesh = new THREE.Mesh(textGeo, [faceMat, sideExtrudeMat]);
+          mesh.position.y = (totalHeight / 2) - idx * lineStepY;
+          text3DGroup.add(mesh);
+        });
+
+        const groupBox = new THREE.Box3().setFromObject(text3DGroup);
+        const width3D = groupBox.max.x - groupBox.min.x;
+        if (width3D > 1.85) {
+          const scaleFactor = 1.85 / width3D;
+          text3DGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        }
+      };
+
+      const isAsciiPrintable = /^[\x20-\x7E\s]+$/.test(secretString || '');
+      if (state.loadedThreeFont && isAsciiPrintable) {
+        renderWithVectorFont(state.loadedThreeFont);
+      } else {
+        renderHighResVolumetricFallback();
+        if (isAsciiPrintable && typeof THREE !== 'undefined' && THREE.FontLoader) {
+          const loader = new THREE.FontLoader();
+          loader.load(
+            'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_bold.typeface.json',
+            (font) => {
+              state.loadedThreeFont = font;
+              renderWithVectorFont(font);
+            }
+          );
+        }
+      }
+
+      state.glitchFrames = 16;
+      worldAnchorGroup.add(text3DGroup);
+    }
+
+    function resetArWorldPinToCurrentView() {
+      state.camYawRad = 0;
+      state.camPitchRad = 0;
+      state.camLateralX = 0;
+      state.camForwardZ = 0;
+      state.baseGyroAlpha = null;
+      state.baseGyroBeta = null;
+      state.touchOrbitYawRad = 0;
+      state.touchOrbitPitchRad = 0;
+      state.cameraOrbitRadius = 2.35;
+      state.prevFlowGray = null;
+
+      if (worldAnchorGroup) {
+        worldAnchorGroup.position.set(0, 1.65, -2.35);
+        worldAnchorGroup.rotation.set(0, 0, 0);
+      }
+    }
+
+    async function launchThreeArExperience() {
+      state.isUnlocked3D = false;
+      state.enteredPin = '';
+      state.pinAttemptsRemaining = 3;
+      resetArWorldPinToCurrentView();
+
+      updateAirPinSlotsUI();
+      document.getElementById('arPinAttemptStatus').textContent = 'ENTER SECRET 4-DIGIT PIN ON ARTIFACT';
+      document.getElementById('arPinAttemptStatus').className = 'font-display font-bold text-[11px] text-white tracking-widest uppercase mb-1.5 air-key-btn';
+
+      switchView('ar');
+      playSynthTone(1046.5, 0.18, 'triangle', 0.16);
+
+      document.getElementById('silentBurnHairlineWrap').classList.add('hidden');
+      document.getElementById('arStatusPill').classList.remove('hidden');
+
+      const requiresPin = state.targetMeta && state.targetMeta.requiresPin;
+      if (requiresPin) {
+        document.getElementById('arSecretPinLockOverlay').classList.remove('hidden');
+        document.getElementById('arNoPinTapOverlay').classList.add('hidden');
+      } else {
+        document.getElementById('arSecretPinLockOverlay').classList.add('hidden');
+        document.getElementById('arNoPinTapOverlay').classList.remove('hidden');
+      }
+
+      const video = document.getElementById('arFullscreenVideo');
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+          state.arVideoStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'environment' } },
+            audio: false
+          });
+          video.srcObject = state.arVideoStream;
+        } catch (e) {}
+      }
+    }
+
+    function initAndStartThreeArScene() {
+      const mount = document.getElementById('threeArMount');
+      if (!mount) return;
+
+      if (!threeRenderer) {
+        threeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 2, 3));
+        threeRenderer.setSize(window.innerWidth, window.innerHeight);
+        mount.innerHTML = '';
+        mount.appendChild(threeRenderer.domElement);
+
+        threeScene = new THREE.Scene();
+
+        threeCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        threeCamera.position.set(0, 1.65, 0);
+        threeCamera.rotation.order = 'YXZ';
+
+        const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+        threeScene.add(ambLight);
+        const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight1.position.set(3, 5, 4);
+        threeScene.add(dirLight1);
+        const dirLight2 = new THREE.DirectionalLight(0xd71921, 1.2);
+        dirLight2.position.set(-3, 2, -4);
+        threeScene.add(dirLight2);
+
+        worldAnchorGroup = new THREE.Group();
+        worldAnchorGroup.position.set(0, 1.65, -2.35);
+        threeScene.add(worldAnchorGroup);
+
+        window.addEventListener('resize', () => {
+          if (!threeRenderer || !threeCamera) return;
+          threeCamera.aspect = window.innerWidth / window.innerHeight;
+          threeCamera.updateProjectionMatrix();
+          threeRenderer.setSize(window.innerWidth, window.innerHeight);
+        });
+      }
+
+      if (text3DGroup) {
+        worldAnchorGroup.remove(text3DGroup);
+        text3DGroup = null;
+      }
+      build3DSpatialEnvironment();
+      buildStationary3DArtifact();
+      resetArWorldPinToCurrentView();
+
+      const videoEl = document.getElementById('arFullscreenVideo');
+      const frustum = new THREE.Frustum();
+      const projScreenMatrix = new THREE.Matrix4();
+
+      function animateThree() {
+        if (state.activeView !== 'ar') return;
+
+        // 1. Run Real-Time Optical-Flow SLAM on Live Camera Video Feed!
+        // Tracks actual physical room movement even when iframe blocks gyroscope!
+        updateCameraPoseFromVideoOpticalFlow(videoEl);
+
+        // 2. Apply Free-Look Camera Rotation (NO lookAt! Turn phone away -> Artifact leaves screen!)
+        threeCamera.rotation.y += (state.camYawRad - threeCamera.rotation.y) * 0.35;
+        threeCamera.rotation.x += (state.camPitchRad - threeCamera.rotation.x) * 0.35;
+
+        // 3. Apply 6-DoF Camera Position (Human Eye Height 1.65m + Lateral/Forward Walk Parallax)
+        threeCamera.position.x += (state.camLateralX - threeCamera.position.x) * 0.25;
+        threeCamera.position.y = 1.65;
+        threeCamera.position.z += (state.camForwardZ - threeCamera.position.z) * 0.25;
+
+        // 4. Keep Artifact Stationary at (0, 1.65m, -cameraOrbitRadius) & Apply 4-Sided 360° Inspection Rotation
+        worldAnchorGroup.position.set(0, 1.65, -state.cameraOrbitRadius);
+        const totalViewAngleY = state.touchOrbitYawRad - state.camLateralX * 0.45;
+        worldAnchorGroup.rotation.y = totalViewAngleY;
+        worldAnchorGroup.rotation.x = state.touchOrbitPitchRad;
+
+        // 5. Frustum Check: Is the Stationary Artifact Currently Inside the Camera's View?
+        threeCamera.updateMatrixWorld();
+        projScreenMatrix.multiplyMatrices(threeCamera.projectionMatrix, threeCamera.matrixWorldInverse);
+        frustum.setFromProjectionMatrix(projScreenMatrix);
+        const inView = frustum.containsPoint(worldAnchorGroup.position);
+
+        const pinOverlay = document.getElementById('arSecretPinLockOverlay');
+        const noPinOverlay = document.getElementById('arNoPinTapOverlay');
+
+        if (!state.isUnlocked3D) {
+          if (inView) {
+            pinOverlay.style.opacity = '1';
+            pinOverlay.style.pointerEvents = 'none';
+            noPinOverlay.style.opacity = '1';
+            const deg360 = ((Math.round((totalViewAngleY * 180) / Math.PI) % 360) + 360) % 360;
+            const sideName = (deg360 >= 315 || deg360 < 45) ? 'FRONT'
+              : (deg360 >= 45 && deg360 < 135) ? 'RIGHT SIDE'
+              : (deg360 >= 135 && deg360 < 225) ? 'BACK SIDE' : 'LEFT SIDE';
+            document.getElementById('arAngleReadout').textContent = `WORLD-PINNED // ${String(deg360).padStart(3, '0')}° ${sideName}`;
+          } else {
+            // Camera turned away from the artifact -> Hide PIN pad!
+            pinOverlay.style.opacity = '0';
+            noPinOverlay.style.opacity = '0';
+            document.getElementById('arAngleReadout').textContent = 'OFF-SCREEN // AIM CAMERA BACK AT SPOT';
+          }
+        }
+
+        // 6. Animate 3D Artifact Rings
+        if (artifactGroup) {
+          if (outerRingMesh) {
+            outerRingMesh.rotation.z += 0.014;
+            outerRingMesh.rotation.x += 0.008;
+          }
+          if (innerRingMesh) {
+            innerRingMesh.rotation.y -= 0.018;
+          }
+          if (coreCrystalMesh) {
+            coreCrystalMesh.rotation.y += 0.01;
+          }
+        }
+
+        // 7. 3D Glitch Materialization on Text Unlock
+        if (text3DGroup && state.glitchFrames > 0) {
+          state.glitchFrames--;
+          text3DGroup.position.set(
+            (Math.random() - 0.5) * 0.12,
+            (Math.random() - 0.5) * 0.08,
+            (Math.random() - 0.5) * 0.08
+          );
+          if (state.glitchFrames === 0) {
+            text3DGroup.position.set(0, 0, 0);
+          }
+        }
+
+        threeRenderer.render(threeScene, threeCamera);
+        state.threeAnimId = requestAnimationFrame(animateThree);
+      }
+
+      cancelAnimationFrame(state.threeAnimId);
+      state.threeAnimId = requestAnimationFrame(animateThree);
+    }
+
+    function stopArCameraStream() {
+      if (state.arVideoStream) {
+        state.arVideoStream.getTracks().forEach(t => t.stop());
+        state.arVideoStream = null;
+      }
+    }
+
+    function updateAirPinSlotsUI() {
+      for (let i = 0; i < 4; i++) {
+        const el = document.getElementById('pinSlot' + i);
+        if (!el) continue;
+        const ch = state.enteredPin[i];
+        el.textContent = ch ? '●' : '_';
+        el.className = ch
+          ? 'font-mono-tech font-bold text-2xl text-[#d71921] border-b-2 border-[#d71921] w-7 text-center pb-0.5 air-key-btn'
+          : 'font-mono-tech font-bold text-2xl text-white border-b-2 border-white/60 w-7 text-center pb-0.5 air-key-btn';
+      }
+    }
+
+    async function handleAirDigitTap(digitStr) {
+      if (state.isUnlocked3D || state.isClaiming) return;
+      if (state.enteredPin.length >= 4) return;
+
+      playSynthTone(1200, 0.04, 'sine', 0.08);
+      state.enteredPin += digitStr;
+      updateAirPinSlotsUI();
+
+      if (state.enteredPin.length === 4) {
+        const candidatePin = state.enteredPin;
+        const candidateHash = await sha256Hex(candidatePin + ':' + state.stashId);
+
+        if (state.targetMeta && state.targetMeta.pinHash && candidateHash !== state.targetMeta.pinHash) {
+          state.pinAttemptsRemaining--;
+          playSynthTone(220, 0.25, 'sawtooth', 0.18);
+          if (navigator.vibrate && !state.stealthMuted) {
+            try { navigator.vibrate([80, 50, 80]); } catch (e) {}
+          }
+
+          if (state.pinAttemptsRemaining <= 0) {
+            const burnedId = state.stashId;
+            await destroyStashAndInvalidateLinkForever(burnedId);
+            showDestroyedView(
+              '[ 3 FAILED PIN ATTEMPTS ]',
+              'SECURITY BREACH TRIGGERED. THIS ARTIFACT AND ITS LINK HAVE PERMANENTLY SELF-DESTRUCTED.'
+            );
+            return;
+          }
+
+          const statusEl = document.getElementById('arPinAttemptStatus');
+          statusEl.textContent = `WRONG PIN // ${state.pinAttemptsRemaining} ATTEMPT${state.pinAttemptsRemaining === 1 ? '' : 'S'} LEFT BEFORE BURN`;
+          statusEl.className = 'font-display font-bold text-[11px] text-[#d71921] tracking-widest uppercase mb-1.5 air-key-btn';
+
+          const row = document.getElementById('airPinSlotsRow');
+          row.classList.add('shake-anim');
+          setTimeout(() => {
+            row.classList.remove('shake-anim');
+            state.enteredPin = '';
+            updateAirPinSlotsUI();
+          }, 380);
+          return;
+        }
+
+        unlockAndProjectPure3DText(candidatePin);
+      }
+    }
+
+    async function unlockAndProjectPure3DText(verifiedPinStr = '') {
+      if (state.isClaiming || state.isUnlocked3D) return;
+      state.isClaiming = true;
+
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!state.audioCtx) state.audioCtx = new AudioCtx();
+        if (state.audioCtx.state === 'suspended') await state.audioCtx.resume();
+      } catch (e) {}
+
+      const id = state.stashId;
+      if (!id) {
+        state.isClaiming = false;
+        return;
+      }
+
+      try {
+        let vault = null;
+        if (db && navigator.onLine) {
+          const metaRef = db.ref('stashes_meta/' + id);
+          const tx = await metaRef.transaction((cur) => {
+            if (cur === null) return cur;
+            if (cur.status === 'DESTROYED') return;
+            if (cur.status === 'CLAIMED' && cur.claimToken !== state.hunterToken) return;
+            cur.status = 'CLAIMED';
+            cur.claimToken = state.hunterToken;
+            return cur;
+          });
+
+          const finalMeta = tx.snapshot.val();
+          if (finalMeta && finalMeta.claimToken && finalMeta.claimToken !== state.hunterToken) {
+            return showDestroyedView('[ INTERCEPTED ]', 'CLAIMED BY ANOTHER HUNTER MILLISECONDS AGO.');
+          }
+
+          const vaultSnap = await db.ref('stashes_vault/' + id).get();
+          vault = vaultSnap.val();
+        }
+
+        if (!vault && state.localVaultCache[id]) {
+          vault = state.localVaultCache[id];
+        }
+
+        if (!vault || !vault.ciphertext) {
+          return showDestroyedView('[ LINK DESTROYED ]', 'VAULT PAYLOAD ALREADY BURNED.');
+        }
+
+        const [keyB64, ivB64] = (state.keyIv || '').split('.');
+        const plainJson = await decryptWithPin(vault.ciphertext, keyB64, ivB64, verifiedPinStr);
+        const secret = JSON.parse(plainJson);
+
+        state.isUnlocked3D = true;
+        playSynthTone(1567.98, 0.22, 'triangle', 0.16);
+
+        document.getElementById('arSecretPinLockOverlay').classList.add('hidden');
+        document.getElementById('arNoPinTapOverlay').classList.add('hidden');
+        document.getElementById('arStatusPill').classList.add('hidden');
+        document.getElementById('silentBurnHairlineWrap').classList.remove('hidden');
+
+        if (secret.type === 'text') {
+          buildTrueVector3DText(secret.data);
+        } else if (secret.type === 'audio') {
+          buildTrueVector3DText('VOICE PLAYBACK');
+          playDirectWebAudio(secret.data);
+        } else if (secret.type === 'image') {
+          if (artifactGroup) {
+            worldAnchorGroup.remove(artifactGroup);
+            artifactGroup = null;
+          }
+          if (envFloorGroup) {
+            worldAnchorGroup.remove(envFloorGroup);
+            envFloorGroup = null;
+          }
+          const img = new Image();
+          img.onload = () => {
+            const tex = new THREE.Texture(img);
+            tex.needsUpdate = true;
+            const aspect = (img.width || 4) / (img.height || 3);
+            const planeGeo = new THREE.PlaneGeometry(1.4 * aspect, 1.4);
+            const planeMat = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide });
+            text3DGroup = new THREE.Mesh(planeGeo, planeMat);
+            text3DGroup.position.set(0, 0, 0);
+            state.glitchFrames = 14;
+            worldAnchorGroup.add(text3DGroup);
+          };
+          img.src = secret.data;
+        }
+
+        await destroyStashAndInvalidateLinkForever(id);
+
+        let remainingMs = 18000;
+        const fillEl = document.getElementById('silentBurnHairlineFill');
+        clearInterval(state.burnTimerId);
+        state.burnTimerId = setInterval(() => {
+          remainingMs -= 100;
+          fillEl.style.width = `${Math.max(0, (remainingMs / 18000) * 100)}%`;
+          if (remainingMs <= 0) {
+            clearInterval(state.burnTimerId);
+            stopActiveAudioPlayback();
+            if (text3DGroup && worldAnchorGroup) {
+              worldAnchorGroup.remove(text3DGroup);
+              text3DGroup = null;
+            }
+            showDestroyedView('[ ARTIFACT DESTROYED ]', 'THE 3D PROJECTION AND DEAD-DROP LINK HAVE PERMANENTLY VAPORIZED.');
+          }
+        }, 100);
+
+      } catch (err) {
+        showDestroyedView('[ ACCESS DENIED ]', 'DECRYPTION FAILED OR INVALID KEY/PIN.');
+      } finally {
+        state.isClaiming = false;
+      }
+    }
+
+    function showDestroyedView(title, msg) {
+      clearInterval(state.burnTimerId);
+      stopActiveAudioPlayback();
+      document.getElementById('destroyedMainTitle').textContent = title;
+      document.getElementById('destroyedSubMsg').textContent = msg;
+      switchView('destroyed');
+    }
+
+    // Hardware Sensor Listeners (Fused with Optical Flow if permitted by browser)
+    function shortestAngleDeltaDeg(a, b) {
+      return ((a - b + 540) % 360) - 180;
+    }
+
+    function handleOrientationSensor(e) {
+      if (e.alpha === null && e.webkitCompassHeading === undefined) return;
+      state.hasHardwareGyro = true;
+
+      if (typeof e.webkitCompassHeading === 'number') {
+        state.compassHeadingDeg = e.webkitCompassHeading;
+      } else if (typeof e.alpha === 'number') {
+        state.compassHeadingDeg = (360 - e.alpha) % 360;
+      }
+
+      if (state.activeView === 'ar' && typeof e.alpha === 'number') {
+        const curAlpha = e.alpha;
+        const curBeta = e.beta !== null ? e.beta : 90;
+        if (state.baseGyroAlpha === null) {
+          state.baseGyroAlpha = curAlpha;
+          state.baseGyroBeta = curBeta;
+        }
+        const dAlpha = shortestAngleDeltaDeg(curAlpha, state.baseGyroAlpha);
+        const dBeta = curBeta - (state.baseGyroBeta || 90);
+        state.camYawRad = THREE.MathUtils.degToRad(dAlpha);
+        state.camPitchRad = THREE.MathUtils.degToRad(dBeta);
+      }
+    }
+
+    window.addEventListener('deviceorientationabsolute', handleOrientationSensor, true);
+    window.addEventListener('deviceorientation', handleOrientationSensor, true);
+
+    // Also bind DeviceMotion rotationRate if available
+    let lastMotionTs = null;
+    window.addEventListener('devicemotion', (e) => {
+      if (state.activeView !== 'ar' || state.hasHardwareGyro) return;
+      const rr = e.rotationRate;
+      if (!rr || (rr.alpha === null && rr.beta === null)) return;
+      const now = performance.now();
+      if (lastMotionTs !== null) {
+        const dt = (now - lastMotionTs) / 1000;
+        if (dt > 0 && dt < 0.2) {
+          state.camYawRad += THREE.MathUtils.degToRad((rr.alpha || 0) * dt);
+          state.camPitchRad = Math.max(-1.25, Math.min(1.25, state.camPitchRad + THREE.MathUtils.degToRad((rr.beta || 0) * dt)));
+        }
+      }
+      lastMotionTs = now;
+    }, true);
+
+    function selectMediaTab(type) {
+      state.mediaType = type;
+      const tQuote = document.getElementById('tabQuote');
+      const tVoice = document.getElementById('tabVoice');
+      const tPhoto = document.getElementById('tabPhoto');
+      const sQuote = document.getElementById('surfaceQuote');
+      const sVoice = document.getElementById('surfaceVoice');
+      const sPhoto = document.getElementById('surfacePhoto');
+
+      [tQuote, tVoice, tPhoto].forEach(b => {
+        b.className = 'py-2 rounded-full text-zinc-400 hover:text-white tracking-wider transition';
+      });
+      [sQuote, sVoice, sPhoto].forEach(s => s.classList.add('hidden'));
+
+      if (type === 'text') {
+        tQuote.className = 'py-2 rounded-full bg-white text-black tracking-wider transition';
+        sQuote.classList.remove('hidden');
+      } else if (type === 'audio') {
+        tVoice.className = 'py-2 rounded-full bg-white text-black tracking-wider transition';
+        sVoice.classList.remove('hidden');
+      } else if (type === 'image') {
+        tPhoto.className = 'py-2 rounded-full bg-white text-black tracking-wider transition';
+        sPhoto.classList.remove('hidden');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      preloadThreeVectorFont();
+
+      if (/Instagram|FBAN|FBAV|WhatsApp/i.test(navigator.userAgent || '')) {
+        document.getElementById('webviewAlert').classList.remove('hidden');
+      }
+      if ('wakeLock' in navigator && navigator.wakeLock) {
+        navigator.wakeLock.request('screen').catch(() => {});
+      }
+
+      sampleRealGpsCoordinates(false);
+
+      const params = new URLSearchParams(location.search);
+      const idParam = params.get('id');
+      const hashKey = location.hash ? location.hash.substring(1) : null;
+
+      if (idParam && hashKey) {
+        document.getElementById('inputPasteHuntUrl').value = location.href;
+        beginHuntForStash(idParam, hashKey);
+      }
+
+      document.getElementById('btnModeDrop').addEventListener('click', () => {
+        switchView('drop');
+      });
+      document.getElementById('btnModeHunt').addEventListener('click', () => {
+        if (state.stashId && state.keyIv && !state.burnedStashIds[state.stashId]) {
+          beginHuntForStash(state.stashId, state.keyIv);
+        } else {
+          switchView('radar');
+        }
+      });
+
+      document.getElementById('btnToggleStealthAudio').addEventListener('click', () => {
+        state.stealthMuted = !state.stealthMuted;
+        const btn = document.getElementById('btnToggleStealthAudio');
+        if (state.stealthMuted) {
+          stopActiveAudioPlayback();
+          btn.textContent = 'STEALTH: MUTE';
+          btn.className = 'px-3 py-1.5 rounded-full text-[11px] font-mono-tech bg-[#d71921]/20 text-[#d71921] border border-[#d71921]/50 transition';
+          notify('STEALTH MODE: AUDIO MUTED');
+        } else {
+          btn.textContent = 'BEEP: ON';
+          btn.className = 'px-3 py-1.5 rounded-full text-[11px] font-mono-tech bg-[#111116] text-white border border-zinc-800 transition';
+          playSynthTone(880, 0.06, 'sine', 0.08);
+          notify('SONAR AUDIO ENABLED');
+        }
+      });
+
+      document.getElementById('tabQuote').addEventListener('click', () => selectMediaTab('text'));
+      document.getElementById('tabVoice').addEventListener('click', () => selectMediaTab('audio'));
+      document.getElementById('tabPhoto').addEventListener('click', () => selectMediaTab('image'));
+
+      document.getElementById('inputSecretQuote').addEventListener('input', (e) => {
+        document.getElementById('charCountLabel').textContent = `${e.target.value.length} / 240`;
+      });
+
+      document.getElementById('btnRecordVoiceToggle').addEventListener('click', toggleMicRecording);
+      document.getElementById('btnPreviewVoice').addEventListener('click', () => {
+        if (state.voiceBase64) playDirectWebAudio(state.voiceBase64);
+      });
+
+      document.getElementById('inputPhotoFile').addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const maxD = 1080;
+            let w = img.naturalWidth || img.width;
+            let h = img.naturalHeight || img.height;
+            if (w > maxD || h > maxD) {
+              if (w > h) { h = Math.round((h * maxD) / w); w = maxD; }
+              else { w = Math.round((w * maxD) / h); h = maxD; }
+            }
+            const c = document.createElement('canvas');
+            c.width = w; c.height = h;
+            c.getContext('2d').drawImage(img, 0, 0, w, h);
+            state.imageBase64 = c.toDataURL('image/jpeg', 0.78);
+            const kb = Math.round((state.imageBase64.length * 3) / 4 / 1024);
+            document.getElementById('photoSizeSubtext').textContent = `COMPRESSED: ${kb} KB (${w}×${h})`;
+            const prev = document.getElementById('imgCompressedPreview');
+            prev.src = state.imageBase64;
+            prev.classList.remove('hidden');
+            notify(`COMPRESSED TO ${kb} KB`);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById('btnResampleGps').addEventListener('click', () => {
+        sampleRealGpsCoordinates(true);
+        notify('RE-PINNING EXACT SATELLITE FIX');
+      });
+      document.getElementById('btnLockStashMain').addEventListener('click', lockStashToFirebase);
+
+      document.getElementById('btnCopyLink').addEventListener('click', copyGeneratedLinkCleanly);
+
+      document.getElementById('btnWhatsappLink').addEventListener('click', () => {
+        if (!state.generatedShareUrl) return;
+        window.open(`https://wa.me/?text=${encodeURIComponent('GEO-STASH 3D DEAD-DROP: ' + state.generatedShareUrl)}`, '_blank', 'noopener');
+      });
+
+      document.getElementById('btnTestHuntDirect').addEventListener('click', () => {
+        if (state.stashId && state.keyIv) beginHuntForStash(state.stashId, state.keyIv);
+      });
+
+      document.getElementById('btnGoHuntUrl').addEventListener('click', () => {
+        const val = (document.getElementById('inputPasteHuntUrl').value || '').trim();
+        if (val.includes('?id=') && val.includes('#')) {
+          const q = val.split('?')[1];
+          const [pStr, hStr] = q.split('#');
+          const id = new URLSearchParams(pStr).get('id');
+          if (id && hStr) return beginHuntForStash(id, hStr);
+        }
+        notify('PASTE FULL LINK WITH ?id=...#KEY');
+      });
+
+      document.querySelectorAll('[data-digit]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleAirDigitTap(btn.getAttribute('data-digit'));
+        });
+      });
+
+      document.getElementById('btnClearAirPin').addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.enteredPin = '';
+        updateAirPinSlotsUI();
+      });
+
+      document.getElementById('btnTapOpenNoPin').addEventListener('click', (e) => {
+        e.stopPropagation();
+        unlockAndProjectPure3DText('');
+      });
+
+      // 4-Sided 360° Touch Inspection + 2-Finger Pinch-to-Zoom on the World-Pinned 3D Object
+      const mount = document.getElementById('threeArMount');
+      let isDragging = false, prevX = 0, prevY = 0, initialPinchDist = null;
+
+      mount.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          prevX = e.touches[0].clientX;
+          prevY = e.touches[0].clientY;
+        } else if (e.touches.length === 2) {
+          isDragging = false;
+          initialPinchDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+        }
+      }, { passive: true });
+
+      mount.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1 && isDragging) {
+          const dx = e.touches[0].clientX - prevX;
+          const dy = e.touches[0].clientY - prevY;
+          state.touchOrbitYawRad += dx * 0.012;
+          state.touchOrbitPitchRad = Math.max(-1.0, Math.min(1.0, state.touchOrbitPitchRad + dy * 0.008));
+          prevX = e.touches[0].clientX;
+          prevY = e.touches[0].clientY;
+        } else if (e.touches.length === 2 && initialPinchDist) {
+          const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          const delta = initialPinchDist - dist;
+          state.cameraOrbitRadius = Math.max(1.1, Math.min(4.8, state.cameraOrbitRadius + delta * 0.006));
+          initialPinchDist = dist;
+        }
+      }, { passive: true });
+
+      mount.addEventListener('touchend', () => {
+        isDragging = false;
+        initialPinchDist = null;
+      });
+
+      let mouseDown = false, mPrevX = 0, mPrevY = 0;
+      mount.addEventListener('mousedown', (e) => {
+        mouseDown = true;
+        mPrevX = e.clientX;
+        mPrevY = e.clientY;
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!mouseDown || state.activeView !== 'ar') return;
+        const dx = e.clientX - mPrevX;
+        const dy = e.clientY - mPrevY;
+        state.touchOrbitYawRad += dx * 0.012;
+        state.touchOrbitPitchRad = Math.max(-1.0, Math.min(1.0, state.touchOrbitPitchRad + dy * 0.008));
+        mPrevX = e.clientX;
+        mPrevY = e.clientY;
+      });
+      window.addEventListener('mouseup', () => { mouseDown = false; });
+
+      document.getElementById('btnResetCameraOrbit').addEventListener('click', () => {
+        resetArWorldPinToCurrentView();
+        notify('RE-PINNED IN FRONT OF CAMERA');
+      });
+
+      document.getElementById('btnCloseArView').addEventListener('click', () => {
+        switchView('radar');
+      });
+
+      document.getElementById('btnBackToNewDrop').addEventListener('click', () => {
+        switchView('drop');
+      });
+    });
+  </script>
+</body>
+</html>
