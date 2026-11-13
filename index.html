@@ -165,7 +165,7 @@
     <div class="space-y-3.5 my-auto">
       <div class="text-center space-y-0.5">
         <h1 class="font-display font-bold text-2xl text-white tracking-wider uppercase">LOCK PHYSICAL DROP</h1>
-        <p class="font-mono-tech text-[10px] text-zinc-500 tracking-widest uppercase">KALMAN PIN-POINT GPS // OPTICAL-FLOW 3D AR</p>
+        <p class="font-mono-tech text-[10px] text-zinc-500 tracking-widest uppercase">KALMAN PIN-POINT GPS // 360° CAMERA-RIG 3D AR</p>
       </div>
 
       <!-- 3 Mode Pills -->
@@ -332,7 +332,7 @@
   </main>
 
   <!-- ===================================================================== -->
-  <!-- VIEW 3: FULLSCREEN OPTICAL-FLOW SLAM + GYRO FUSION 3D AR CAMERA       -->
+  <!-- VIEW 3: FULLSCREEN TWO-STAGE CAMERARIG + QUATERNION FREE-LOOK 3D AR   -->
   <!-- ===================================================================== -->
   <section id="viewArCamera" class="hidden fixed inset-0 z-50 bg-black overflow-hidden">
     <!-- Fullscreen Back Camera Feed -->
@@ -343,20 +343,17 @@
       <div id="silentBurnHairlineFill" class="h-full bg-[#d71921] transition-all duration-100" style="width: 100%"></div>
     </div>
 
-    <!-- Three.js WebGL World-Pinned Free-Look Viewport -->
+    <!-- Three.js WebGL Two-Stage CameraRig Viewport -->
     <div id="threeArMount" class="absolute inset-0 w-full h-full z-10"></div>
 
-    <!-- Minimal Top Camera Controls -->
+    <!-- Minimal Top Camera Bar (NO Re-Pin Button — Artifact Strictly Locked at Encrypted Coords!) -->
     <div id="arTopChrome" class="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none">
       <div id="arStatusPill" class="px-3.5 py-1.5 rounded-full bg-black/65 backdrop-blur-md border border-white/15 flex items-center gap-2 pointer-events-auto">
         <span class="w-2 h-2 rounded-full bg-[#d71921] dot-pulse"></span>
-        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">SLAM LOCKED // 000° FRONT</span>
+        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">CAMERA 000° // FRONT</span>
       </div>
 
       <div class="flex items-center gap-1.5 pointer-events-auto">
-        <button id="btnResetCameraOrbit" type="button" class="px-3 py-1.5 rounded-full bg-black/65 backdrop-blur-md border border-white/20 font-display font-bold text-[10px] text-white tracking-wider">
-          RE-PIN HERE
-        </button>
         <button id="btnCloseArView" type="button" class="w-8 h-8 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-white text-xs flex items-center justify-center">
           ✕
         </button>
@@ -427,7 +424,7 @@
   </section>
 
   <!-- ===================================================================== -->
-  <!-- MASTER PRODUCTION ENGINE (KALMAN GPS + OPTICAL-FLOW SLAM + 3D AR)     -->
+  <!-- MASTER PRODUCTION ENGINE (TWO-STAGE CAMERARIG + QUATERNION FREE-LOOK) -->
   <!-- ===================================================================== -->
   <script>
     const firebaseConfig = {
@@ -493,26 +490,19 @@
       compassHeadingDeg: 0,
       latestAccuracy: 12,
 
-      // Hybrid Sensor Fusion + Real-Time Camera Optical-Flow SLAM State
-      hasHardwareGyro: false,
-      devAlpha: 0,
-      devBeta: 90,
-      devGamma: 0,
-      screenOrientDeg: 0,
-      baseGyroAlpha: null,
-      baseGyroBeta: null,
+      // Two-Stage CameraRig (360° 4-Sided Camera Orbit around Stationary Artifact at (0, 1.65m, 0))
+      targetOrbitYaw: 0,
+      targetOrbitPitch: 0.08,
+      targetOrbitRadius: 2.35,
+      currentOrbitYaw: 0,
+      currentOrbitPitch: 0.08,
+      currentOrbitRadius: 2.35,
 
-      // Live Camera Video Optical-Flow State (Works 100% Even When Iframe Blocks Gyro!)
-      camYawRad: 0,          // Camera Left/Right Free-Look Angle (Turns away -> Artifact goes off-screen!)
-      camPitchRad: 0,        // Camera Up/Down Free-Look Angle (Tilts away -> Artifact goes off-screen!)
-      camLateralX: 0,        // 6-DoF Camera Left/Right Parallax Walk
-      camForwardZ: 0,        // 6-DoF Camera Forward/Back Walk
-      prevFlowGray: null,
-
-      // 4-Sided 360° Inspection Rotation & Zoom While Aimed at the World-Pinned Spot
-      touchOrbitYawRad: 0,
-      touchOrbitPitchRad: 0,
-      cameraOrbitRadius: 2.35,
+      // Stage 2: Gimbal-Free Relative Quaternion Delta (q_init^-1 * q_current) with Deadband Smoothing
+      hasGyro: false,
+      initialDeviceQuat: null,
+      latestDeviceQuat: null,
+      smoothedDeltaQuat: null,
 
       enteredPin: '',
       pinAttemptsRemaining: 3,
@@ -739,7 +729,7 @@
           state.kalmanLng = state.kalmanLng * 0.25 + rawLng * 0.75;
           state.kalmanVar = acc * acc;
         } else {
-          const processNoise = speed > 1.0 ? 8.0 : 0.4;
+          const processNoise = speed > 1.0 ? 8.0 : 0.35;
           state.kalmanVar += processNoise;
           const kGain = state.kalmanVar / (state.kalmanVar + acc * acc);
           state.kalmanLat += kGain * (rawLat - state.kalmanLat);
@@ -788,6 +778,10 @@
         const unlockRadius = Math.max(10, Math.min(finalAcc, 16));
         if (state.distanceMeters <= unlockRadius && state.activeView === 'radar') {
           launchThreeArExperience();
+        } else if (state.distanceMeters > 18 && state.activeView === 'ar' && !state.isUnlocked3D) {
+          // Strict Encrypted Coordinate Hysteresis: If hunter walks > 18m away from the encrypted spot, close AR!
+          switchView('radar');
+          notify('MOVED OUTSIDE 10M ZONE — RETURN TO SPOT');
         }
       }
     }
@@ -1343,10 +1337,13 @@
     }
 
     // =========================================================================
-    // PHASE 4 & 5: LIVE CAMERA OPTICAL-FLOW SLAM + GYRO FUSION 3D AR ENGINE
+    // PHASE 4 & 5: TWO-STAGE CAMERARIG + QUATERNION FREE-LOOK 3D AR ENGINE
+    // Artifact is 100% FIXED at (0, 1.65m, 0). CameraRig orbits 360° around it!
     // =========================================================================
     let threeRenderer = null;
     let threeScene = null;
+    let cameraOrbitRig = null;
+    let cameraDistanceMount = null;
     let threeCamera = null;
     let worldAnchorGroup = null;
     let envFloorGroup = null;
@@ -1356,121 +1353,23 @@
     let coreCrystalMesh = null;
     let text3DGroup = null;
 
-    // Offscreen 80x60 Canvas for 60fps Live Camera Video Optical-Flow SLAM Tracking
-    const FLOW_W = 80;
-    const FLOW_H = 60;
-    const flowCanvas = document.createElement('canvas');
-    flowCanvas.width = FLOW_W;
-    flowCanvas.height = FLOW_H;
-    const flowCtx = flowCanvas.getContext('2d', { willReadFrequently: true });
+    const _zee = new THREE.Vector3(0, 0, 1);
+    const _euler = new THREE.Euler();
+    const _q0 = new THREE.Quaternion();
+    const _q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));
 
-    // Compute Real-Time Camera Pan/Tilt/Parallax from Live <video> Pixels!
-    // Works 100% inside sandboxed iframes even when Android Chrome blocks gyroscope events!
-    function updateCameraPoseFromVideoOpticalFlow(videoEl) {
-      if (!videoEl || videoEl.readyState < 2 || videoEl.paused || videoEl.videoWidth === 0) return;
+    function computeW3CQuaternion(alphaDeg, betaDeg, gammaDeg, orientDeg) {
+      const alpha = THREE.MathUtils.degToRad(alphaDeg || 0);
+      const beta = THREE.MathUtils.degToRad(betaDeg !== null ? betaDeg : 90);
+      const gamma = THREE.MathUtils.degToRad(gammaDeg || 0);
+      const orient = THREE.MathUtils.degToRad(orientDeg || 0);
 
-      try {
-        flowCtx.drawImage(videoEl, 0, 0, FLOW_W, FLOW_H);
-        const imgData = flowCtx.getImageData(0, 0, FLOW_W, FLOW_H).data;
-        const currGray = new Uint8Array(FLOW_W * FLOW_H);
-
-        for (let i = 0, p = 0; i < currGray.length; i++, p += 4) {
-          currGray[i] = (imgData[p] * 77 + imgData[p + 1] * 150 + imgData[p + 2] * 29) >> 8;
-        }
-
-        const prevGray = state.prevFlowGray;
-        state.prevFlowGray = currGray;
-        if (!prevGray) return;
-
-        // Track 9 patches (3x3 grid across the camera frame) using Sum of Absolute Differences (SAD)
-        const patchCentersX = [22, 40, 58];
-        const patchCentersY = [17, 30, 43];
-        const halfP = 4; // 9x9 patch
-        const searchR = 6; // Search +-6 pixels per frame
-
-        const dxList = [];
-        const dyList = [];
-        let leftShift = 0, rightShift = 0;
-
-        for (let pyIdx = 0; pyIdx < 3; pyIdx++) {
-          for (let pxIdx = 0; pxIdx < 3; pxIdx++) {
-            const cx = patchCentersX[pxIdx];
-            const cy = patchCentersY[pyIdx];
-
-            // Check patch texture variance so blank walls don't create false zero motion
-            let minVal = 255, maxVal = 0;
-            for (let y = -halfP; y <= halfP; y += 2) {
-              const rowOff = (cy + y) * FLOW_W;
-              for (let x = -halfP; x <= halfP; x += 2) {
-                const v = prevGray[rowOff + cx + x];
-                if (v < minVal) minVal = v;
-                if (v > maxVal) maxVal = v;
-              }
-            }
-            if (maxVal - minVal < 14) continue; // Low contrast patch, skip
-
-            let bestSad = Infinity;
-            let bestDx = 0;
-            let bestDy = 0;
-
-            for (let dy = -searchR; dy <= searchR; dy++) {
-              for (let dx = -searchR; dx <= searchR; dx++) {
-                let sad = 0;
-                for (let y = -halfP; y <= halfP; y += 2) {
-                  const prevRow = (cy + y) * FLOW_W + cx;
-                  const currRow = (cy + y + dy) * FLOW_W + (cx + dx);
-                  for (let x = -halfP; x <= halfP; x += 2) {
-                    const diff = prevGray[prevRow + x] - currGray[currRow + x];
-                    sad += diff < 0 ? -diff : diff;
-                  }
-                }
-                // Slight preference for smaller motion on ties
-                sad += (Math.abs(dx) + Math.abs(dy)) * 2;
-                if (sad < bestSad) {
-                  bestSad = sad;
-                  bestDx = dx;
-                  bestDy = dy;
-                }
-              }
-            }
-
-            dxList.push(bestDx);
-            dyList.push(bestDy);
-            if (pxIdx === 0) leftShift += bestDx;
-            if (pxIdx === 2) rightShift += bestDx;
-          }
-        }
-
-        if (dxList.length >= 2) {
-          dxList.sort((a, b) => a - b);
-          dyList.sort((a, b) => a - b);
-          const medDx = dxList[Math.floor(dxList.length / 2)];
-          const medDy = dyList[Math.floor(dyList.length / 2)];
-
-          // Deadband filter (< 0.4px micro-noise ignored)
-          const cleanDx = Math.abs(medDx) >= 1 ? medDx : 0;
-          const cleanDy = Math.abs(medDy) >= 1 ? medDy : 0;
-
-          // Physics of Rear Camera:
-          // Phone pans LEFT (+camYawRad in Three.js) -> Real world image moves RIGHT (cleanDx > 0)
-          // Phone pans RIGHT (-camYawRad in Three.js) -> Real world image moves LEFT (cleanDx < 0)
-          // Phone tilts UP (+camPitchRad) -> Real world image moves DOWN (cleanDy > 0)
-          const radPerPixel = 0.0155;
-          if (!state.hasHardwareGyro) {
-            state.camYawRad += cleanDx * radPerPixel;
-            state.camPitchRad = Math.max(-1.25, Math.min(1.25, state.camPitchRad + cleanDy * radPerPixel));
-          }
-
-          // Lateral Walk-Around Parallax (Allows viewing Left/Right/Back 3D sides as you move!)
-          state.camLateralX = Math.max(-1.6, Math.min(1.6, state.camLateralX - cleanDx * 0.008));
-
-          // Forward/Back Scale Divergence (Walking closer vs stepping back)
-          const scaleDiv = (rightShift - leftShift) / 3;
-          if (Math.abs(scaleDiv) >= 1.5) {
-            state.camForwardZ = Math.max(-1.2, Math.min(1.2, state.camForwardZ - scaleDiv * 0.025));
-          }
-        }
-      } catch (e) {}
+      _euler.set(beta, alpha, -gamma, 'YXZ');
+      const q = new THREE.Quaternion();
+      q.setFromEuler(_euler);
+      q.multiply(_q1);
+      q.multiply(_q0.setFromAxisAngle(_zee, -orient));
+      return q;
     }
 
     function build3DSpatialEnvironment() {
@@ -1695,29 +1594,18 @@
       worldAnchorGroup.add(text3DGroup);
     }
 
-    function resetArWorldPinToCurrentView() {
-      state.camYawRad = 0;
-      state.camPitchRad = 0;
-      state.camLateralX = 0;
-      state.camForwardZ = 0;
-      state.baseGyroAlpha = null;
-      state.baseGyroBeta = null;
-      state.touchOrbitYawRad = 0;
-      state.touchOrbitPitchRad = 0;
-      state.cameraOrbitRadius = 2.35;
-      state.prevFlowGray = null;
-
-      if (worldAnchorGroup) {
-        worldAnchorGroup.position.set(0, 1.65, -2.35);
-        worldAnchorGroup.rotation.set(0, 0, 0);
-      }
-    }
-
     async function launchThreeArExperience() {
       state.isUnlocked3D = false;
       state.enteredPin = '';
       state.pinAttemptsRemaining = 3;
-      resetArWorldPinToCurrentView();
+      state.targetOrbitYaw = 0;
+      state.targetOrbitPitch = 0.06;
+      state.targetOrbitRadius = 2.35;
+      state.currentOrbitYaw = 0;
+      state.currentOrbitPitch = 0.06;
+      state.currentOrbitRadius = 2.35;
+      state.initialDeviceQuat = null;
+      state.smoothedDeltaQuat = new THREE.Quaternion();
 
       updateAirPinSlotsUI();
       document.getElementById('arPinAttemptStatus').textContent = 'ENTER SECRET 4-DIGIT PIN ON ARTIFACT';
@@ -1763,9 +1651,28 @@
 
         threeScene = new THREE.Scene();
 
+        // 1. Stationary World Anchor at (0, 1.65m, 0) — NEVER moves or rotates!
+        worldAnchorGroup = new THREE.Group();
+        worldAnchorGroup.position.set(0, 1.65, 0);
+        worldAnchorGroup.rotation.set(0, 0, 0);
+        threeScene.add(worldAnchorGroup);
+
+        // 2. Two-Stage Camera Rig Centered at (0, 1.65m, 0)
+        // Stage 1: cameraOrbitRig orbits 360° around the stationary Artifact at (0, 1.65m, 0)!
+        cameraOrbitRig = new THREE.Group();
+        cameraOrbitRig.position.set(0, 1.65, 0);
+        cameraOrbitRig.rotation.order = 'YXZ';
+        threeScene.add(cameraOrbitRig);
+
+        // Stage 1b: Radial Distance Mount (+Z offset from center)
+        cameraDistanceMount = new THREE.Group();
+        cameraDistanceMount.position.set(0, 0, 2.35);
+        cameraOrbitRig.add(cameraDistanceMount);
+
+        // Stage 2: threeCamera inside Mount (Driven by Smoothed Relative Quaternion Free-Look!)
         threeCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-        threeCamera.position.set(0, 1.65, 0);
-        threeCamera.rotation.order = 'YXZ';
+        threeCamera.position.set(0, 0, 0);
+        cameraDistanceMount.add(threeCamera);
 
         const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
         threeScene.add(ambLight);
@@ -1775,10 +1682,6 @@
         const dirLight2 = new THREE.DirectionalLight(0xd71921, 1.2);
         dirLight2.position.set(-3, 2, -4);
         threeScene.add(dirLight2);
-
-        worldAnchorGroup = new THREE.Group();
-        worldAnchorGroup.position.set(0, 1.65, -2.35);
-        threeScene.add(worldAnchorGroup);
 
         window.addEventListener('resize', () => {
           if (!threeRenderer || !threeCamera) return;
@@ -1794,35 +1697,34 @@
       }
       build3DSpatialEnvironment();
       buildStationary3DArtifact();
-      resetArWorldPinToCurrentView();
 
-      const videoEl = document.getElementById('arFullscreenVideo');
       const frustum = new THREE.Frustum();
       const projScreenMatrix = new THREE.Matrix4();
 
       function animateThree() {
         if (state.activeView !== 'ar') return;
 
-        // 1. Run Real-Time Optical-Flow SLAM on Live Camera Video Feed!
-        // Tracks actual physical room movement even when iframe blocks gyroscope!
-        updateCameraPoseFromVideoOpticalFlow(videoEl);
+        // 1. Smoothly Interpolate Stage 1 Camera Orbit Rig around Stationary Artifact at (0, 1.65m, 0)
+        state.currentOrbitYaw += (state.targetOrbitYaw - state.currentOrbitYaw) * 0.10;
+        state.currentOrbitPitch += (state.targetOrbitPitch - state.currentOrbitPitch) * 0.10;
+        state.currentOrbitRadius += (state.targetOrbitRadius - state.currentOrbitRadius) * 0.12;
 
-        // 2. Apply Free-Look Camera Rotation (NO lookAt! Turn phone away -> Artifact leaves screen!)
-        threeCamera.rotation.y += (state.camYawRad - threeCamera.rotation.y) * 0.35;
-        threeCamera.rotation.x += (state.camPitchRad - threeCamera.rotation.x) * 0.35;
+        cameraOrbitRig.rotation.y = state.currentOrbitYaw;
+        cameraOrbitRig.rotation.x = -state.currentOrbitPitch;
+        cameraDistanceMount.position.z = state.currentOrbitRadius;
 
-        // 3. Apply 6-DoF Camera Position (Human Eye Height 1.65m + Lateral/Forward Walk Parallax)
-        threeCamera.position.x += (state.camLateralX - threeCamera.position.x) * 0.25;
-        threeCamera.position.y = 1.65;
-        threeCamera.position.z += (state.camForwardZ - threeCamera.position.z) * 0.25;
+        // 2. Smoothly Apply Stage 2 Relative Quaternion Free-Look on threeCamera (Deadband Filtered = Zero Shake!)
+        if (state.hasGyro && state.latestDeviceQuat && state.initialDeviceQuat) {
+          const qDelta = state.initialDeviceQuat.clone().invert().multiply(state.latestDeviceQuat);
+          const angleDiff = state.smoothedDeltaQuat.angleTo(qDelta);
+          // Deadband filter ignores < 0.35 deg hand tremor so Artifact is 100% rock-solid still!
+          if (angleDiff > 0.006) {
+            state.smoothedDeltaQuat.slerp(qDelta, 0.12);
+          }
+          threeCamera.quaternion.copy(state.smoothedDeltaQuat);
+        }
 
-        // 4. Keep Artifact Stationary at (0, 1.65m, -cameraOrbitRadius) & Apply 4-Sided 360° Inspection Rotation
-        worldAnchorGroup.position.set(0, 1.65, -state.cameraOrbitRadius);
-        const totalViewAngleY = state.touchOrbitYawRad - state.camLateralX * 0.45;
-        worldAnchorGroup.rotation.y = totalViewAngleY;
-        worldAnchorGroup.rotation.x = state.touchOrbitPitchRad;
-
-        // 5. Frustum Check: Is the Stationary Artifact Currently Inside the Camera's View?
+        // 3. Check Camera Frustum: If phone turns away from (0, 1.65m, 0), Artifact leaves screen & PIN hides!
         threeCamera.updateMatrixWorld();
         projScreenMatrix.multiplyMatrices(threeCamera.projectionMatrix, threeCamera.matrixWorldInverse);
         frustum.setFromProjectionMatrix(projScreenMatrix);
@@ -1834,42 +1736,40 @@
         if (!state.isUnlocked3D) {
           if (inView) {
             pinOverlay.style.opacity = '1';
-            pinOverlay.style.pointerEvents = 'none';
             noPinOverlay.style.opacity = '1';
-            const deg360 = ((Math.round((totalViewAngleY * 180) / Math.PI) % 360) + 360) % 360;
+            const deg360 = ((Math.round((state.currentOrbitYaw * 180) / Math.PI) % 360) + 360) % 360;
             const sideName = (deg360 >= 315 || deg360 < 45) ? 'FRONT'
               : (deg360 >= 45 && deg360 < 135) ? 'RIGHT SIDE'
               : (deg360 >= 135 && deg360 < 225) ? 'BACK SIDE' : 'LEFT SIDE';
-            document.getElementById('arAngleReadout').textContent = `WORLD-PINNED // ${String(deg360).padStart(3, '0')}° ${sideName}`;
+            document.getElementById('arAngleReadout').textContent = `CAMERA ${String(deg360).padStart(3, '0')}° // ${sideName}`;
           } else {
-            // Camera turned away from the artifact -> Hide PIN pad!
             pinOverlay.style.opacity = '0';
             noPinOverlay.style.opacity = '0';
             document.getElementById('arAngleReadout').textContent = 'OFF-SCREEN // AIM CAMERA BACK AT SPOT';
           }
         }
 
-        // 6. Animate 3D Artifact Rings
+        // 4. Subtle Idle Spin on Inner Crystal Core Only (World Anchor Never Moves!)
         if (artifactGroup) {
           if (outerRingMesh) {
-            outerRingMesh.rotation.z += 0.014;
-            outerRingMesh.rotation.x += 0.008;
+            outerRingMesh.rotation.z += 0.012;
+            outerRingMesh.rotation.x += 0.006;
           }
           if (innerRingMesh) {
-            innerRingMesh.rotation.y -= 0.018;
+            innerRingMesh.rotation.y -= 0.015;
           }
           if (coreCrystalMesh) {
-            coreCrystalMesh.rotation.y += 0.01;
+            coreCrystalMesh.rotation.y += 0.009;
           }
         }
 
-        // 7. 3D Glitch Materialization on Text Unlock
+        // 5. Brief Glitch Materialization on 3D Text Unlock, then 100% Rock-Solid Fixed at (0, 0, 0)
         if (text3DGroup && state.glitchFrames > 0) {
           state.glitchFrames--;
           text3DGroup.position.set(
-            (Math.random() - 0.5) * 0.12,
-            (Math.random() - 0.5) * 0.08,
-            (Math.random() - 0.5) * 0.08
+            (Math.random() - 0.5) * 0.10,
+            (Math.random() - 0.5) * 0.06,
+            (Math.random() - 0.5) * 0.06
           );
           if (state.glitchFrames === 0) {
             text3DGroup.position.set(0, 0, 0);
@@ -2071,14 +1971,9 @@
       switchView('destroyed');
     }
 
-    // Hardware Sensor Listeners (Fused with Optical Flow if permitted by browser)
-    function shortestAngleDeltaDeg(a, b) {
-      return ((a - b + 540) % 360) - 180;
-    }
-
+    // W3C DeviceOrientation Listener -> Relative Quaternion Free-Look
     function handleOrientationSensor(e) {
       if (e.alpha === null && e.webkitCompassHeading === undefined) return;
-      state.hasHardwareGyro = true;
 
       if (typeof e.webkitCompassHeading === 'number') {
         state.compassHeadingDeg = e.webkitCompassHeading;
@@ -2086,39 +1981,20 @@
         state.compassHeadingDeg = (360 - e.alpha) % 360;
       }
 
-      if (state.activeView === 'ar' && typeof e.alpha === 'number') {
-        const curAlpha = e.alpha;
-        const curBeta = e.beta !== null ? e.beta : 90;
-        if (state.baseGyroAlpha === null) {
-          state.baseGyroAlpha = curAlpha;
-          state.baseGyroBeta = curBeta;
+      if (typeof e.alpha === 'number') {
+        state.hasGyro = true;
+        const orientDeg = (window.screen && window.screen.orientation && window.screen.orientation.angle) || window.orientation || 0;
+        const q = computeW3CQuaternion(e.alpha, e.beta !== null ? e.beta : 90, e.gamma || 0, orientDeg);
+        state.latestDeviceQuat = q;
+        if (!state.initialDeviceQuat && state.activeView === 'ar') {
+          state.initialDeviceQuat = q.clone();
+          state.smoothedDeltaQuat = new THREE.Quaternion();
         }
-        const dAlpha = shortestAngleDeltaDeg(curAlpha, state.baseGyroAlpha);
-        const dBeta = curBeta - (state.baseGyroBeta || 90);
-        state.camYawRad = THREE.MathUtils.degToRad(dAlpha);
-        state.camPitchRad = THREE.MathUtils.degToRad(dBeta);
       }
     }
 
     window.addEventListener('deviceorientationabsolute', handleOrientationSensor, true);
     window.addEventListener('deviceorientation', handleOrientationSensor, true);
-
-    // Also bind DeviceMotion rotationRate if available
-    let lastMotionTs = null;
-    window.addEventListener('devicemotion', (e) => {
-      if (state.activeView !== 'ar' || state.hasHardwareGyro) return;
-      const rr = e.rotationRate;
-      if (!rr || (rr.alpha === null && rr.beta === null)) return;
-      const now = performance.now();
-      if (lastMotionTs !== null) {
-        const dt = (now - lastMotionTs) / 1000;
-        if (dt > 0 && dt < 0.2) {
-          state.camYawRad += THREE.MathUtils.degToRad((rr.alpha || 0) * dt);
-          state.camPitchRad = Math.max(-1.25, Math.min(1.25, state.camPitchRad + THREE.MathUtils.degToRad((rr.beta || 0) * dt)));
-        }
-      }
-      lastMotionTs = now;
-    }, true);
 
     function selectMediaTab(type) {
       state.mediaType = type;
@@ -2283,7 +2159,7 @@
         unlockAndProjectPure3DText('');
       });
 
-      // 4-Sided 360° Touch Inspection + 2-Finger Pinch-to-Zoom on the World-Pinned 3D Object
+      // Smooth 4-Sided 360° Camera Orbit + Pinch-to-Zoom Around Stationary Artifact at (0, 1.65m, 0)
       const mount = document.getElementById('threeArMount');
       let isDragging = false, prevX = 0, prevY = 0, initialPinchDist = null;
 
@@ -2305,8 +2181,8 @@
         if (e.touches.length === 1 && isDragging) {
           const dx = e.touches[0].clientX - prevX;
           const dy = e.touches[0].clientY - prevY;
-          state.touchOrbitYawRad += dx * 0.012;
-          state.touchOrbitPitchRad = Math.max(-1.0, Math.min(1.0, state.touchOrbitPitchRad + dy * 0.008));
+          state.targetOrbitYaw -= dx * 0.011;
+          state.targetOrbitPitch = Math.max(-1.05, Math.min(1.05, state.targetOrbitPitch + dy * 0.008));
           prevX = e.touches[0].clientX;
           prevY = e.touches[0].clientY;
         } else if (e.touches.length === 2 && initialPinchDist) {
@@ -2315,7 +2191,7 @@
             e.touches[0].clientY - e.touches[1].clientY
           );
           const delta = initialPinchDist - dist;
-          state.cameraOrbitRadius = Math.max(1.1, Math.min(4.8, state.cameraOrbitRadius + delta * 0.006));
+          state.targetOrbitRadius = Math.max(1.1, Math.min(4.8, state.targetOrbitRadius + delta * 0.006));
           initialPinchDist = dist;
         }
       }, { passive: true });
@@ -2335,17 +2211,12 @@
         if (!mouseDown || state.activeView !== 'ar') return;
         const dx = e.clientX - mPrevX;
         const dy = e.clientY - mPrevY;
-        state.touchOrbitYawRad += dx * 0.012;
-        state.touchOrbitPitchRad = Math.max(-1.0, Math.min(1.0, state.touchOrbitPitchRad + dy * 0.008));
+        state.targetOrbitYaw -= dx * 0.011;
+        state.targetOrbitPitch = Math.max(-1.05, Math.min(1.05, state.targetOrbitPitch + dy * 0.008));
         mPrevX = e.clientX;
         mPrevY = e.clientY;
       });
       window.addEventListener('mouseup', () => { mouseDown = false; });
-
-      document.getElementById('btnResetCameraOrbit').addEventListener('click', () => {
-        resetArWorldPinToCurrentView();
-        notify('RE-PINNED IN FRONT OF CAMERA');
-      });
 
       document.getElementById('btnCloseArView').addEventListener('click', () => {
         switchView('radar');
