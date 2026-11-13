@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>GEO-STASH // NOTHING OS 3.0</title>
+  <title>GEO-STASH // TIKA XR WORLD-LOCKED 3D DEAD-DROP</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-app-compat.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-database-compat.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -141,14 +140,14 @@
   <!-- In-App Browser Notice -->
   <div id="webviewAlert" class="hidden max-w-md mx-auto px-5 pt-2">
     <div class="px-3 py-2 rounded-xl bg-[#d71921]/15 border border-[#d71921] text-[11px] font-mono-tech text-white text-center">
-      OPEN IN SYSTEM BROWSER (CHROME / SAFARI) FOR FULL 3D AR &amp; SENSORS.
+      OPEN IN SYSTEM BROWSER (CHROME / SAFARI) FOR WEBXR IMMERSIVE-AR &amp; SENSORS.
     </div>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- VIEW 1: DROP MODE (ALWAYS-HOT KALMAN GPS + SECRET PIN + CLUE)         -->
+  <!-- VIEW 1: DROP MODE (ALWAYS-HOT KALMAN GPS + TIKA XR AR PLACEMENT)      -->
   <!-- ===================================================================== -->
-  <main id="viewDropMode" class="flex-1 w-full max-w-md mx-auto px-5 py-3 flex flex-col justify-between gap-4">
+  <main id="viewDropMode" class="flex-1 w-full max-w-md mx-auto px-5 py-3 flex flex-col justify-between gap-3.5">
 
     <!-- 1-Line Always-Hot Kalman GPS Lock Pill -->
     <div class="n-card rounded-full px-4 py-2.5 flex items-center justify-between text-xs font-mono-tech">
@@ -162,10 +161,10 @@
     </div>
 
     <!-- Main Composer Stack -->
-    <div class="space-y-3.5 my-auto">
+    <div class="space-y-3 my-auto">
       <div class="text-center space-y-0.5">
         <h1 class="font-display font-bold text-2xl text-white tracking-wider uppercase">LOCK PHYSICAL DROP</h1>
-        <p class="font-mono-tech text-[10px] text-zinc-500 tracking-widest uppercase">KALMAN PIN-POINT GPS // 360° CAMERA-RIG 3D AR</p>
+        <p class="font-mono-tech text-[10px] text-zinc-500 tracking-widest uppercase">TIKA XR WORLD-LOCKED WEBXR // 24-LAYER 3D DEPTH</p>
       </div>
 
       <!-- 3 Mode Pills -->
@@ -185,9 +184,9 @@
       <div id="surfaceQuote" class="space-y-1.5">
         <textarea id="inputSecretQuote" rows="3" maxlength="240"
           class="w-full rounded-2xl bg-[#08080b] border border-zinc-800 focus:border-white p-3.5 font-mono-tech text-sm text-white placeholder-zinc-600 leading-relaxed transition"
-          placeholder="Write your secret note (renders in solid 360° 3D geometry)..."></textarea>
+          placeholder="Write your secret note (renders in TIKA XR 24-layer 3D WebGL depth)..."></textarea>
         <div class="flex justify-between px-1 font-mono-tech text-[10px] text-zinc-500">
-          <span>SOLID 3D EXTRUDED MESH</span>
+          <span>TIKA XR 3D DEPTH SHADER</span>
           <span id="charCountLabel">0 / 240</span>
         </div>
       </div>
@@ -243,11 +242,17 @@
       </div>
     </div>
 
-    <!-- Bottom Action & Zero-Highlight Share Card -->
-    <div class="space-y-3 pb-2">
-      <button id="btnLockStashMain" type="button" class="w-full py-4 rounded-full n-btn-red font-display font-bold text-sm tracking-widest uppercase transition">
-        ENCRYPT &amp; LOCK DEAD-DROP
-      </button>
+    <!-- Bottom Action: Creator AR Anchor Placement + Direct Encrypt & Share Card -->
+    <div class="space-y-2.5 pb-2">
+      <div class="grid grid-cols-12 gap-2">
+        <button id="btnCreatorPlaceAr" type="button" class="col-span-5 py-3.5 px-3 rounded-full bg-[#111116] border border-zinc-700 hover:border-white text-white font-display font-bold text-[11px] tracking-wider uppercase transition flex items-center justify-center gap-1.5">
+          <span>◎</span>
+          <span id="creatorArBtnLabel">PLACE IN AR</span>
+        </button>
+        <button id="btnLockStashMain" type="button" class="col-span-7 py-3.5 px-4 rounded-full n-btn-red font-display font-bold text-xs tracking-widest uppercase transition">
+          ENCRYPT &amp; LOCK DEAD-DROP
+        </button>
+      </div>
 
       <!-- Share Sheet (Non-Selectable URL Div = Zero Blue Highlight!) -->
       <div id="shareResultSheet" class="hidden rounded-3xl bg-[#0a0a0e] border border-zinc-800 p-4 space-y-3">
@@ -323,45 +328,76 @@
       </div>
     </div>
 
-    <!-- Bottom Hint -->
-    <div class="w-full text-center pb-2">
-      <div class="font-display font-semibold text-[11px] text-zinc-500 tracking-wider uppercase">
-        ENTER 10M ZONE TO ENGAGE 3D ARTIFACT &amp; SECRET PIN LOCK
+    <!-- Bottom Hint / 10m WebXR Launch Button -->
+    <div class="w-full text-center pb-2 space-y-2">
+      <button id="btnEnterWebXrHunt" type="button" class="hidden w-full py-3.5 rounded-full n-btn-red font-display font-bold text-xs tracking-widest uppercase transition">
+        WITHIN 10M — LAUNCH WORLD-LOCKED AR
+      </button>
+      <div id="radarZoneHintText" class="font-display font-semibold text-[11px] text-zinc-500 tracking-wider uppercase">
+        ENTER 10M ZONE TO ENGAGE WORLD-LOCKED 3D AR &amp; PIN
       </div>
     </div>
   </main>
 
   <!-- ===================================================================== -->
-  <!-- VIEW 3: FULLSCREEN TWO-STAGE CAMERARIG + QUATERNION FREE-LOOK 3D AR   -->
+  <!-- VIEW 3: TIKA XR TRUE WORLD-LOCKED WEBGL + WEBXR (IMMERSIVE-AR) VIEW   -->
   <!-- ===================================================================== -->
   <section id="viewArCamera" class="hidden fixed inset-0 z-50 bg-black overflow-hidden">
-    <!-- Fullscreen Back Camera Feed -->
+    <!-- Fallback Camera Video Feed (Used when WebXR immersive-ar is not active) -->
     <video id="arFullscreenVideo" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover"></video>
+
+    <!-- TIKA XR Raw WebGL Canvas (xrCompatible: true, 24-Layer 3D Depth + Reticle) -->
+    <canvas id="tikaXrCanvas" class="absolute inset-0 w-full h-full z-10 block"></canvas>
+
+    <!-- Legacy Mount Div Preserved for Structural Compatibility -->
+    <div id="threeArMount" class="hidden"></div>
 
     <!-- Silent 2px Burn Progress Hairline at Very Top Edge -->
     <div id="silentBurnHairlineWrap" class="hidden absolute top-0 left-0 right-0 h-1 bg-black/50 z-40">
       <div id="silentBurnHairlineFill" class="h-full bg-[#d71921] transition-all duration-100" style="width: 100%"></div>
     </div>
 
-    <!-- Three.js WebGL Two-Stage CameraRig Viewport -->
-    <div id="threeArMount" class="absolute inset-0 w-full h-full z-10"></div>
-
-    <!-- Minimal Top Camera Bar (NO Re-Pin Button — Artifact Strictly Locked at Encrypted Coords!) -->
+    <!-- Minimal Top Camera Bar (WebXR Status + Hardware AR Trigger + Close) -->
     <div id="arTopChrome" class="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none">
-      <div id="arStatusPill" class="px-3.5 py-1.5 rounded-full bg-black/65 backdrop-blur-md border border-white/15 flex items-center gap-2 pointer-events-auto">
-        <span class="w-2 h-2 rounded-full bg-[#d71921] dot-pulse"></span>
-        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">CAMERA 000° // FRONT</span>
+      <div id="arStatusPill" class="px-3.5 py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-white/15 flex items-center gap-2 pointer-events-auto">
+        <span id="xrStatusDot" class="w-2 h-2 rounded-full bg-[#38ef7d] dot-pulse"></span>
+        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">WORLD-LOCKED 3D AR</span>
       </div>
 
       <div class="flex items-center gap-1.5 pointer-events-auto">
-        <button id="btnCloseArView" type="button" class="w-8 h-8 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-white text-xs flex items-center justify-center">
+        <button id="btnStartHardwareXr" type="button" class="px-3 py-1.5 rounded-full bg-[#d71921] text-white font-display font-bold text-[10px] tracking-wider uppercase shadow-lg">
+          WEBXR 6DOF
+        </button>
+        <button id="btnCloseArView" type="button" class="w-8 h-8 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white text-xs flex items-center justify-center">
           ✕
         </button>
       </div>
     </div>
 
+    <!-- Center Aiming Hint Banner (Used in Creator Placement or Surface Scan) -->
+    <div id="xrSurfaceHintPill" class="hidden absolute top-16 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full bg-black/75 border border-white/15 font-mono-tech text-[11px] text-zinc-200 whitespace-nowrap pointer-events-none">
+      AIM RING AT FLOOR/WALL &amp; TAP TO ANCHOR
+    </div>
+
     <!-- =================================================================== -->
-    <!-- ON-ARTIFACT 0-9 SECRET PIN LOCK (ONLY VISIBLE WHEN AIMED AT SPOT!)  -->
+    <!-- CREATOR AR PLACEMENT OVERLAY (ONLY IN CREATOR PLACEMENT MODE!)      -->
+    <!-- =================================================================== -->
+    <div id="arCreatorPlaceOverlay" class="hidden absolute inset-x-0 bottom-7 z-30 flex flex-col items-center justify-center gap-2.5 px-5 pointer-events-none">
+      <div class="font-mono-tech text-[11px] text-zinc-300 bg-black/70 px-3.5 py-1 rounded-full border border-white/15">
+        TAP SCREEN TO PLACE 3D TEXT AT EXACT SPOT
+      </div>
+      <div class="flex items-center gap-2.5 pointer-events-auto">
+        <button id="btnCreatorSnapHere" type="button" class="px-5 py-3 rounded-full bg-white text-black font-display font-bold text-xs tracking-wider uppercase">
+          PLACE HERE ◎
+        </button>
+        <button id="btnCreatorConfirmLock" type="button" class="px-6 py-3 rounded-full n-btn-red font-display font-bold text-xs tracking-widest uppercase">
+          LOCK &amp; ENCRYPT →
+        </button>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- HUNTER 0-9 SECRET PIN LOCK (NO RE-PIN BUTTON — AUTO-ANCHORED!)      -->
     <!-- =================================================================== -->
     <div id="arSecretPinLockOverlay" class="hidden absolute inset-x-0 bottom-5 z-30 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-150">
       <div id="arPinAttemptStatus" class="font-display font-bold text-[11px] text-white tracking-widest uppercase mb-1.5 air-key-btn">
@@ -424,7 +460,7 @@
   </section>
 
   <!-- ===================================================================== -->
-  <!-- MASTER PRODUCTION ENGINE (TWO-STAGE CAMERARIG + QUATERNION FREE-LOOK) -->
+  <!-- MASTER PRODUCTION ENGINE (TIKA XR WEBXR + KALMAN GPS + AES-256-GCM)   -->
   <!-- ===================================================================== -->
   <script>
     const firebaseConfig = {
@@ -458,6 +494,7 @@
 
     const state = {
       activeView: 'drop',
+      arRole: 'hunter', // 'creator' | 'hunter'
       mediaType: 'text',
       voiceBase64: null,
       voiceMime: 'audio/webm',
@@ -471,6 +508,11 @@
       kalmanVar: 100,
       bestGpsAcc: Infinity,
       rejectedOutliers: 0,
+
+      // Creator Spatial Anchor Metadata (Saved with Stash in Firebase!)
+      creatorPlacedOffset: [0, 0.15, -1.6],
+      creatorPlacedYaw: 0,
+      hasCreatorCustomAnchor: false,
 
       stashId: null,
       keyIv: null,
@@ -490,30 +532,39 @@
       compassHeadingDeg: 0,
       latestAccuracy: 12,
 
-      // Two-Stage CameraRig (360° 4-Sided Camera Orbit around Stationary Artifact at (0, 1.65m, 0))
-      targetOrbitYaw: 0,
-      targetOrbitPitch: 0.08,
-      targetOrbitRadius: 2.35,
-      currentOrbitYaw: 0,
-      currentOrbitPitch: 0.08,
-      currentOrbitRadius: 2.35,
+      // TIKA XR World-Locked 3D State
+      xrSupported: false,
+      xrSession: null,
+      xrRefSpace: null,
+      xrHitTestSource: null,
+      xrAnchor: null,
+      lastHitResult: null,
+      lastHitMatrix: null,
+      lastViewerPos: [0, 1.6, 0],
+      placed: false,
+      placedPos: [0, 0.15, -1.6],
+      placedYaw: 0,
 
-      // Stage 2: Gimbal-Free Relative Quaternion Delta (q_init^-1 * q_current) with Deadband Smoothing
+      // Fallback 60fps 3D Preview Orbit + Gyro State (When Outside Immersive WebXR)
+      camYaw: 0,
+      camPitch: 0.12,
+      camDist: 2.35,
+      targetCamYaw: 0,
+      targetCamPitch: 0.12,
+      targetCamDist: 2.35,
       hasGyro: false,
-      initialDeviceQuat: null,
-      latestDeviceQuat: null,
-      smoothedDeltaQuat: null,
+      baseAlpha: null,
+      baseBeta: null,
 
       enteredPin: '',
       pinAttemptsRemaining: 3,
       isClaiming: false,
       isUnlocked3D: false,
-      glitchFrames: 0,
       burnTimerId: null,
 
       arVideoStream: null,
       radarAnimId: null,
-      threeAnimId: null,
+      previewAnimId: null,
       micAnimId: null,
       audioCtx: null,
       activeAudioSource: null,
@@ -521,8 +572,7 @@
       mediaRecorder: null,
       recChunks: [],
       recInterval: null,
-      micStream: null,
-      loadedThreeFont: null
+      micStream: null
     };
 
     function notify(msg) {
@@ -533,17 +583,6 @@
       pill.classList.remove('hidden');
       clearTimeout(pill._t);
       pill._t = setTimeout(() => pill.classList.add('hidden'), 3000);
-    }
-
-    function preloadThreeVectorFont() {
-      if (typeof THREE === 'undefined' || !THREE.FontLoader) return;
-      const loader = new THREE.FontLoader();
-      loader.load(
-        'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_bold.typeface.json',
-        (font) => {
-          state.loadedThreeFont = font;
-        }
-      );
     }
 
     function playSynthTone(freq, durationSec, type = 'sine', gainVal = 0.12) {
@@ -582,7 +621,7 @@
     function switchView(viewName) {
       state.activeView = viewName;
       cancelAnimationFrame(state.radarAnimId);
-      cancelAnimationFrame(state.threeAnimId);
+      cancelAnimationFrame(state.previewAnimId);
 
       const topBar = document.getElementById('mainTopBar');
       const vDrop = document.getElementById('viewDropMode');
@@ -599,6 +638,9 @@
 
       if (viewName !== 'ar') {
         topBar.classList.remove('hidden');
+        if (state.xrSession) {
+          try { state.xrSession.end(); } catch (e) {}
+        }
         stopArCameraStream();
       } else {
         topBar.classList.add('hidden');
@@ -615,12 +657,16 @@
         startAvionicsRadarLoop();
       } else if (viewName === 'ar') {
         vAr.classList.remove('hidden');
-        initAndStartThreeArScene();
+        initTikaWebGlEngine();
+        startTikaPreviewLoop();
       } else if (viewName === 'destroyed') {
         vDest.classList.remove('hidden');
       }
     }
 
+    // =========================================================================
+    // CRYPTOGRAPHY (AES-256-GCM + SHA-256 PIN MIXING)
+    // =========================================================================
     function bufToB64Url(buf) {
       const bytes = new Uint8Array(buf);
       let bin = '';
@@ -717,7 +763,6 @@
       } else {
         const jumpMeters = haversineMeters(state.kalmanLat, state.kalmanLng, rawLat, rawLng);
 
-        // Reject degraded cell-tower / indoor multipath bounces
         if (state.bestGpsAcc <= 20 && acc > state.bestGpsAcc * 1.45 && jumpMeters > 12 && speed < 1.5) {
           state.rejectedOutliers++;
           return;
@@ -754,7 +799,7 @@
         dotEl.className = 'w-2 h-2 rounded-full bg-white';
       }
 
-      if (state.targetMeta && (state.activeView === 'radar' || state.activeView === 'ar')) {
+      if (state.targetMeta && (state.activeView === 'radar' || (state.activeView === 'ar' && state.arRole === 'hunter'))) {
         const lostEl = document.getElementById('radarSignalLost');
         if (acc > 75 && state.bestGpsAcc > 50) lostEl.classList.remove('hidden');
         else lostEl.classList.add('hidden');
@@ -776,12 +821,22 @@
         triggerProximitySonarPulse(state.distanceMeters);
 
         const unlockRadius = Math.max(10, Math.min(finalAcc, 16));
-        if (state.distanceMeters <= unlockRadius && state.activeView === 'radar') {
-          launchThreeArExperience();
-        } else if (state.distanceMeters > 18 && state.activeView === 'ar' && !state.isUnlocked3D) {
-          // Strict Encrypted Coordinate Hysteresis: If hunter walks > 18m away from the encrypted spot, close AR!
-          switchView('radar');
-          notify('MOVED OUTSIDE 10M ZONE — RETURN TO SPOT');
+        const btnEnterXr = document.getElementById('btnEnterWebXrHunt');
+        const hintZone = document.getElementById('radarZoneHintText');
+
+        if (state.distanceMeters <= unlockRadius) {
+          if (btnEnterXr) btnEnterXr.classList.remove('hidden');
+          if (hintZone) hintZone.textContent = '10M ZONE LOCKED — WORLD-LOCKED AR READY';
+          if (state.activeView === 'radar') {
+            launchHunterArExperience(false);
+          }
+        } else {
+          if (btnEnterXr) btnEnterXr.classList.add('hidden');
+          if (hintZone) hintZone.textContent = 'ENTER 10M ZONE TO ENGAGE WORLD-LOCKED 3D AR & PIN';
+          if (state.distanceMeters > 18 && state.activeView === 'ar' && state.arRole === 'hunter' && !state.isUnlocked3D) {
+            switchView('radar');
+            notify('MOVED OUTSIDE 10M ZONE — RETURN TO SPOT');
+          }
         }
       }
     }
@@ -951,18 +1006,27 @@
       } catch (e) {}
     }
 
-    async function lockStashToFirebase() {
-      let payloadData = '';
+    // =========================================================================
+    // ENCRYPT & SAVE STASH TO FIREBASE (WITH CREATOR SPATIAL ANCHOR OFFSET!)
+    // =========================================================================
+    function validateCreatorInputs() {
       if (state.mediaType === 'text') {
-        payloadData = document.getElementById('inputSecretQuote').value.trim();
-        if (!payloadData) return notify('WRITE A SECRET MESSAGE FIRST');
+        const txt = document.getElementById('inputSecretQuote').value.trim();
+        if (!txt) { notify('WRITE A SECRET MESSAGE FIRST'); return null; }
+        return txt;
       } else if (state.mediaType === 'audio') {
-        if (!state.voiceBase64) return notify('RECORD VOICE MESSAGE FIRST');
-        payloadData = state.voiceBase64;
+        if (!state.voiceBase64) { notify('RECORD VOICE MESSAGE FIRST'); return null; }
+        return state.voiceBase64;
       } else if (state.mediaType === 'image') {
-        if (!state.imageBase64) return notify('SELECT A PHOTO FIRST');
-        payloadData = state.imageBase64;
+        if (!state.imageBase64) { notify('SELECT A PHOTO FIRST'); return null; }
+        return state.imageBase64;
       }
+      return null;
+    }
+
+    async function lockStashToFirebase() {
+      const payloadData = validateCreatorInputs();
+      if (!payloadData) return;
 
       const rawPin = (document.getElementById('inputSecretPin').value || '').replace(/\D/g, '');
       if (rawPin.length > 0 && rawPin.length !== 4) {
@@ -999,6 +1063,8 @@
           requiresPin: hasPin,
           pinHash: pinHash,
           clue: clueText || null,
+          placedPos: state.creatorPlacedOffset || [0, 0.15, -1.6],
+          placedYaw: typeof state.creatorPlacedYaw === 'number' ? +state.creatorPlacedYaw.toFixed(4) : 0,
           status: 'ACTIVE',
           claimToken: null,
           createdAt: Date.now(),
@@ -1033,8 +1099,12 @@
         document.getElementById('sharePinNotice').textContent = hasPin ? 'SECRET PIN ARMED (3-STRIKE BURN)' : 'NO PIN (DIRECT 10M UNLOCK)';
         document.getElementById('shareResultSheet').classList.remove('hidden');
 
+        if (state.activeView === 'ar') {
+          switchView('drop');
+        }
+
         playSynthTone(880, 0.12, 'triangle', 0.15);
-        notify('LOCKED AT EXACT KALMAN COORDS');
+        notify('WORLD-LOCKED STASH ARMED IN FIREBASE');
       } catch (e) {
         notify('LOCK ERROR: ' + e.message);
       } finally {
@@ -1104,6 +1174,9 @@
       }
     }
 
+    // =========================================================================
+    // HIGH-DPI AVIONICS RADAR
+    // =========================================================================
     function startAvionicsRadarLoop() {
       const canvas = document.getElementById('avionicsRadarCanvas');
       if (!canvas) return;
@@ -1337,133 +1410,182 @@
     }
 
     // =========================================================================
-    // PHASE 4 & 5: TWO-STAGE CAMERARIG + QUATERNION FREE-LOOK 3D AR ENGINE
-    // Artifact is 100% FIXED at (0, 1.65m, 0). CameraRig orbits 360° around it!
+    // PHASE 4 & 5: TIKA XR TRUE WORLD-LOCKED WEBGL + WEBXR (IMMERSIVE-AR) ENGINE
+    // Exact Port of index (1).html (24-Layer 3D Depth + Hit-Test + XRAnchor)
     // =========================================================================
-    let threeRenderer = null;
-    let threeScene = null;
-    let cameraOrbitRig = null;
-    let cameraDistanceMount = null;
-    let threeCamera = null;
-    let worldAnchorGroup = null;
-    let envFloorGroup = null;
-    let artifactGroup = null;
-    let outerRingMesh = null;
-    let innerRingMesh = null;
-    let coreCrystalMesh = null;
-    let text3DGroup = null;
+    let gl = null;
+    let prog = null;
+    let quadBuf = null;
+    let ringBuf = null;
+    let gridBuf = null;
+    let gridVertCount = 0;
+    let textTex = null;
+    let ringTex = null;
+    let whiteTex = null;
+    let textAspect = 2.5;
+    let uLoc = {};
 
-    const _zee = new THREE.Vector3(0, 0, 1);
-    const _euler = new THREE.Euler();
-    const _q0 = new THREE.Quaternion();
-    const _q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));
-
-    function computeW3CQuaternion(alphaDeg, betaDeg, gammaDeg, orientDeg) {
-      const alpha = THREE.MathUtils.degToRad(alphaDeg || 0);
-      const beta = THREE.MathUtils.degToRad(betaDeg !== null ? betaDeg : 90);
-      const gamma = THREE.MathUtils.degToRad(gammaDeg || 0);
-      const orient = THREE.MathUtils.degToRad(orientDeg || 0);
-
-      _euler.set(beta, alpha, -gamma, 'YXZ');
-      const q = new THREE.Quaternion();
-      q.setFromEuler(_euler);
-      q.multiply(_q1);
-      q.multiply(_q0.setFromAxisAngle(_zee, -orient));
-      return q;
+    const mId = () => new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+    function mMul(a, b) {
+      const o = new Float32Array(16);
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          o[j * 4 + i] =
+            a[i] * b[j * 4] +
+            a[4 + i] * b[j * 4 + 1] +
+            a[8 + i] * b[j * 4 + 2] +
+            a[12 + i] * b[j * 4 + 3];
+        }
+      }
+      return o;
+    }
+    const mT = (x, y, z) => new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, x,y,z,1]);
+    const mS = (x, y, z) => new Float32Array([x,0,0,0, 0,y,0,0, 0,0,z,0, 0,0,0,1]);
+    function mRy(a) {
+      const c = Math.cos(a), s = Math.sin(a);
+      return new Float32Array([c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1]);
+    }
+    function mPersp(fov, asp, n, f) {
+      const t = 1 / Math.tan(fov / 2), nf = 1 / (n - f);
+      return new Float32Array([t / asp,0,0,0, 0,t,0,0, 0,0,(f + n) * nf,-1, 0,0,2 * f * n * nf,0]);
+    }
+    function mLookAt(e, tg, up) {
+      let zx = e[0] - tg[0], zy = e[1] - tg[1], zz = e[2] - tg[2];
+      let l = Math.hypot(zx, zy, zz) || 1; zx /= l; zy /= l; zz /= l;
+      let xx = up[1] * zz - up[2] * zy, xy = up[2] * zx - up[0] * zz, xz = up[0] * zy - up[1] * zx;
+      l = Math.hypot(xx, xy, xz) || 1; xx /= l; xy /= l; xz /= l;
+      const yx = zy * xz - zz * xy, yy = zz * xx - zx * xz, yz = zx * xy - zy * xx;
+      return new Float32Array([
+        xx, yx, zx, 0,
+        xy, yy, zy, 0,
+        xz, yz, zz, 0,
+        -(xx * e[0] + xy * e[1] + xz * e[2]),
+        -(yx * e[0] + yy * e[1] + yz * e[2]),
+        -(zx * e[0] + zy * e[1] + zz * e[2]),
+        1
+      ]);
     }
 
-    function build3DSpatialEnvironment() {
-      if (envFloorGroup) {
-        worldAnchorGroup.remove(envFloorGroup);
+    function initTikaWebGlEngine() {
+      const cv = document.getElementById('tikaXrCanvas');
+      if (!cv) return;
+      if (gl) {
+        resizeTikaCanvas();
+        return;
       }
-      envFloorGroup = new THREE.Group();
-      envFloorGroup.position.set(0, -1.65, 0);
 
-      [0.65, 1.3, 2.0].forEach((radius, idx) => {
-        const ringGeo = new THREE.RingGeometry(radius - 0.012, radius, 64);
-        ringGeo.rotateX(-Math.PI / 2);
-        const ringMat = new THREE.MeshBasicMaterial({
-          color: idx === 0 ? 0xd71921 : 0xffffff,
-          transparent: true,
-          opacity: idx === 0 ? 0.55 : 0.16,
-          side: THREE.DoubleSide
-        });
-        envFloorGroup.add(new THREE.Mesh(ringGeo, ringMat));
+      gl = cv.getContext('webgl', {
+        alpha: true,
+        antialias: true,
+        premultipliedAlpha: true,
+        xrCompatible: true
       });
+      if (!gl) return;
 
-      const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 });
-      const ptsX = [new THREE.Vector3(-2.0, 0.002, 0), new THREE.Vector3(2.0, 0.002, 0)];
-      const ptsZ = [new THREE.Vector3(0, 0.002, -2.0), new THREE.Vector3(0, 0.002, 2.0)];
-      envFloorGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ptsX), lineMat));
-      envFloorGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ptsZ), lineMat));
+      const vsSrc = "attribute vec3 aPos;attribute vec2 aUv;uniform mat4 uP,uV,uM;varying vec2 vUv;void main(){vUv=aUv;gl_Position=uP*uV*uM*vec4(aPos,1.0);}";
+      const fsSrc = "precision mediump float;varying vec2 vUv;uniform sampler2D uTex;uniform vec3 uCol;uniform float uA;void main(){vec4 texel=texture2D(uTex,vUv);float a=texel.a*uA;if(a<0.02)discard;gl_FragColor=vec4(texel.rgb*uCol*a,a);}";
 
-      const tetherMat = new THREE.LineBasicMaterial({ color: 0xd71921, transparent: true, opacity: 0.45 });
-      const tetherPts = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 1.65, 0)];
-      envFloorGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(tetherPts), tetherMat));
+      const compileShader = (tp, src) => {
+        const s = gl.createShader(tp);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      };
+      prog = gl.createProgram();
+      gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, vsSrc));
+      gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, fsSrc));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
 
-      worldAnchorGroup.add(envFloorGroup);
+      uLoc = {
+        aPos: gl.getAttribLocation(prog, 'aPos'),
+        aUv: gl.getAttribLocation(prog, 'aUv'),
+        uP: gl.getUniformLocation(prog, 'uP'),
+        uV: gl.getUniformLocation(prog, 'uV'),
+        uM: gl.getUniformLocation(prog, 'uM'),
+        uCol: gl.getUniformLocation(prog, 'uCol'),
+        uA: gl.getUniformLocation(prog, 'uA')
+      };
+
+      const makeVBO = (arr) => {
+        const b = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, b);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arr), gl.STATIC_DRAW);
+        return b;
+      };
+
+      quadBuf = makeVBO([
+        -0.5,-0.5,0, 0,1,  0.5,-0.5,0, 1,1,  0.5,0.5,0, 1,0,
+        -0.5,-0.5,0, 0,1,  0.5,0.5,0, 1,0,  -0.5,0.5,0, 0,0
+      ]);
+      ringBuf = makeVBO([
+        -0.5,0,-0.5, 0,1,  0.5,0,-0.5, 1,1,  0.5,0,0.5, 1,0,
+        -0.5,0,-0.5, 0,1,  0.5,0,0.5, 1,0,  -0.5,0,0.5, 0,0
+      ]);
+
+      const g = [];
+      for (let i = -5; i <= 5; i++) {
+        const p = i * 0.45;
+        g.push(-2.25, 0, p, 0, 0,  2.25, 0, p, 0, 0,  p, 0, -2.25, 0, 0,  p, 0, 2.25, 0, 0);
+      }
+      gridVertCount = g.length / 5;
+      gridBuf = makeVBO(g);
+
+      whiteTex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, whiteTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255]));
+
+      ringTex = makeReticleRingTexture();
+      textTex = gl.createTexture();
+
+      uploadTikaTextTexture('GEO // STASH', true);
+      resizeTikaCanvas();
+      window.addEventListener('resize', resizeTikaCanvas);
     }
 
-    function buildStationary3DArtifact() {
-      if (artifactGroup) {
-        worldAnchorGroup.remove(artifactGroup);
-      }
-      artifactGroup = new THREE.Group();
-      artifactGroup.position.set(0, 0, 0);
-
-      const octaGeo = new THREE.OctahedronGeometry(0.28, 0);
-      const octaMat = new THREE.MeshStandardMaterial({
-        color: 0xd71921,
-        emissive: 0x660508,
-        roughness: 0.18,
-        metalness: 0.85,
-        flatShading: true
-      });
-      coreCrystalMesh = new THREE.Mesh(octaGeo, octaMat);
-      artifactGroup.add(coreCrystalMesh);
-
-      const cageGeo = new THREE.IcosahedronGeometry(0.38, 1);
-      const cageMat = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.42
-      });
-      artifactGroup.add(new THREE.Mesh(cageGeo, cageMat));
-
-      const ring1Geo = new THREE.TorusGeometry(0.48, 0.012, 16, 72);
-      outerRingMesh = new THREE.Mesh(ring1Geo, new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        roughness: 0.3,
-        metalness: 0.9
-      }));
-      artifactGroup.add(outerRingMesh);
-
-      const ring2Geo = new THREE.TorusGeometry(0.55, 0.01, 16, 72);
-      innerRingMesh = new THREE.Mesh(ring2Geo, new THREE.MeshBasicMaterial({ color: 0xd71921 }));
-      innerRingMesh.rotation.x = Math.PI / 3;
-      artifactGroup.add(innerRingMesh);
-
-      worldAnchorGroup.add(artifactGroup);
+    function resizeTikaCanvas() {
+      const cv = document.getElementById('tikaXrCanvas');
+      if (!cv || state.xrSession) return;
+      const dpr = Math.min(window.devicePixelRatio || 2, 2.5);
+      cv.width = window.innerWidth * dpr;
+      cv.height = window.innerHeight * dpr;
     }
 
-    function buildTrueVector3DText(secretString) {
-      if (artifactGroup) {
-        worldAnchorGroup.remove(artifactGroup);
-        artifactGroup = null;
-      }
-      if (envFloorGroup) {
-        worldAnchorGroup.remove(envFloorGroup);
-        envFloorGroup = null;
-      }
-      if (text3DGroup) {
-        worldAnchorGroup.remove(text3DGroup);
-      }
+    function makeReticleRingTexture() {
+      const c = document.createElement('canvas');
+      c.width = c.height = 256;
+      const x = c.getContext('2d');
+      x.strokeStyle = '#ffffff';
+      x.lineWidth = 10;
+      x.beginPath();
+      x.arc(128, 128, 95, 0, Math.PI * 2);
+      x.stroke();
 
-      text3DGroup = new THREE.Group();
-      text3DGroup.position.set(0, 0, 0);
+      x.strokeStyle = '#d71921';
+      x.lineWidth = 4;
+      x.beginPath();
+      x.arc(128, 128, 65, 0, Math.PI * 2);
+      x.stroke();
 
-      const words = (secretString || '').trim().split(/\s+/);
+      x.fillStyle = '#ffffff';
+      x.beginPath();
+      x.arc(128, 128, 10, 0, Math.PI * 2);
+      x.fill();
+
+      const t = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      return t;
+    }
+
+    function uploadTikaTextTexture(str, isLockedVault = false) {
+      if (!gl || !textTex) return;
+
+      const words = (str || 'GEO-STASH').trim().split(/\s+/);
       const lines = [];
       let cur = '';
       words.forEach(w => {
@@ -1475,158 +1597,375 @@
         }
       });
       if (cur) lines.push(cur);
-      const finalLines = lines.slice(0, 5);
+      const finalLines = lines.slice(0, 4);
 
-      const renderHighResVolumetricFallback = () => {
-        if (!text3DGroup || text3DGroup.children.length > 0) return;
-        const makeTex = (fill, stroke) => {
-          const c = document.createElement('canvas');
-          c.width = 2048; c.height = 1024;
-          const ctx = c.getContext('2d');
-          const fs = finalLines.length <= 2 ? 156 : 112;
-          const lh = fs * 1.28;
-          const sy = (c.height - finalLines.length * lh) / 2 + fs / 2;
-          ctx.font = `700 ${fs}px "Space Grotesk", "JetBrains Mono", sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          finalLines.forEach((ln, i) => {
-            if (stroke) {
-              ctx.lineWidth = 14;
-              ctx.strokeStyle = stroke;
-              ctx.strokeText(ln, c.width / 2, sy + i * lh);
-            }
-            ctx.fillStyle = fill;
-            ctx.fillText(ln, c.width / 2, sy + i * lh);
-          });
-          const t = new THREE.CanvasTexture(c);
-          t.needsUpdate = true;
-          return t;
-        };
-        const fTex = makeTex('#ffffff', 'rgba(0,0,0,0.9)');
-        const sTex = makeTex('#d71921', null);
-        const geo = new THREE.PlaneGeometry(2.0, 1.0);
-        for (let i = 0; i < 32; i++) {
-          const isFace = (i === 0 || i === 31);
-          const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
-            map: isFace ? fTex : sTex,
-            transparent: true,
-            alphaTest: 0.1,
-            side: isFace ? THREE.FrontSide : THREE.DoubleSide
-          }));
-          m.position.z = -0.07 + (i / 31) * 0.14;
-          if (i === 0) m.rotation.y = Math.PI;
-          text3DGroup.add(m);
-        }
-      };
+      const c = document.createElement('canvas');
+      const x = c.getContext('2d');
+      const fontSize = finalLines.length === 1 ? 168 : finalLines.length === 2 ? 132 : 104;
+      const fontSpec = `900 ${fontSize}px "Space Grotesk", "JetBrains Mono", system-ui, sans-serif`;
+      x.font = fontSpec;
 
-      const renderWithVectorFont = (font) => {
-        if (!text3DGroup) return;
-        while (text3DGroup.children.length) {
-          text3DGroup.remove(text3DGroup.children[0]);
-        }
+      let maxW = 320;
+      finalLines.forEach(ln => {
+        const m = x.measureText(ln).width;
+        if (m > maxW) maxW = m;
+      });
 
-        const faceMat = new THREE.MeshStandardMaterial({
-          color: 0xffffff,
-          emissive: 0x282828,
-          roughness: 0.18,
-          metalness: 0.25
-        });
-        const sideExtrudeMat = new THREE.MeshStandardMaterial({
-          color: 0xd71921,
-          emissive: 0x600509,
-          roughness: 0.3,
-          metalness: 0.8
-        });
+      const padX = 110;
+      const lineH = fontSize * 1.24;
+      c.width = Math.min(2048, Math.ceil(maxW + padX * 2));
+      c.height = Math.min(1024, Math.ceil(finalLines.length * lineH + 110));
+      textAspect = c.width / c.height;
 
-        const lineStepY = 0.28;
-        const totalHeight = (finalLines.length - 1) * lineStepY;
+      x.clearRect(0, 0, c.width, c.height);
 
-        finalLines.forEach((lineStr, idx) => {
-          const textGeo = new THREE.TextGeometry(lineStr, {
-            font: font,
-            size: 0.19,
-            height: 0.08,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 0.014,
-            bevelSize: 0.009,
-            bevelOffset: 0,
-            bevelSegments: 5
-          });
-
-          textGeo.computeBoundingBox();
-          const bb = textGeo.boundingBox;
-          const centerX = -0.5 * (bb.max.x - bb.min.x);
-          const centerZ = -0.5 * (bb.max.z - bb.min.z);
-          textGeo.translate(centerX, 0, centerZ);
-
-          const mesh = new THREE.Mesh(textGeo, [faceMat, sideExtrudeMat]);
-          mesh.position.y = (totalHeight / 2) - idx * lineStepY;
-          text3DGroup.add(mesh);
-        });
-
-        const groupBox = new THREE.Box3().setFromObject(text3DGroup);
-        const width3D = groupBox.max.x - groupBox.min.x;
-        if (width3D > 1.85) {
-          const scaleFactor = 1.85 / width3D;
-          text3DGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
-        }
-      };
-
-      const isAsciiPrintable = /^[\x20-\x7E\s]+$/.test(secretString || '');
-      if (state.loadedThreeFont && isAsciiPrintable) {
-        renderWithVectorFont(state.loadedThreeFont);
-      } else {
-        renderHighResVolumetricFallback();
-        if (isAsciiPrintable && typeof THREE !== 'undefined' && THREE.FontLoader) {
-          const loader = new THREE.FontLoader();
-          loader.load(
-            'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_bold.typeface.json',
-            (font) => {
-              state.loadedThreeFont = font;
-              renderWithVectorFont(font);
-            }
-          );
-        }
+      if (isLockedVault) {
+        // Draw crisp Nothing OS 3D Vault Frame around Locked Status
+        x.strokeStyle = '#ffffff';
+        x.lineWidth = 10;
+        x.strokeRect(20, 20, c.width - 40, c.height - 40);
       }
 
-      state.glitchFrames = 16;
-      worldAnchorGroup.add(text3DGroup);
+      x.font = fontSpec;
+      x.textAlign = 'center';
+      x.textBaseline = 'middle';
+      x.lineJoin = 'round';
+
+      const startY = (c.height - (finalLines.length - 1) * lineH) / 2;
+      finalLines.forEach((ln, idx) => {
+        const y = startY + idx * lineH;
+        x.lineWidth = 14;
+        x.strokeStyle = 'rgba(0, 0, 0, 0.92)';
+        x.strokeText(ln, c.width / 2, y);
+        x.fillStyle = '#ffffff';
+        x.fillText(ln, c.width / 2, y);
+      });
+
+      gl.bindTexture(gl.TEXTURE_2D, textTex);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLIED_ALPHA_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     }
 
-    async function launchThreeArExperience() {
-      state.isUnlocked3D = false;
-      state.enteredPin = '';
-      state.pinAttemptsRemaining = 3;
-      state.targetOrbitYaw = 0;
-      state.targetOrbitPitch = 0.06;
-      state.targetOrbitRadius = 2.35;
-      state.currentOrbitYaw = 0;
-      state.currentOrbitPitch = 0.06;
-      state.currentOrbitRadius = 2.35;
-      state.initialDeviceQuat = null;
-      state.smoothedDeltaQuat = new THREE.Quaternion();
+    function uploadTikaPhotoTexture(imgEl) {
+      if (!gl || !textTex || !imgEl) return;
+      const c = document.createElement('canvas');
+      c.width = 1024;
+      c.height = 1024;
+      const x = c.getContext('2d');
+      const w = imgEl.naturalWidth || imgEl.width || 1024;
+      const h = imgEl.naturalHeight || imgEl.height || 1024;
+      textAspect = w / h;
 
-      updateAirPinSlotsUI();
-      document.getElementById('arPinAttemptStatus').textContent = 'ENTER SECRET 4-DIGIT PIN ON ARTIFACT';
-      document.getElementById('arPinAttemptStatus').className = 'font-display font-bold text-[11px] text-white tracking-widest uppercase mb-1.5 air-key-btn';
+      x.fillStyle = '#ffffff';
+      x.fillRect(0, 0, c.width, c.height);
+      x.drawImage(imgEl, 24, 24, c.width - 48, c.height - 48);
 
-      switchView('ar');
-      playSynthTone(1046.5, 0.18, 'triangle', 0.16);
+      gl.bindTexture(gl.TEXTURE_2D, textTex);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLIED_ALPHA_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    }
 
-      document.getElementById('silentBurnHairlineWrap').classList.add('hidden');
-      document.getElementById('arStatusPill').classList.remove('hidden');
+    function bindTikaBuf(b) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, b);
+      gl.enableVertexAttribArray(uLoc.aPos);
+      gl.vertexAttribPointer(uLoc.aPos, 3, gl.FLOAT, false, 20, 0);
+      gl.enableVertexAttribArray(uLoc.aUv);
+      gl.vertexAttribPointer(uLoc.aUv, 2, gl.FLOAT, false, 20, 12);
+    }
 
-      const requiresPin = state.targetMeta && state.targetMeta.requiresPin;
-      if (requiresPin) {
-        document.getElementById('arSecretPinLockOverlay').classList.remove('hidden');
-        document.getElementById('arNoPinTapOverlay').classList.add('hidden');
-      } else {
-        document.getElementById('arSecretPinLockOverlay').classList.add('hidden');
-        document.getElementById('arNoPinTapOverlay').classList.remove('hidden');
+    // TIKA XR 24-Layer 3D Depth-Extruded WebGL Renderer
+    function drawTikaExtruded3D(P, V, base) {
+      gl.useProgram(prog);
+      gl.uniformMatrix4fv(uLoc.uP, false, P);
+      gl.uniformMatrix4fv(uLoc.uV, false, V);
+      gl.bindTexture(gl.TEXTURE_2D, textTex);
+      bindTikaBuf(quadBuf);
+
+      const h = 0.36;
+      const w = Math.min(1.65, h * textAspect);
+      const S = mS(w, h, 1);
+      const n = 22;
+      const gap = 0.0045;
+
+      // Render Back-to-Front 3D Extruded Depth Layers
+      for (let i = n - 1; i >= 0; i--) {
+        const zOff = (n / 2 - i) * gap;
+        const M = mMul(mMul(base, mT(0, h * 0.55, zOff)), S);
+        const isFrontOrBackFace = (i === 0 || i === n - 1);
+
+        if (isFrontOrBackFace) {
+          // Pure Stark White Front & Back Faces
+          gl.uniform3f(uLoc.uCol, 1.0, 1.0, 1.0);
+        } else {
+          // Nothing OS Crimson Red (#D71921) 3D Extruded Depth Walls
+          const shade = Math.max(0.35, 1.0 - (i / n) * 0.55);
+          gl.uniform3f(uLoc.uCol, 0.843 * shade, 0.098 * shade, 0.129 * shade);
+        }
+        gl.uniform1f(uLoc.uA, 1.0);
+        gl.uniformMatrix4fv(uLoc.uM, false, M);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
+    }
+
+    function drawTikaReticle(P, V, M) {
+      gl.useProgram(prog);
+      gl.uniformMatrix4fv(uLoc.uP, false, P);
+      gl.uniformMatrix4fv(uLoc.uV, false, V);
+      gl.uniformMatrix4fv(uLoc.uM, false, mMul(M, mS(0.32, 1, 0.32)));
+      gl.bindTexture(gl.TEXTURE_2D, ringTex);
+      gl.uniform3f(uLoc.uCol, 1.0, 1.0, 1.0);
+      gl.uniform1f(uLoc.uA, 0.92);
+      bindTikaBuf(ringBuf);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
+    function drawTikaGrid(P, V) {
+      gl.useProgram(prog);
+      gl.uniformMatrix4fv(uLoc.uP, false, P);
+      gl.uniformMatrix4fv(uLoc.uV, false, V);
+      gl.uniformMatrix4fv(uLoc.uM, false, mId());
+      gl.bindTexture(gl.TEXTURE_2D, whiteTex);
+      gl.uniform3f(uLoc.uCol, 0.84, 0.10, 0.13);
+      gl.uniform1f(uLoc.uA, 0.24);
+      bindTikaBuf(gridBuf);
+      gl.drawArrays(gl.LINES, 0, gridVertCount);
+    }
+
+    // =========================================================================
+    // WEBXR IMMERSIVE-AR SESSION (HIT-TEST + HARDWARE XRAncHOR)
+    // =========================================================================
+    async function startHardwareWebXrSession() {
+      if (!navigator.xr) {
+        notify('WEBXR NOT IN BROWSER — USING 3D GYRO LOCK');
+        return false;
+      }
+      if (state.xrSession) return true;
+
+      try {
+        const supported = await navigator.xr.isSessionSupported('immersive-ar');
+        if (!supported) {
+          notify('IMMERSIVE-AR UNSUPPORTED ON DEVICE — USING 3D LOCK');
+          return false;
+        }
+
+        initTikaWebGlEngine();
+        await gl.makeXRCompatible();
+
+        const session = await navigator.xr.requestSession('immersive-ar', {
+          requiredFeatures: ['hit-test'],
+          optionalFeatures: ['anchors', 'dom-overlay', 'local-floor'],
+          domOverlay: { root: document.getElementById('viewArCamera') }
+        });
+
+        state.xrSession = session;
+        stopArCameraStream();
+        cancelAnimationFrame(state.previewAnimId);
+
+        document.getElementById('btnStartHardwareXr').classList.add('hidden');
+        document.getElementById('arAngleReadout').textContent = state.arRole === 'creator'
+          ? 'WEBXR SLAM // TAP SURFACE TO PLACE'
+          : 'WEBXR 6DOF // LOCKING TO SURFACE...';
+
+        session.updateRenderState({
+          baseLayer: new XRWebGLLayer(session, gl, { framebufferScaleFactor: 1.0, alpha: true })
+        });
+
+        try {
+          state.xrRefSpace = await session.requestReferenceSpace('local-floor');
+        } catch (e) {
+          state.xrRefSpace = await session.requestReferenceSpace('local');
+        }
+
+        const viewerSpace = await session.requestReferenceSpace('viewer');
+        state.xrHitTestSource = await session.requestHitTestSource({ space: viewerSpace });
+
+        session.addEventListener('select', onWebXrSelectTap);
+        session.addEventListener('end', () => {
+          state.xrSession = null;
+          state.xrHitTestSource = null;
+          state.xrAnchor = null;
+          document.getElementById('btnStartHardwareXr').classList.remove('hidden');
+          if (state.activeView === 'ar') {
+            startFallbackCameraVideo();
+            resizeTikaCanvas();
+            startTikaPreviewLoop();
+          }
+        });
+
+        session.requestAnimationFrame(onTikaXrFrame);
+        return true;
+      } catch (err) {
+        notify('WEBXR READY IN 3D LOCK MODE');
+        return false;
+      }
+    }
+
+    async function onWebXrSelectTap() {
+      // STRICT RULE: Only Creator can place/re-place the spot!
+      // Hunter is strictly locked to the encrypted coordinates and cannot move it!
+      if (state.arRole !== 'creator') return;
+      if (!state.lastHitMatrix) return;
+
+      const m = state.lastHitMatrix;
+      state.placedPos = [m[12], m[13], m[14]];
+      state.placedYaw = Math.atan2(state.lastViewerPos[0] - state.placedPos[0], state.lastViewerPos[2] - state.placedPos[2]);
+      state.placed = true;
+
+      state.creatorPlacedOffset = [...state.placedPos];
+      state.creatorPlacedYaw = state.placedYaw;
+      state.hasCreatorCustomAnchor = true;
+
+      if (state.lastHitResult && state.lastHitResult.createAnchor) {
+        try {
+          state.xrAnchor = await state.lastHitResult.createAnchor();
+        } catch (e) {}
       }
 
+      document.getElementById('creatorArBtnLabel').textContent = 'SPOT ANCHORED ✓';
+      document.getElementById('arAngleReadout').textContent = 'ANCHORED IN 3D SPACE // WALK AROUND';
+      playSynthTone(1180, 0.09, 'triangle', 0.14);
+      notify('3D SPOT ANCHORED — WALK AROUND OR LOCK');
+    }
+
+    async function autoAnchorForHunterInWebXr(hit, hitMat) {
+      if (state.placed) return;
+      state.placed = true;
+
+      const savedOff = (state.targetMeta && Array.isArray(state.targetMeta.placedPos))
+        ? state.targetMeta.placedPos
+        : [0, 0.15, -1.6];
+
+      state.placedPos = [hitMat[12], hitMat[13] + (savedOff[1] || 0), hitMat[14]];
+      state.placedYaw = Math.atan2(state.lastViewerPos[0] - state.placedPos[0], state.lastViewerPos[2] - state.placedPos[2]);
+
+      if (hit && hit.createAnchor) {
+        try {
+          state.xrAnchor = await hit.createAnchor();
+        } catch (e) {}
+      }
+
+      document.getElementById('xrSurfaceHintPill').classList.add('hidden');
+      document.getElementById('arAngleReadout').textContent = 'WEBXR 6DOF LOCKED // WALK 360°';
+      playSynthTone(1320, 0.1, 'triangle', 0.14);
+    }
+
+    function onTikaXrFrame(t, frame) {
+      const s = frame.session;
+      s.requestAnimationFrame(onTikaXrFrame);
+
+      const pose = frame.getViewerPose(state.xrRefSpace);
+      if (!pose) return;
+
+      const glLayer = s.renderState.baseLayer;
+      gl.bindFramebuffer(gl.FRAMEBUFFER, glLayer.framebuffer);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.enable(gl.DEPTH_TEST);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+      const p = pose.transform.position;
+      state.lastViewerPos = [p.x, p.y, p.z];
+
+      if (state.xrHitTestSource) {
+        const hits = frame.getHitTestResults(state.xrHitTestSource);
+        if (hits.length > 0) {
+          state.lastHitResult = hits[0];
+          const hp = state.lastHitResult.getPose(state.xrRefSpace);
+          if (hp) {
+            state.lastHitMatrix = hp.transform.matrix;
+            // In Hunter Mode, automatically lock the XRAnchor onto the first detected real-world surface!
+            if (state.arRole === 'hunter' && !state.placed) {
+              autoAnchorForHunterInWebXr(state.lastHitResult, state.lastHitMatrix);
+            }
+          }
+        } else {
+          state.lastHitMatrix = null;
+        }
+      }
+
+      if (state.xrAnchor && state.placed) {
+        const ap = frame.getPose(state.xrAnchor.anchorSpace, state.xrRefSpace);
+        if (ap) {
+          const m = ap.transform.matrix;
+          state.placedPos = [m[12], m[13], m[14]];
+        }
+      }
+
+      const base = mMul(mT(state.placedPos[0], state.placedPos[1], state.placedPos[2]), mRy(state.placedYaw));
+
+      for (const view of pose.views) {
+        const vp = glLayer.getViewport(view);
+        gl.viewport(vp.x, vp.y, vp.width, vp.height);
+        const P = view.projectionMatrix;
+        const V = view.transform.inverse.matrix;
+
+        if (state.lastHitMatrix && (state.arRole === 'creator' || !state.placed)) {
+          drawTikaReticle(P, V, state.lastHitMatrix);
+        }
+        if (state.placed) {
+          drawTikaExtruded3D(P, V, base);
+        }
+      }
+    }
+
+    // =========================================================================
+    // 60FPS WORLD-LOCKED 3D PREVIEW ENGINE (WHEN OUTSIDE HARDWARE WEBXR)
+    // =========================================================================
+    function startTikaPreviewLoop() {
+      cancelAnimationFrame(state.previewAnimId);
+
+      function renderPreviewFrame() {
+        if (state.activeView !== 'ar' || state.xrSession) return;
+        const cv = document.getElementById('tikaXrCanvas');
+        if (!cv || !gl) return;
+
+        state.camYaw += (state.targetCamYaw - state.camYaw) * 0.12;
+        state.camPitch += (state.targetCamPitch - state.camPitch) * 0.12;
+        state.camDist += (state.targetCamDist - state.camDist) * 0.12;
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, cv.width, cv.height);
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+        const P = mPersp(Math.PI / 3, cv.width / cv.height, 0.05, 50);
+
+        // Camera orbits around or looks away from the anchored world spot (0, 0.22, 0)
+        const ex = Math.sin(state.camYaw) * Math.cos(state.camPitch) * state.camDist;
+        const ey = Math.sin(state.camPitch) * state.camDist + 0.25;
+        const ez = Math.cos(state.camYaw) * Math.cos(state.camPitch) * state.camDist;
+
+        const V = mLookAt([ex, ey, ez], [0, 0.22, 0], [0, 1, 0]);
+
+        drawTikaGrid(P, V);
+        drawTikaReticle(P, V, mId());
+
+        if (state.placed) {
+          const base = mMul(mT(0, 0.04, 0), mRy(0));
+          drawTikaExtruded3D(P, V, base);
+        }
+
+        state.previewAnimId = requestAnimationFrame(renderPreviewFrame);
+      }
+
+      state.previewAnimId = requestAnimationFrame(renderPreviewFrame);
+    }
+
+    async function startFallbackCameraVideo() {
       const video = document.getElementById('arFullscreenVideo');
+      if (!video || state.arVideoStream) return;
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
           state.arVideoStream = await navigator.mediaDevices.getUserMedia({
@@ -1638,152 +1977,6 @@
       }
     }
 
-    function initAndStartThreeArScene() {
-      const mount = document.getElementById('threeArMount');
-      if (!mount) return;
-
-      if (!threeRenderer) {
-        threeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 2, 3));
-        threeRenderer.setSize(window.innerWidth, window.innerHeight);
-        mount.innerHTML = '';
-        mount.appendChild(threeRenderer.domElement);
-
-        threeScene = new THREE.Scene();
-
-        // 1. Stationary World Anchor at (0, 1.65m, 0) — NEVER moves or rotates!
-        worldAnchorGroup = new THREE.Group();
-        worldAnchorGroup.position.set(0, 1.65, 0);
-        worldAnchorGroup.rotation.set(0, 0, 0);
-        threeScene.add(worldAnchorGroup);
-
-        // 2. Two-Stage Camera Rig Centered at (0, 1.65m, 0)
-        // Stage 1: cameraOrbitRig orbits 360° around the stationary Artifact at (0, 1.65m, 0)!
-        cameraOrbitRig = new THREE.Group();
-        cameraOrbitRig.position.set(0, 1.65, 0);
-        cameraOrbitRig.rotation.order = 'YXZ';
-        threeScene.add(cameraOrbitRig);
-
-        // Stage 1b: Radial Distance Mount (+Z offset from center)
-        cameraDistanceMount = new THREE.Group();
-        cameraDistanceMount.position.set(0, 0, 2.35);
-        cameraOrbitRig.add(cameraDistanceMount);
-
-        // Stage 2: threeCamera inside Mount (Driven by Smoothed Relative Quaternion Free-Look!)
-        threeCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-        threeCamera.position.set(0, 0, 0);
-        cameraDistanceMount.add(threeCamera);
-
-        const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
-        threeScene.add(ambLight);
-        const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
-        dirLight1.position.set(3, 5, 4);
-        threeScene.add(dirLight1);
-        const dirLight2 = new THREE.DirectionalLight(0xd71921, 1.2);
-        dirLight2.position.set(-3, 2, -4);
-        threeScene.add(dirLight2);
-
-        window.addEventListener('resize', () => {
-          if (!threeRenderer || !threeCamera) return;
-          threeCamera.aspect = window.innerWidth / window.innerHeight;
-          threeCamera.updateProjectionMatrix();
-          threeRenderer.setSize(window.innerWidth, window.innerHeight);
-        });
-      }
-
-      if (text3DGroup) {
-        worldAnchorGroup.remove(text3DGroup);
-        text3DGroup = null;
-      }
-      build3DSpatialEnvironment();
-      buildStationary3DArtifact();
-
-      const frustum = new THREE.Frustum();
-      const projScreenMatrix = new THREE.Matrix4();
-
-      function animateThree() {
-        if (state.activeView !== 'ar') return;
-
-        // 1. Smoothly Interpolate Stage 1 Camera Orbit Rig around Stationary Artifact at (0, 1.65m, 0)
-        state.currentOrbitYaw += (state.targetOrbitYaw - state.currentOrbitYaw) * 0.10;
-        state.currentOrbitPitch += (state.targetOrbitPitch - state.currentOrbitPitch) * 0.10;
-        state.currentOrbitRadius += (state.targetOrbitRadius - state.currentOrbitRadius) * 0.12;
-
-        cameraOrbitRig.rotation.y = state.currentOrbitYaw;
-        cameraOrbitRig.rotation.x = -state.currentOrbitPitch;
-        cameraDistanceMount.position.z = state.currentOrbitRadius;
-
-        // 2. Smoothly Apply Stage 2 Relative Quaternion Free-Look on threeCamera (Deadband Filtered = Zero Shake!)
-        if (state.hasGyro && state.latestDeviceQuat && state.initialDeviceQuat) {
-          const qDelta = state.initialDeviceQuat.clone().invert().multiply(state.latestDeviceQuat);
-          const angleDiff = state.smoothedDeltaQuat.angleTo(qDelta);
-          // Deadband filter ignores < 0.35 deg hand tremor so Artifact is 100% rock-solid still!
-          if (angleDiff > 0.006) {
-            state.smoothedDeltaQuat.slerp(qDelta, 0.12);
-          }
-          threeCamera.quaternion.copy(state.smoothedDeltaQuat);
-        }
-
-        // 3. Check Camera Frustum: If phone turns away from (0, 1.65m, 0), Artifact leaves screen & PIN hides!
-        threeCamera.updateMatrixWorld();
-        projScreenMatrix.multiplyMatrices(threeCamera.projectionMatrix, threeCamera.matrixWorldInverse);
-        frustum.setFromProjectionMatrix(projScreenMatrix);
-        const inView = frustum.containsPoint(worldAnchorGroup.position);
-
-        const pinOverlay = document.getElementById('arSecretPinLockOverlay');
-        const noPinOverlay = document.getElementById('arNoPinTapOverlay');
-
-        if (!state.isUnlocked3D) {
-          if (inView) {
-            pinOverlay.style.opacity = '1';
-            noPinOverlay.style.opacity = '1';
-            const deg360 = ((Math.round((state.currentOrbitYaw * 180) / Math.PI) % 360) + 360) % 360;
-            const sideName = (deg360 >= 315 || deg360 < 45) ? 'FRONT'
-              : (deg360 >= 45 && deg360 < 135) ? 'RIGHT SIDE'
-              : (deg360 >= 135 && deg360 < 225) ? 'BACK SIDE' : 'LEFT SIDE';
-            document.getElementById('arAngleReadout').textContent = `CAMERA ${String(deg360).padStart(3, '0')}° // ${sideName}`;
-          } else {
-            pinOverlay.style.opacity = '0';
-            noPinOverlay.style.opacity = '0';
-            document.getElementById('arAngleReadout').textContent = 'OFF-SCREEN // AIM CAMERA BACK AT SPOT';
-          }
-        }
-
-        // 4. Subtle Idle Spin on Inner Crystal Core Only (World Anchor Never Moves!)
-        if (artifactGroup) {
-          if (outerRingMesh) {
-            outerRingMesh.rotation.z += 0.012;
-            outerRingMesh.rotation.x += 0.006;
-          }
-          if (innerRingMesh) {
-            innerRingMesh.rotation.y -= 0.015;
-          }
-          if (coreCrystalMesh) {
-            coreCrystalMesh.rotation.y += 0.009;
-          }
-        }
-
-        // 5. Brief Glitch Materialization on 3D Text Unlock, then 100% Rock-Solid Fixed at (0, 0, 0)
-        if (text3DGroup && state.glitchFrames > 0) {
-          state.glitchFrames--;
-          text3DGroup.position.set(
-            (Math.random() - 0.5) * 0.10,
-            (Math.random() - 0.5) * 0.06,
-            (Math.random() - 0.5) * 0.06
-          );
-          if (state.glitchFrames === 0) {
-            text3DGroup.position.set(0, 0, 0);
-          }
-        }
-
-        threeRenderer.render(threeScene, threeCamera);
-        state.threeAnimId = requestAnimationFrame(animateThree);
-      }
-
-      cancelAnimationFrame(state.threeAnimId);
-      state.threeAnimId = requestAnimationFrame(animateThree);
-    }
-
     function stopArCameraStream() {
       if (state.arVideoStream) {
         state.arVideoStream.getTracks().forEach(t => t.stop());
@@ -1791,6 +1984,99 @@
       }
     }
 
+    // =========================================================================
+    // CREATOR AR PLACEMENT FLOW & HUNTER 10M AUTO-ANCHOR FLOW
+    // =========================================================================
+    async function launchCreatorArPlacement() {
+      const payloadData = validateCreatorInputs();
+      if (!payloadData) return;
+
+      state.arRole = 'creator';
+      state.isUnlocked3D = false;
+      state.placed = true;
+      state.placedPos = [0, 0.15, -1.6];
+      state.placedYaw = 0;
+      state.targetCamYaw = 0;
+      state.targetCamPitch = 0.12;
+      state.targetCamDist = 2.2;
+      state.baseAlpha = null;
+      state.baseBeta = null;
+
+      switchView('ar');
+
+      const previewLabel = state.mediaType === 'text'
+        ? document.getElementById('inputSecretQuote').value.trim()
+        : state.mediaType === 'audio' ? 'VOICE STASH' : 'PHOTO STASH';
+      uploadTikaTextTexture(previewLabel, false);
+
+      document.getElementById('arCreatorPlaceOverlay').classList.remove('hidden');
+      document.getElementById('arSecretPinLockOverlay').classList.add('hidden');
+      document.getElementById('arNoPinTapOverlay').classList.add('hidden');
+      document.getElementById('silentBurnHairlineWrap').classList.add('hidden');
+      document.getElementById('xrSurfaceHintPill').classList.remove('hidden');
+
+      const startedXr = await startHardwareWebXrSession();
+      if (!startedXr) {
+        await startFallbackCameraVideo();
+      }
+    }
+
+    async function launchHunterArExperience(fromDirectGesture = false) {
+      state.arRole = 'hunter';
+      state.isUnlocked3D = false;
+      state.enteredPin = '';
+      state.pinAttemptsRemaining = 3;
+      state.placed = true;
+      state.placedPos = (state.targetMeta && Array.isArray(state.targetMeta.placedPos))
+        ? [...state.targetMeta.placedPos]
+        : [0, 0.15, -1.6];
+      state.placedYaw = (state.targetMeta && typeof state.targetMeta.placedYaw === 'number')
+        ? state.targetMeta.placedYaw
+        : 0;
+      state.targetCamYaw = 0;
+      state.targetCamPitch = 0.10;
+      state.targetCamDist = 2.25;
+      state.baseAlpha = null;
+      state.baseBeta = null;
+
+      updateAirPinSlotsUI();
+      document.getElementById('arPinAttemptStatus').textContent = 'ENTER SECRET 4-DIGIT PIN ON ARTIFACT';
+      document.getElementById('arPinAttemptStatus').className = 'font-display font-bold text-[11px] text-white tracking-widest uppercase mb-1.5 air-key-btn';
+
+      switchView('ar');
+      playSynthTone(1046.5, 0.18, 'triangle', 0.16);
+
+      const requiresPin = state.targetMeta && state.targetMeta.requiresPin;
+      uploadTikaTextTexture(requiresPin ? 'LOCKED // ENTER PIN' : 'LOCKED // TAP OPEN', true);
+
+      document.getElementById('arCreatorPlaceOverlay').classList.add('hidden');
+      document.getElementById('silentBurnHairlineWrap').classList.add('hidden');
+      document.getElementById('arStatusPill').classList.remove('hidden');
+      document.getElementById('xrSurfaceHintPill').classList.add('hidden');
+
+      if (requiresPin) {
+        document.getElementById('arSecretPinLockOverlay').classList.remove('hidden');
+        document.getElementById('arNoPinTapOverlay').classList.add('hidden');
+      } else {
+        document.getElementById('arSecretPinLockOverlay').classList.add('hidden');
+        document.getElementById('arNoPinTapOverlay').classList.remove('hidden');
+      }
+
+      if (fromDirectGesture) {
+        const startedXr = await startHardwareWebXrSession();
+        if (startedXr) {
+          state.placed = false; // Let WebXR hit-test auto-anchor on first surface hit!
+          document.getElementById('xrSurfaceHintPill').textContent = 'SCANNING SURFACE TO AUTO-ANCHOR STASH...';
+          document.getElementById('xrSurfaceHintPill').classList.remove('hidden');
+          return;
+        }
+      }
+      await startFallbackCameraVideo();
+    }
+
+    // =========================================================================
+    // SECRET PIN VERIFICATION, 3-STRIKE BURN & TIKA XR 3D DEPTH REVEAL
+    // =========================================================================
     function updateAirPinSlotsUI() {
       for (let i = 0; i < 4; i++) {
         const el = document.getElementById('pinSlot' + i);
@@ -1901,38 +2187,24 @@
         const secret = JSON.parse(plainJson);
 
         state.isUnlocked3D = true;
+        state.placed = true;
         playSynthTone(1567.98, 0.22, 'triangle', 0.16);
 
         document.getElementById('arSecretPinLockOverlay').classList.add('hidden');
         document.getElementById('arNoPinTapOverlay').classList.add('hidden');
         document.getElementById('arStatusPill').classList.add('hidden');
+        document.getElementById('xrSurfaceHintPill').classList.add('hidden');
         document.getElementById('silentBurnHairlineWrap').classList.remove('hidden');
 
         if (secret.type === 'text') {
-          buildTrueVector3DText(secret.data);
+          uploadTikaTextTexture(secret.data, false);
         } else if (secret.type === 'audio') {
-          buildTrueVector3DText('VOICE PLAYBACK');
+          uploadTikaTextTexture('VOICE PLAYBACK', false);
           playDirectWebAudio(secret.data);
         } else if (secret.type === 'image') {
-          if (artifactGroup) {
-            worldAnchorGroup.remove(artifactGroup);
-            artifactGroup = null;
-          }
-          if (envFloorGroup) {
-            worldAnchorGroup.remove(envFloorGroup);
-            envFloorGroup = null;
-          }
           const img = new Image();
           img.onload = () => {
-            const tex = new THREE.Texture(img);
-            tex.needsUpdate = true;
-            const aspect = (img.width || 4) / (img.height || 3);
-            const planeGeo = new THREE.PlaneGeometry(1.4 * aspect, 1.4);
-            const planeMat = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide });
-            text3DGroup = new THREE.Mesh(planeGeo, planeMat);
-            text3DGroup.position.set(0, 0, 0);
-            state.glitchFrames = 14;
-            worldAnchorGroup.add(text3DGroup);
+            uploadTikaPhotoTexture(img);
           };
           img.src = secret.data;
         }
@@ -1948,10 +2220,6 @@
           if (remainingMs <= 0) {
             clearInterval(state.burnTimerId);
             stopActiveAudioPlayback();
-            if (text3DGroup && worldAnchorGroup) {
-              worldAnchorGroup.remove(text3DGroup);
-              text3DGroup = null;
-            }
             showDestroyedView('[ ARTIFACT DESTROYED ]', 'THE 3D PROJECTION AND DEAD-DROP LINK HAVE PERMANENTLY VAPORIZED.');
           }
         }, 100);
@@ -1971,7 +2239,7 @@
       switchView('destroyed');
     }
 
-    // W3C DeviceOrientation Listener -> Relative Quaternion Free-Look
+    // DeviceOrientation Sensor Handler (Compass + Preview Gyro Orbit)
     function handleOrientationSensor(e) {
       if (e.alpha === null && e.webkitCompassHeading === undefined) return;
 
@@ -1981,14 +2249,19 @@
         state.compassHeadingDeg = (360 - e.alpha) % 360;
       }
 
-      if (typeof e.alpha === 'number') {
-        state.hasGyro = true;
-        const orientDeg = (window.screen && window.screen.orientation && window.screen.orientation.angle) || window.orientation || 0;
-        const q = computeW3CQuaternion(e.alpha, e.beta !== null ? e.beta : 90, e.gamma || 0, orientDeg);
-        state.latestDeviceQuat = q;
-        if (!state.initialDeviceQuat && state.activeView === 'ar') {
-          state.initialDeviceQuat = q.clone();
-          state.smoothedDeltaQuat = new THREE.Quaternion();
+      if (typeof e.alpha === 'number' && state.activeView === 'ar' && !state.xrSession) {
+        if (state.baseAlpha === null) {
+          state.baseAlpha = e.alpha;
+          state.baseBeta = e.beta !== null ? e.beta : 75;
+        }
+        let dAlpha = e.alpha - state.baseAlpha;
+        if (dAlpha > 180) dAlpha -= 360;
+        if (dAlpha < -180) dAlpha += 360;
+        const dBeta = (e.beta !== null ? e.beta : 75) - state.baseBeta;
+
+        if (Math.abs(dAlpha) > 0.45 || Math.abs(dBeta) > 0.45) {
+          state.targetCamYaw = -(dAlpha * Math.PI) / 180;
+          state.targetCamPitch = Math.max(-1.05, Math.min(1.05, 0.12 + (dBeta * Math.PI) / 180 * 0.6));
         }
       }
     }
@@ -2022,8 +2295,12 @@
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      preloadThreeVectorFont();
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (navigator.xr && navigator.xr.isSessionSupported) {
+        try {
+          state.xrSupported = await navigator.xr.isSessionSupported('immersive-ar');
+        } catch (e) {}
+      }
 
       if (/Instagram|FBAN|FBAV|WhatsApp/i.test(navigator.userAgent || '')) {
         document.getElementById('webviewAlert').classList.remove('hidden');
@@ -2117,6 +2394,23 @@
         sampleRealGpsCoordinates(true);
         notify('RE-PINNING EXACT SATELLITE FIX');
       });
+
+      // Creator AR Placement & Lock Listeners
+      document.getElementById('btnCreatorPlaceAr').addEventListener('click', launchCreatorArPlacement);
+      document.getElementById('btnCreatorSnapHere').addEventListener('click', () => {
+        if (state.xrSession && state.lastHitMatrix) {
+          onWebXrSelectTap();
+        } else {
+          state.placed = true;
+          state.creatorPlacedOffset = [0, 0.15, -1.6];
+          state.creatorPlacedYaw = state.camYaw;
+          state.hasCreatorCustomAnchor = true;
+          document.getElementById('creatorArBtnLabel').textContent = 'SPOT ANCHORED ✓';
+          playSynthTone(1180, 0.09, 'triangle', 0.14);
+          notify('3D SPOT ANCHORED AT CURRENT HEADING');
+        }
+      });
+      document.getElementById('btnCreatorConfirmLock').addEventListener('click', lockStashToFirebase);
       document.getElementById('btnLockStashMain').addEventListener('click', lockStashToFirebase);
 
       document.getElementById('btnCopyLink').addEventListener('click', copyGeneratedLinkCleanly);
@@ -2141,6 +2435,14 @@
         notify('PASTE FULL LINK WITH ?id=...#KEY');
       });
 
+      document.getElementById('btnEnterWebXrHunt').addEventListener('click', () => {
+        launchHunterArExperience(true);
+      });
+
+      document.getElementById('btnStartHardwareXr').addEventListener('click', () => {
+        startHardwareWebXrSession();
+      });
+
       document.querySelectorAll('[data-digit]').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -2159,67 +2461,71 @@
         unlockAndProjectPure3DText('');
       });
 
-      // Smooth 4-Sided 360° Camera Orbit + Pinch-to-Zoom Around Stationary Artifact at (0, 1.65m, 0)
-      const mount = document.getElementById('threeArMount');
-      let isDragging = false, prevX = 0, prevY = 0, initialPinchDist = null;
+      // Smooth 360° Touch & Mouse Orbit on TIKA XR Preview Canvas
+      const cv = document.getElementById('tikaXrCanvas');
+      let dragging = false, lx = 0, ly = 0, pinchDist = null;
 
-      mount.addEventListener('touchstart', (e) => {
+      cv.addEventListener('touchstart', (e) => {
+        if (state.xrSession) return;
         if (e.touches.length === 1) {
-          isDragging = true;
-          prevX = e.touches[0].clientX;
-          prevY = e.touches[0].clientY;
+          dragging = true;
+          lx = e.touches[0].clientX;
+          ly = e.touches[0].clientY;
         } else if (e.touches.length === 2) {
-          isDragging = false;
-          initialPinchDist = Math.hypot(
+          dragging = false;
+          pinchDist = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
           );
         }
       }, { passive: true });
 
-      mount.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 1 && isDragging) {
-          const dx = e.touches[0].clientX - prevX;
-          const dy = e.touches[0].clientY - prevY;
-          state.targetOrbitYaw -= dx * 0.011;
-          state.targetOrbitPitch = Math.max(-1.05, Math.min(1.05, state.targetOrbitPitch + dy * 0.008));
-          prevX = e.touches[0].clientX;
-          prevY = e.touches[0].clientY;
-        } else if (e.touches.length === 2 && initialPinchDist) {
-          const dist = Math.hypot(
+      cv.addEventListener('touchmove', (e) => {
+        if (state.xrSession) return;
+        if (e.touches.length === 1 && dragging) {
+          const dx = e.touches[0].clientX - lx;
+          const dy = e.touches[0].clientY - ly;
+          state.targetCamYaw -= dx * 0.01;
+          state.targetCamPitch = Math.max(-1.05, Math.min(1.05, state.targetCamPitch + dy * 0.008));
+          lx = e.touches[0].clientX;
+          ly = e.touches[0].clientY;
+        } else if (e.touches.length === 2 && pinchDist) {
+          const d = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
           );
-          const delta = initialPinchDist - dist;
-          state.targetOrbitRadius = Math.max(1.1, Math.min(4.8, state.targetOrbitRadius + delta * 0.006));
-          initialPinchDist = dist;
+          state.targetCamDist = Math.max(0.85, Math.min(5.0, state.targetCamDist + (pinchDist - d) * 0.006));
+          pinchDist = d;
         }
       }, { passive: true });
 
-      mount.addEventListener('touchend', () => {
-        isDragging = false;
-        initialPinchDist = null;
+      cv.addEventListener('touchend', () => {
+        dragging = false;
+        pinchDist = null;
       });
 
-      let mouseDown = false, mPrevX = 0, mPrevY = 0;
-      mount.addEventListener('mousedown', (e) => {
-        mouseDown = true;
-        mPrevX = e.clientX;
-        mPrevY = e.clientY;
+      let mDown = false, mx = 0, my = 0;
+      cv.addEventListener('mousedown', (e) => {
+        if (state.xrSession) return;
+        mDown = true;
+        mx = e.clientX;
+        my = e.clientY;
       });
       window.addEventListener('mousemove', (e) => {
-        if (!mouseDown || state.activeView !== 'ar') return;
-        const dx = e.clientX - mPrevX;
-        const dy = e.clientY - mPrevY;
-        state.targetOrbitYaw -= dx * 0.011;
-        state.targetOrbitPitch = Math.max(-1.05, Math.min(1.05, state.targetOrbitPitch + dy * 0.008));
-        mPrevX = e.clientX;
-        mPrevY = e.clientY;
+        if (!mDown || state.activeView !== 'ar' || state.xrSession) return;
+        state.targetCamYaw -= (e.clientX - mx) * 0.008;
+        state.targetCamPitch = Math.max(-1.05, Math.min(1.05, state.targetCamPitch + (e.clientY - my) * 0.006));
+        mx = e.clientX;
+        my = e.clientY;
       });
-      window.addEventListener('mouseup', () => { mouseDown = false; });
+      window.addEventListener('mouseup', () => { mDown = false; });
 
       document.getElementById('btnCloseArView').addEventListener('click', () => {
-        switchView('radar');
+        if (state.arRole === 'creator') {
+          switchView('drop');
+        } else {
+          switchView('radar');
+        }
       });
 
       document.getElementById('btnBackToNewDrop').addEventListener('click', () => {
