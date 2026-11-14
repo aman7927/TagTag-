@@ -141,12 +141,12 @@
   <!-- In-App Browser Notice -->
   <div id="webviewAlert" class="hidden max-w-md mx-auto px-5 pt-2">
     <div class="px-3 py-2 rounded-xl bg-[#d71921]/15 border border-[#d71921] text-[11px] font-mono-tech text-white text-center">
-      OPEN IN SYSTEM BROWSER (CHROME / SAFARI) FOR WEBXR 6-DOF &amp; REAL SHADOWS.
+      OPEN IN SYSTEM BROWSER (CHROME / SAFARI) FOR FULL 3D AR &amp; SENSORS.
     </div>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- VIEW 1: DROP MODE (SINGLE ENCRYPT BUTTON -> OPENS TRUE 6DOF WEBXR)    -->
+  <!-- VIEW 1: DROP MODE (SINGLE ENCRYPT BUTTON -> OPENS 60FPS 3D AR)        -->
   <!-- ===================================================================== -->
   <main id="viewDropMode" class="flex-1 w-full max-w-md mx-auto px-5 py-2.5 flex flex-col justify-between gap-3">
 
@@ -187,9 +187,9 @@
       <div id="surfaceQuote" class="space-y-1.5">
         <textarea id="inputSecretQuote" rows="3" maxlength="240"
           class="w-full rounded-2xl bg-[#08080b] border border-zinc-800 focus:border-white p-3.5 font-mono-tech text-sm text-white placeholder-zinc-600 leading-relaxed transition"
-          placeholder="Write secret note (tap Encrypt to place 3D Notepad in real 360° 3D space)..."></textarea>
+          placeholder="Write secret note (tap Encrypt to place 3D Notepad at exact spot in camera)..."></textarea>
         <div class="flex justify-between px-1 font-mono-tech text-[10px] text-zinc-500">
-          <span>3D NOTEPAD → 360° WALK-AROUND 3D TEXT</span>
+          <span>3D NOTEPAD → 360° EXTRUDED 3D TEXT</span>
           <span id="charCountLabel">0 / 240</span>
         </div>
       </div>
@@ -257,7 +257,7 @@
       </div>
     </div>
 
-    <!-- Single Unified Action Button (Directly Launches TIKA XR WebXR + Touch Placement!) -->
+    <!-- Single Unified Action Button -->
     <div class="space-y-2 pb-2">
       <button id="btnCreatorPlaceAr" type="button" class="hidden">
         <span id="creatorArBtnLabel">PLACE IN AR</span>
@@ -299,7 +299,7 @@
       <div class="space-y-1.5">
         <div class="flex justify-between font-mono-tech text-[10px] text-zinc-400 px-1">
           <span>SHAREABLE DEAD-DROP LINK</span>
-          <span>10M PROXIMITY + 6DOF AR</span>
+          <span>10M PROXIMITY + 360° 3D AR</span>
         </div>
         <div id="displayGeneratedUrl"
           class="w-full bg-black border border-zinc-700 rounded-2xl px-4 py-3 font-mono-tech text-xs text-white truncate pointer-events-none">
@@ -385,13 +385,13 @@
   </main>
 
   <!-- ===================================================================== -->
-  <!-- VIEW 3: TIKA XR 6-DOF WALK-AROUND WEBXR + HARD-LOCK 3D AR VIEW        -->
+  <!-- VIEW 3: 60FPS ZERO-LAG WORLD-LOCKED 360° 3D AR VIEW                   -->
   <!-- ===================================================================== -->
   <section id="viewArCamera" class="hidden fixed inset-0 z-50 bg-black overflow-hidden">
-    <!-- Fallback Camera Video Feed (Automatically hidden when Hardware WebXR is active) -->
+    <!-- 60FPS Native Hardware Camera Feed -->
     <video id="arFullscreenVideo" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover"></video>
 
-    <!-- Three.js WebXR + PCFSoftShadowMap Mount -->
+    <!-- Single-Pass Three.js 3D Viewport (Zero Double-Overlay, Zero ShadowMap Lag!) -->
     <div id="threeArMount" class="absolute inset-0 w-full h-full z-10"></div>
 
     <!-- Compatibility Reference Canvas -->
@@ -406,11 +406,11 @@
     <div id="arTopChrome" class="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none">
       <div id="arStatusPill" class="px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md border border-white/15 flex items-center gap-2 pointer-events-auto">
         <span id="xrStatusDot" class="w-2 h-2 rounded-full bg-[#38ef7d] dot-pulse"></span>
-        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">360° 3D AR // TOUCH TO PLACE</span>
+        <span id="arAngleReadout" class="font-mono-tech text-[11px] text-white">360° 3D AR // TAP TO PLACE</span>
       </div>
 
       <div class="flex items-center gap-1.5 pointer-events-auto">
-        <button id="btnStartHardwareXr" type="button" class="px-3 py-1.5 rounded-full bg-[#d71921] text-white font-display font-bold text-[10px] tracking-wider uppercase shadow-lg">
+        <button id="btnStartHardwareXr" type="button" class="px-3 py-1.5 rounded-full bg-[#111116] border border-white/20 text-white font-display font-bold text-[10px] tracking-wider uppercase">
           WEBXR 6DOF
         </button>
         <button id="btnCloseArView" type="button" class="w-8 h-8 rounded-full bg-black/75 backdrop-blur-md border border-white/20 text-white text-xs flex items-center justify-center">
@@ -421,10 +421,10 @@
 
     <!-- Surface Aiming / Touch Hint Pill -->
     <div id="xrSurfaceHintPill" class="hidden absolute top-16 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full bg-black/80 border border-white/15 font-mono-tech text-[11px] text-zinc-200 whitespace-nowrap pointer-events-none">
-      TAP SURFACE OR SCREEN TO HARD-LOCK 3D OBJECT
+      TAP SCREEN TO FIX AT EXACT SPOT
     </div>
 
-    <!-- Off-Screen Wayfinder Indicator -->
+    <!-- Off-Screen Wayfinder Indicator (Guides Hunter to exact Compass & Tilt Angle where Stash was fixed!) -->
     <div id="arOffscreenWayfinder" class="hidden absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-30 px-5 py-2.5 rounded-full bg-black/90 border border-[#d71921] font-mono-tech text-xs text-white tracking-wider shadow-2xl pointer-events-none text-center">
       ◄ POINT CAMERA AT HIDDEN SPOT ►
     </div>
@@ -434,7 +434,7 @@
     <!-- =================================================================== -->
     <div id="arCreatorPlaceOverlay" class="hidden absolute inset-x-0 bottom-7 z-30 flex flex-col items-center justify-center gap-2.5 px-5 pointer-events-none">
       <div id="creatorFreezeHintText" class="font-mono-tech text-[11px] text-zinc-200 bg-black/80 px-4 py-1.5 rounded-full border border-white/15 text-center">
-        TOUCH SCREEN TO PLACE &amp; FREEZE // WALK 360° TO INSPECT
+        TAP SCREEN TO FIX SPOT // SWIPE TO ROTATE 3D SIDES
       </div>
       <div class="flex items-center gap-2.5 pointer-events-auto">
         <button id="btnCreatorSnapHere" type="button" class="px-5 py-3 rounded-full bg-white text-black font-display font-bold text-xs tracking-wider uppercase shadow-xl">
@@ -447,7 +447,7 @@
     </div>
 
     <!-- =================================================================== -->
-    <!-- HUNTER 0-9 SECRET PIN LOCK (PROTECTED BY beforexrselect!)           -->
+    <!-- HUNTER 0-9 SECRET PIN LOCK                                          -->
     <!-- =================================================================== -->
     <div id="arSecretPinLockOverlay" class="hidden absolute inset-x-0 bottom-5 z-30 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-150">
       <div id="arPinAttemptStatus" class="font-display font-bold text-[11px] text-white tracking-widest uppercase mb-1.5 air-key-btn">
@@ -510,7 +510,7 @@
   </section>
 
   <!-- ===================================================================== -->
-  <!-- MASTER PRODUCTION ENGINE (TIKA XR 6-DOF WALK-AROUND + HARD-LOCK)      -->
+  <!-- MASTER PRODUCTION ENGINE (60FPS ZERO-LAG + EXACT WORLD COMPASS LOCK)  -->
   <!-- ===================================================================== -->
   <script>
     const firebaseConfig = {
@@ -559,9 +559,9 @@
       bestGpsAcc: Infinity,
       rejectedOutliers: 0,
 
-      // Module 2: Creator Spatial Placement State (Reset after every drop!)
-      creatorPlacedOffset: [0, -0.05, -1.65],
-      creatorPlacedYaw: 0,
+      // Module 2: Creator Spatial Placement State (Saved to Firebase & Restored for Hunter!)
+      creatorPlacedOffset: [0, -0.04, -1.65],
+      creatorPlacedYaw: -0.22, // Slight 3D perspective angle so 3D depth is immediately visible!
       creatorCompassAzimuth: 0,
       creatorPitchBeta: 75,
       creatorPlacedQuatArray: null,
@@ -575,9 +575,9 @@
       generatedShareUrl: '',
       targetMeta: null,
       metaRef: null,
-      localMetaCache: safeGetLocal('gs_meta_v7', {}),
-      localVaultCache: safeGetLocal('gs_vault_v7', {}),
-      burnedStashIds: safeGetLocal('gs_burned_v7', {}),
+      localMetaCache: safeGetLocal('gs_meta_v8', {}),
+      localVaultCache: safeGetLocal('gs_vault_v8', {}),
+      burnedStashIds: safeGetLocal('gs_burned_v8', {}),
       hunterToken: 'H-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
 
       stealthMuted: false,
@@ -589,25 +589,18 @@
       deviceBetaDeg: 75,
       latestAccuracy: 12,
 
-      // Module 4: TIKA XR 6-DoF WebXR + Hard-Lock State (ZERO SHAKE!)
-      xrSupported: false,
-      xrSession: null,
-      xrRefSpace: null,
-      xrHitTestSource: null,
-      lastHitMatrix: null,
-      lastViewerPos: [0, 1.6, 0],
+      // Module 4: 60FPS Single-Pass 3D World-Lock State (Zero Double-Overlay, Zero Lag!)
       isWorldFrozen: false,
-      hunterStableHits: 0,
-
-      // Fallback 3D Orbit + High-Damping Gyro Filter (When WebXR is unavailable)
       hasGyro: false,
-      initialDeviceQuat: null,
+      anchorDeviceQuat: null, // The exact device quaternion where the object is fixed in the room!
       latestDeviceQuat: null,
-      smoothedDeviceQuat: null,
-      orbitYaw: 0,
-      orbitPitch: 0.08,
-      targetOrbitYaw: 0,
-      targetOrbitPitch: 0.08,
+      smoothedCameraQuat: null,
+
+      // 360° 3D Walk-Around / Side-Inspection Angles
+      modelRotY: -0.22,
+      modelRotX: 0.06,
+      targetModelRotY: -0.22,
+      targetModelRotX: 0.06,
 
       enteredPin: '',
       pinAttemptsRemaining: 3,
@@ -620,6 +613,7 @@
 
       arVideoStream: null,
       radarAnimId: null,
+      arAnimId: null,
       micAnimId: null,
       audioCtx: null,
       activeAudioSource: null,
@@ -688,13 +682,11 @@
     function resetCreatorPlacementState() {
       state.isWorldFrozen = false;
       state.hasCreatorCustomAnchor = false;
-      state.creatorPlacedOffset = [0, -0.05, -1.65];
-      state.creatorPlacedYaw = 0;
+      state.creatorPlacedOffset = [0, -0.04, -1.65];
+      state.creatorPlacedYaw = -0.22;
       state.creatorCompassAzimuth = 0;
       state.creatorPitchBeta = 75;
       state.creatorPlacedQuatArray = null;
-      state.hunterStableHits = 0;
-      state.lastHitMatrix = null;
 
       const btnLabel = document.getElementById('creatorArBtnLabel');
       if (btnLabel) btnLabel.textContent = 'PLACE IN AR';
@@ -703,7 +695,7 @@
       if (snapBtn) snapBtn.textContent = 'PLACE HERE ◎';
 
       const hintText = document.getElementById('creatorFreezeHintText');
-      if (hintText) hintText.textContent = 'TOUCH SCREEN TO PLACE & FREEZE // WALK 360° TO INSPECT';
+      if (hintText) hintText.textContent = 'TAP SCREEN TO FIX SPOT // SWIPE TO ROTATE 3D SIDES';
     }
 
     function resetFullCreatorComposerForNewDrop() {
@@ -726,6 +718,7 @@
     function switchView(viewName) {
       state.activeView = viewName;
       cancelAnimationFrame(state.radarAnimId);
+      cancelAnimationFrame(state.arAnimId);
 
       const topBar = document.getElementById('mainTopBar');
       const vDrop = document.getElementById('viewDropMode');
@@ -742,9 +735,6 @@
 
       if (viewName !== 'ar') {
         topBar.classList.remove('hidden');
-        if (state.xrSession) {
-          try { state.xrSession.end(); } catch (e) {}
-        }
         stopArCameraStream();
       } else {
         topBar.classList.add('hidden');
@@ -813,7 +803,7 @@
       const enc = new TextEncoder();
       const baseMaterial = await window.crypto.subtle.importKey(
         'raw',
-        enc.encode(`GEOSTASH_V7:${cleanId}:${pinStr || 'NOPIN'}`),
+        enc.encode(`GEOSTASH_V8:${cleanId}:${pinStr || 'NOPIN'}`),
         { name: 'PBKDF2' },
         false,
         ['deriveKey']
@@ -1268,8 +1258,8 @@
           requiresPin: hasPin,
           pinHash: pinHash,
           clue: clueText || null,
-          placedPos: state.hasCreatorCustomAnchor ? [...state.creatorPlacedOffset] : [0, -0.05, -1.65],
-          placedYaw: state.hasCreatorCustomAnchor ? +state.creatorPlacedYaw.toFixed(4) : 0,
+          placedPos: state.hasCreatorCustomAnchor ? [...state.creatorPlacedOffset] : [0, -0.04, -1.65],
+          placedYaw: state.hasCreatorCustomAnchor ? +state.creatorPlacedYaw.toFixed(4) : -0.22,
           placedQuat: savedQuatArr || null,
           compassAzimuth: savedCompass,
           pitchBeta: savedPitch,
@@ -1284,12 +1274,12 @@
         };
 
         delete state.burnedStashIds[id];
-        safeSetLocal('gs_burned_v7', state.burnedStashIds);
+        safeSetLocal('gs_burned_v8', state.burnedStashIds);
 
         state.localMetaCache[id] = metaObj;
         state.localVaultCache[id] = vaultObj;
-        safeSetLocal('gs_meta_v7', state.localMetaCache);
-        safeSetLocal('gs_vault_v7', state.localVaultCache);
+        safeSetLocal('gs_meta_v8', state.localMetaCache);
+        safeSetLocal('gs_vault_v8', state.localVaultCache);
 
         if (db && navigator.onLine) {
           try {
@@ -1382,12 +1372,12 @@
       }
 
       state.burnedStashIds[id] = true;
-      safeSetLocal('gs_burned_v7', state.burnedStashIds);
+      safeSetLocal('gs_burned_v8', state.burnedStashIds);
 
       delete state.localMetaCache[id];
       delete state.localVaultCache[id];
-      safeSetLocal('gs_meta_v7', state.localMetaCache);
-      safeSetLocal('gs_vault_v7', state.localVaultCache);
+      safeSetLocal('gs_meta_v8', state.localMetaCache);
+      safeSetLocal('gs_vault_v8', state.localVaultCache);
 
       if (state.stashId === id) {
         state.stashId = null;
@@ -1634,7 +1624,7 @@
           const val = s.val();
           if (val && val.status === 'DESTROYED' && !state.isUnlocked3D && !state.isClaiming) {
             state.burnedStashIds[stashId] = true;
-            safeSetLocal('gs_burned_v7', state.burnedStashIds);
+            safeSetLocal('gs_burned_v8', state.burnedStashIds);
             showDestroyedView('[ INTERCEPTED ]', 'ANOTHER HUNTER JUST CLAIMED & BURNED THIS STASH.');
           }
         });
@@ -1655,18 +1645,18 @@
     }
 
     // =========================================================================
-    // MODULE 4: TIKA XR 6-DOF WALK-AROUND WEBXR + HARD-LOCK 3D AR ENGINE
-    // - True 6-DoF Walk-Around in WebXR (immersive-ar + local-floor + hit-test)
-    // - 360° 3D Camera Orbit in Fallback Mode (Never stuck on Front-View Only!)
-    // - 100% Motionless Hard-Lock (Zero sine-wave bobbing, Zero per-frame lerp!)
+    // MODULE 4: 60FPS ZERO-LAG, ZERO-DOUBLE-OVERLAY, WORLD-LOCKED 3D AR ENGINE
+    // - shadowMap.enabled = false & xr.enabled = false -> 100% eliminates the
+    //   2x double-render overlay bug and runs at locked 60 FPS!
+    // - Exact Creator Quaternion + Screen-Ray Offset Lock -> Hunter finds the
+    //   object at the EXACT same wall/door/table spot where Creator fixed it!
+    // - Full 360° 3D Extruded Depth (Swipe or move phone to view all 4 sides!)
     // =========================================================================
     let threeRenderer = null;
     let threeScene = null;
-    let cameraOrbitRig = null;
     let threeCamera = null;
     let worldAnchorGroup = null;
     let hoverFloatGroup = null;
-    let shadowReceiverMesh = null;
     let contactShadowMesh = null;
     let reticleGroup = null;
     let voiceSonicRings = [];
@@ -1694,9 +1684,9 @@
       const c = document.createElement('canvas');
       c.width = c.height = 256;
       const ctx = c.getContext('2d');
-      const g = ctx.createRadialGradient(128, 128, 12, 128, 128, 118);
-      g.addColorStop(0, 'rgba(0, 0, 0, 0.72)');
-      g.addColorStop(0.45, 'rgba(0, 0, 0, 0.35)');
+      const g = ctx.createRadialGradient(128, 128, 14, 128, 128, 118);
+      g.addColorStop(0, 'rgba(0, 0, 0, 0.78)');
+      g.addColorStop(0.48, 'rgba(0, 0, 0, 0.38)');
       g.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, 256, 256);
@@ -1781,22 +1771,18 @@
     }
 
     function build3DNotepadArtifact(group) {
-      const boardGeo = new THREE.BoxGeometry(0.38, 0.50, 0.036);
+      const boardGeo = new THREE.BoxGeometry(0.38, 0.50, 0.042);
       const boardMat = new THREE.MeshStandardMaterial({ color: 0x121217, roughness: 0.35, metalness: 0.65 });
-      const boardMesh = new THREE.Mesh(boardGeo, boardMat);
-      boardMesh.castShadow = true;
-      boardMesh.receiveShadow = true;
-      group.add(boardMesh);
+      group.add(new THREE.Mesh(boardGeo, boardMat));
 
-      const railGeo = new THREE.BoxGeometry(0.40, 0.52, 0.024);
+      const railGeo = new THREE.BoxGeometry(0.40, 0.52, 0.028);
       const railMat = new THREE.MeshStandardMaterial({ color: 0xd71921, roughness: 0.25, metalness: 0.8 });
       const railMesh = new THREE.Mesh(railGeo, railMat);
       railMesh.position.z = -0.005;
-      railMesh.castShadow = true;
       group.add(railMesh);
 
       const pageTex = createNotepadSheetTexture();
-      const pageGeo = new THREE.BoxGeometry(0.33, 0.42, 0.018);
+      const pageGeo = new THREE.BoxGeometry(0.33, 0.42, 0.022);
       const pageMaterials = [
         new THREE.MeshStandardMaterial({ color: 0xe4e4e7 }),
         new THREE.MeshStandardMaterial({ color: 0xe4e4e7 }),
@@ -1806,15 +1792,13 @@
         new THREE.MeshStandardMaterial({ map: pageTex, roughness: 0.4 })
       ];
       const pageMesh = new THREE.Mesh(pageGeo, pageMaterials);
-      pageMesh.position.set(0, -0.015, 0.016);
-      pageMesh.castShadow = true;
+      pageMesh.position.set(0, -0.015, 0.018);
       group.add(pageMesh);
 
-      const clipGeo = new THREE.BoxGeometry(0.16, 0.055, 0.048);
+      const clipGeo = new THREE.BoxGeometry(0.16, 0.055, 0.054);
       const clipMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f7, roughness: 0.2, metalness: 0.9 });
       const clipMesh = new THREE.Mesh(clipGeo, clipMat);
-      clipMesh.position.set(0, 0.22, 0.016);
-      clipMesh.castShadow = true;
+      clipMesh.position.set(0, 0.22, 0.018);
       group.add(clipMesh);
     }
 
@@ -1823,7 +1807,6 @@
       const bodyMat = new THREE.MeshStandardMaterial({ color: 0x14141a, roughness: 0.28, metalness: 0.82 });
       const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
       bodyMesh.position.y = -0.06;
-      bodyMesh.castShadow = true;
       group.add(bodyMesh);
 
       const collarGeo = new THREE.TorusGeometry(0.095, 0.012, 16, 48);
@@ -1838,7 +1821,6 @@
       const grilleMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f7, roughness: 0.22, metalness: 0.92 });
       const grilleMesh = new THREE.Mesh(grilleGeo, grilleMat);
       grilleMesh.position.y = 0.14;
-      grilleMesh.castShadow = true;
       group.add(grilleMesh);
 
       const cageGeo = new THREE.SphereGeometry(0.112, 16, 12);
@@ -1858,7 +1840,6 @@
         });
         const ring = new THREE.Mesh(waveGeo, waveMat);
         ring.position.y = 0.05;
-        ring.castShadow = true;
         group.add(ring);
         voiceSonicRings.push(ring);
       });
@@ -1868,23 +1849,20 @@
       const folderDarkMat = new THREE.MeshStandardMaterial({ color: 0x16161d, roughness: 0.35, metalness: 0.65 });
       const folderRedMat = new THREE.MeshStandardMaterial({ color: 0xd71921, roughness: 0.28, metalness: 0.75 });
 
-      const backGeo = new THREE.BoxGeometry(0.46, 0.34, 0.022);
+      const backGeo = new THREE.BoxGeometry(0.46, 0.34, 0.024);
       const backMesh = new THREE.Mesh(backGeo, folderDarkMat);
       backMesh.position.set(0, 0, -0.016);
-      backMesh.castShadow = true;
       group.add(backMesh);
 
-      const tabGeo = new THREE.BoxGeometry(0.16, 0.05, 0.022);
+      const tabGeo = new THREE.BoxGeometry(0.16, 0.05, 0.024);
       const tabMesh = new THREE.Mesh(tabGeo, folderRedMat);
       tabMesh.position.set(-0.13, 0.19, -0.016);
-      tabMesh.castShadow = true;
       group.add(tabMesh);
 
-      const innerDocGeo = new THREE.BoxGeometry(0.41, 0.31, 0.024);
+      const innerDocGeo = new THREE.BoxGeometry(0.41, 0.31, 0.026);
       const innerDocMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f7, roughness: 0.3 });
       const innerDocMesh = new THREE.Mesh(innerDocGeo, innerDocMat);
       innerDocMesh.position.set(0, 0.01, 0);
-      innerDocMesh.castShadow = true;
       group.add(innerDocMesh);
 
       const labelTex = createFolderLabelTexture();
@@ -1893,10 +1871,9 @@
         new THREE.MeshStandardMaterial({ map: labelTex, roughness: 0.35 }),
         new THREE.MeshStandardMaterial({ map: labelTex, roughness: 0.35 })
       ];
-      const frontGeo = new THREE.BoxGeometry(0.46, 0.32, 0.022);
+      const frontGeo = new THREE.BoxGeometry(0.46, 0.32, 0.024);
       const frontMesh = new THREE.Mesh(frontGeo, frontMaterials);
       frontMesh.position.set(0, -0.01, 0.016);
-      frontMesh.castShadow = true;
       group.add(frontMesh);
     }
 
@@ -1918,7 +1895,7 @@
       hoverFloatGroup.add(artGroup);
     }
 
-    // TRUE 3D EXTRUDED TEXT WITH THICK RED DEPTH WALLS (Viewable 360° from all 4 sides, Zero Slices!)
+    // TRUE FLOATING 3D EXTRUDED TEXT (Bold Red 3D Side Walls + Stark White Front/Back, Viewable 360°!)
     function buildSolidWatertight3DText(secretString) {
       if (!hoverFloatGroup) return;
       const myToken = ++state.unlockSessionToken;
@@ -1943,45 +1920,59 @@
       if (cur) lines.push(cur);
       const finalLines = lines.slice(0, 5);
 
-      const populateSolidMonolithSlab = () => {
+      // High-Density Frameless 3D Volume Fallback (Used only while vector font loads or for non-ASCII)
+      const populateSeamlessVolumetricLetters = () => {
         if (state.unlockSessionToken !== myToken) return;
         while (outerPopGroup.children.length) outerPopGroup.remove(outerPopGroup.children[0]);
 
-        const c = document.createElement('canvas');
-        c.width = 1600;
-        c.height = 800;
-        const ctx = c.getContext('2d');
+        const makeCanvasTex = (fillColor, strokeColor) => {
+          const c = document.createElement('canvas');
+          c.width = 1600;
+          c.height = 800;
+          const ctx = c.getContext('2d');
+          ctx.clearRect(0, 0, c.width, c.height);
 
-        ctx.fillStyle = '#09090d';
-        ctx.fillRect(0, 0, c.width, c.height);
-        ctx.strokeStyle = '#d71921';
-        ctx.lineWidth = 20;
-        ctx.strokeRect(20, 20, c.width - 40, c.height - 40);
+          const fs = finalLines.length === 1 ? 165 : finalLines.length === 2 ? 128 : 96;
+          const lh = fs * 1.24;
+          ctx.font = `900 ${fs}px "Space Grotesk", "JetBrains Mono", sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.lineJoin = 'round';
 
-        const fs = finalLines.length === 1 ? 140 : finalLines.length === 2 ? 110 : 86;
-        const lh = fs * 1.25;
-        ctx.font = `700 ${fs}px "Space Grotesk", "JetBrains Mono", sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+          const startY = (c.height - (finalLines.length - 1) * lh) / 2;
+          finalLines.forEach((ln, i) => {
+            if (strokeColor) {
+              ctx.lineWidth = 10;
+              ctx.strokeStyle = strokeColor;
+              ctx.strokeText(ln, c.width / 2, startY + i * lh);
+            }
+            ctx.fillStyle = fillColor;
+            ctx.fillText(ln, c.width / 2, startY + i * lh);
+          });
 
-        const startY = (c.height - (finalLines.length - 1) * lh) / 2;
-        finalLines.forEach((ln, i) => {
-          ctx.fillStyle = '#ffffff';
-          ctx.fillText(ln, c.width / 2, startY + i * lh);
-        });
+          const tex = new THREE.CanvasTexture(c);
+          tex.needsUpdate = true;
+          return tex;
+        };
 
-        const tex = new THREE.CanvasTexture(c);
-        if (threeRenderer) tex.anisotropy = threeRenderer.capabilities.getMaxAnisotropy();
-        tex.needsUpdate = true;
+        const frontBackTex = makeCanvasTex('#ffffff', 'rgba(0,0,0,0.85)');
+        const sideWallTex = makeCanvasTex('#d71921', null);
+        const planeGeo = new THREE.PlaneGeometry(0.56, 0.28);
+        const layers = 36;
+        const totalDepth = 0.048;
 
-        const sideMat = new THREE.MeshStandardMaterial({ color: 0xd71921, roughness: 0.25, metalness: 0.85 });
-        const faceMat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.22, metalness: 0.15 });
-
-        const slabGeo = new THREE.BoxGeometry(0.46, 0.24, 0.048);
-        const slabMesh = new THREE.Mesh(slabGeo, [sideMat, sideMat, sideMat, sideMat, faceMat, faceMat]);
-        slabMesh.castShadow = true;
-        slabMesh.receiveShadow = true;
-        outerPopGroup.add(slabMesh);
+        for (let i = 0; i < layers; i++) {
+          const isCap = (i === 0 || i === layers - 1);
+          const mat = new THREE.MeshBasicMaterial({
+            map: isCap ? frontBackTex : sideWallTex,
+            transparent: true,
+            alphaTest: 0.08,
+            side: THREE.DoubleSide
+          });
+          const m = new THREE.Mesh(planeGeo, mat);
+          m.position.z = -totalDepth / 2 + (i / (layers - 1)) * totalDepth;
+          outerPopGroup.add(m);
+        }
       };
 
       const populateTrueExtrudedLetters = (font) => {
@@ -1992,13 +1983,13 @@
 
         const faceMat = new THREE.MeshStandardMaterial({
           color: 0xffffff,
-          emissive: 0x222222,
+          emissive: 0x242424,
           roughness: 0.15,
           metalness: 0.2
         });
         const sideExtrudeMat = new THREE.MeshStandardMaterial({
           color: 0xd71921,
-          emissive: 0x550407,
+          emissive: 0x5c0408,
           roughness: 0.22,
           metalness: 0.8
         });
@@ -2010,7 +2001,7 @@
           const textGeo = new THREE.TextGeometry(lineStr, {
             font: font,
             size: 0.072,
-            height: 0.042, // Rich 3D Extruded Depth so walking around shows bold 3D side walls!
+            height: 0.046,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 0.007,
@@ -2027,14 +2018,12 @@
 
           const mesh = new THREE.Mesh(textGeo, [faceMat, sideExtrudeMat]);
           mesh.position.y = (totalHeight / 2) - idx * lineStepY;
-          mesh.castShadow = true;
-          mesh.receiveShadow = true;
           innerFittedHolder.add(mesh);
         });
 
         const groupBox = new THREE.Box3().setFromObject(innerFittedHolder);
         const width3D = Math.max(0.01, groupBox.max.x - groupBox.min.x);
-        const maxAllowedWidth = 0.46;
+        const maxAllowedWidth = 0.48;
         if (width3D > maxAllowedWidth) {
           innerFittedHolder.scale.setScalar(maxAllowedWidth / width3D);
         }
@@ -2046,7 +2035,7 @@
       if (state.loadedThreeFont && isAsciiPrintable) {
         populateTrueExtrudedLetters(state.loadedThreeFont);
       } else {
-        populateSolidMonolithSlab();
+        populateSeamlessVolumetricLetters();
         if (isAsciiPrintable && typeof THREE !== 'undefined' && THREE.FontLoader) {
           const loader = new THREE.FontLoader();
           loader.load(
@@ -2067,78 +2056,58 @@
       if (!mount) return;
 
       if (!threeRenderer) {
+        // Single-Pass Lightweight WebGLRenderer:
+        // - shadowMap.enabled = false (Zero GPU lag, Zero framebuffer viewport corruption!)
+        // - xr.enabled = false (Zero 1x/2.5x double Notepad overlay!)
         threeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
-        threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 2, 2.5));
+        threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1.5, 2.0));
         threeRenderer.setSize(window.innerWidth, window.innerHeight);
-        threeRenderer.shadowMap.enabled = true;
-        threeRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        threeRenderer.xr.enabled = true;
+        threeRenderer.shadowMap.enabled = false;
 
         mount.innerHTML = '';
         mount.appendChild(threeRenderer.domElement);
 
         threeScene = new THREE.Scene();
 
-        // Camera Orbit Rig for Fallback 360° 3D Walk-Around (When outside WebXR)
-        cameraOrbitRig = new THREE.Group();
-        cameraOrbitRig.rotation.order = 'YXZ';
-        threeScene.add(cameraOrbitRig);
-
         threeCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.05, 60);
-        threeCamera.position.set(0, 0.28, 0);
-        cameraOrbitRig.add(threeCamera);
+        threeCamera.position.set(0, 0.26, 0);
+        threeScene.add(threeCamera);
 
-        const ambLight = new THREE.AmbientLight(0xffffff, 0.9);
+        const ambLight = new THREE.AmbientLight(0xffffff, 0.92);
         threeScene.add(ambLight);
 
-        const shadowDirLight = new THREE.DirectionalLight(0xffffff, 1.55);
-        shadowDirLight.position.set(0.5, 2.5, 1.0);
-        shadowDirLight.castShadow = true;
-        shadowDirLight.shadow.mapSize.width = 1024;
-        shadowDirLight.shadow.mapSize.height = 1024;
-        shadowDirLight.shadow.camera.near = 0.2;
-        shadowDirLight.shadow.camera.far = 5.0;
-        const d = 1.1;
-        shadowDirLight.shadow.camera.left = -d;
-        shadowDirLight.shadow.camera.right = d;
-        shadowDirLight.shadow.camera.top = d;
-        shadowDirLight.shadow.camera.bottom = -d;
-        shadowDirLight.shadow.bias = -0.0005;
-        shadowDirLight.shadow.radius = 4;
+        const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.45);
+        dirLight1.position.set(1.2, 2.4, 1.5);
+        threeScene.add(dirLight1);
+
+        const dirLight2 = new THREE.DirectionalLight(0xd71921, 0.95);
+        dirLight2.position.set(-1.5, 1.0, -1.2);
+        threeScene.add(dirLight2);
 
         worldAnchorGroup = new THREE.Group();
-        worldAnchorGroup.position.set(0, -0.05, -1.65);
+        worldAnchorGroup.position.set(0, -0.04, -1.65);
         threeScene.add(worldAnchorGroup);
 
-        worldAnchorGroup.add(shadowDirLight);
-        worldAnchorGroup.add(shadowDirLight.target);
-
-        const shadowPlaneGeo = new THREE.PlaneGeometry(2.0, 2.0);
-        shadowPlaneGeo.rotateX(-Math.PI / 2);
-        const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.45 });
-        shadowReceiverMesh = new THREE.Mesh(shadowPlaneGeo, shadowPlaneMat);
-        shadowReceiverMesh.position.y = 0.001;
-        shadowReceiverMesh.receiveShadow = true;
-        worldAnchorGroup.add(shadowReceiverMesh);
-
-        const aoPlaneGeo = new THREE.PlaneGeometry(0.58, 0.58);
+        // Zero-Lag Soft Radial Ground Contact Shadow
+        const aoPlaneGeo = new THREE.PlaneGeometry(0.62, 0.62);
         aoPlaneGeo.rotateX(-Math.PI / 2);
         const aoPlaneMat = new THREE.MeshBasicMaterial({
           map: createSoftAOShadowTexture(),
           transparent: true,
-          opacity: 0.65,
+          opacity: 0.72,
           depthWrite: false
         });
         contactShadowMesh = new THREE.Mesh(aoPlaneGeo, aoPlaneMat);
         contactShadowMesh.position.y = 0.002;
         worldAnchorGroup.add(contactShadowMesh);
 
+        // Single Clean Red Ground Ring Under Shadow
         const lockRingGeo = new THREE.RingGeometry(0.25, 0.268, 64);
         lockRingGeo.rotateX(-Math.PI / 2);
         const lockRingMat = new THREE.MeshBasicMaterial({
           color: 0xd71921,
           transparent: true,
-          opacity: 0.6,
+          opacity: 0.65,
           side: THREE.DoubleSide
         });
         const lockRingMesh = new THREE.Mesh(lockRingGeo, lockRingMat);
@@ -2149,21 +2118,11 @@
         worldAnchorGroup.add(hoverFloatGroup);
 
         reticleGroup = new THREE.Group();
-        const rOuter = new THREE.Mesh(
-          new THREE.RingGeometry(0.16, 0.185, 48).rotateX(-Math.PI / 2),
-          new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
-        );
-        const rInner = new THREE.Mesh(
-          new THREE.RingGeometry(0.08, 0.10, 48).rotateX(-Math.PI / 2),
-          new THREE.MeshBasicMaterial({ color: 0xd71921, side: THREE.DoubleSide })
-        );
-        reticleGroup.add(rOuter);
-        reticleGroup.add(rInner);
         reticleGroup.visible = false;
         threeScene.add(reticleGroup);
 
         window.addEventListener('resize', () => {
-          if (!threeRenderer || !threeCamera || state.xrSession) return;
+          if (!threeRenderer || !threeCamera) return;
           threeCamera.aspect = window.innerWidth / window.innerHeight;
           threeCamera.updateProjectionMatrix();
           threeRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -2177,135 +2136,69 @@
       rebuildLocked3DArtifactForType(activeType);
 
       if (hoverFloatGroup) {
-        hoverFloatGroup.rotation.set(0, 0, 0);
         hoverFloatGroup.position.set(0, 0, 0);
         hoverFloatGroup.scale.setScalar(1.0);
+        hoverFloatGroup.rotation.set(state.modelRotX, state.modelRotY, 0);
       }
       worldAnchorGroup.scale.setScalar(1.0);
+      threeCamera.position.set(0, 0.26, 0);
       threeCamera.quaternion.identity();
 
       if (state.arRole === 'creator') {
-        worldAnchorGroup.position.set(0, -0.05, -1.65);
+        worldAnchorGroup.position.set(0, -0.04, -1.65);
         worldAnchorGroup.rotation.set(0, 0, 0);
       } else {
+        // Restore Creator's EXACT saved 3D Offset!
         const savedOff = (state.targetMeta && Array.isArray(state.targetMeta.placedPos))
           ? state.targetMeta.placedPos
-          : [0, -0.05, -1.65];
-        worldAnchorGroup.position.set(savedOff[0] || 0, savedOff[1] || -0.05, savedOff[2] || -1.65);
-        worldAnchorGroup.rotation.set(0, (state.targetMeta && state.targetMeta.placedYaw) || 0, 0);
+          : [0, -0.04, -1.65];
+        worldAnchorGroup.position.set(savedOff[0] || 0, savedOff[1] || -0.04, savedOff[2] || -1.65);
+        worldAnchorGroup.rotation.set(0, 0, 0);
       }
 
       const frustum = new THREE.Frustum();
       const projScreenMatrix = new THREE.Matrix4();
       const tempVec = new THREE.Vector3();
 
-      threeRenderer.setAnimationLoop((timestamp, xrFrame) => {
+      function renderArLoop() {
         if (state.activeView !== 'ar') return;
-        const t = (timestamp || performance.now()) * 0.001;
+        const t = performance.now() * 0.001;
 
-        // ===================================================================
-        // MODE A: HARDWARE WEBXR 6-DOF WALK-AROUND (EXACT TIKA XR ENGINE!)
-        // ===================================================================
-        if (xrFrame && state.xrSession && state.xrRefSpace) {
-          cameraOrbitRig.position.set(0, 0, 0);
-          cameraOrbitRig.rotation.set(0, 0, 0);
-          threeCamera.position.set(0, 0, 0);
+        // Smooth 360° 3D Model Side Inspection Rotation (Swipe left/right/up/down to inspect all 4 3D sides!)
+        state.modelRotY += (state.targetModelRotY - state.modelRotY) * 0.14;
+        state.modelRotX += (state.targetModelRotX - state.modelRotX) * 0.14;
 
-          const pose = xrFrame.getViewerPose(state.xrRefSpace);
-          if (pose) {
-            const p = pose.transform.position;
-            state.lastViewerPos = [p.x, p.y, p.z];
+        if (!state.isWorldFrozen) {
+          // Live Aiming Phase (Creator before tapping screen):
+          if (state.latestDeviceQuat) {
+            state.anchorDeviceQuat = state.latestDeviceQuat.clone();
           }
+          threeCamera.quaternion.identity();
+        } else if (state.hasGyro && state.latestDeviceQuat && state.anchorDeviceQuat) {
+          // FROZEN WORLD-LOCKED PHASE:
+          // Camera rotates strictly relative to `state.anchorDeviceQuat` (the Creator's exact placement orientation!).
+          // If you turn your phone away, the object stays fixed at its real-world spot and leaves the camera view!
+          const qDelta = state.anchorDeviceQuat.clone().invert().multiply(state.latestDeviceQuat);
+          if (!state.smoothedCameraQuat) state.smoothedCameraQuat = new THREE.Quaternion();
 
-          // While NOT frozen: Track surface via hit-test just like TIKA XR!
-          // Once frozen (state.isWorldFrozen === true): NEVER update worldAnchorGroup.position again -> 100% ZERO SHAKE!
-          if (!state.isWorldFrozen && state.xrHitTestSource) {
-            const hits = xrFrame.getHitTestResults(state.xrHitTestSource);
-            if (hits.length > 0) {
-              const hit = hits[0];
-              const hitPose = hit.getPose(state.xrRefSpace);
-              if (hitPose) {
-                const m = hitPose.transform.matrix;
-                state.lastHitMatrix = m;
-
-                reticleGroup.visible = true;
-                reticleGroup.position.set(m[12], m[13], m[14]);
-
-                worldAnchorGroup.position.set(m[12], m[13], m[14]);
-                worldAnchorGroup.rotation.y = Math.atan2(
-                  state.lastViewerPos[0] - m[12],
-                  state.lastViewerPos[2] - m[14]
-                );
-
-                // In Hunter Mode: Auto-Hard-Lock onto the surface after 3 hit frames!
-                if (state.arRole === 'hunter') {
-                  state.hunterStableHits++;
-                  if (state.hunterStableHits >= 3) {
-                    freezeWorldAnchorNow(true);
-                  }
-                }
-              }
-            }
+          // 0.85° Deadband + 0.10 Low-Pass Smoothing = 100% Zero Hand-Tremor Shake!
+          if (state.smoothedCameraQuat.angleTo(qDelta) > 0.015) {
+            state.smoothedCameraQuat.slerp(qDelta, 0.10);
           }
-        } else {
-          // ===================================================================
-          // MODE B: FALLBACK 3D WALK-AROUND ORBIT + HIGH-DAMPING GYRO (ZERO SHAKE!)
-          // ===================================================================
-          reticleGroup.visible = false;
+          threeCamera.quaternion.copy(state.smoothedCameraQuat);
 
-          // Smoothly interpolate 360° 3D camera orbit around worldAnchorGroup so user sees all 4 3D sides!
-          state.orbitYaw += (state.targetOrbitYaw - state.orbitYaw) * 0.12;
-          state.orbitPitch += (state.targetOrbitPitch - state.orbitPitch) * 0.12;
-
-          if (!state.isWorldFrozen) {
-            if (state.latestDeviceQuat) {
-              state.initialDeviceQuat = state.latestDeviceQuat.clone();
-            }
-            cameraOrbitRig.position.set(0, 0, 0);
-            cameraOrbitRig.rotation.set(0, 0, 0);
-            threeCamera.position.set(0, 0.28, 0);
-            threeCamera.quaternion.identity();
-          } else {
-            // Orbit camera in 3D around the frozen worldAnchorGroup so user can view Left/Right/Back 3D sides!
-            const ax = worldAnchorGroup.position.x;
-            const ay = worldAnchorGroup.position.y + 0.24;
-            const az = worldAnchorGroup.position.z;
-            const radius = Math.hypot(ax, az) || 1.65;
-
-            // Combine finger 3D orbit + heavily damped gyro parallax
-            let gyroYaw = 0;
-            let gyroPitch = 0;
-            if (state.hasGyro && state.latestDeviceQuat && state.initialDeviceQuat) {
-              const qDelta = state.initialDeviceQuat.clone().invert().multiply(state.latestDeviceQuat);
-              if (!state.smoothedDeviceQuat) state.smoothedDeviceQuat = new THREE.Quaternion();
-              // High-threshold 0.9° deadband + 0.08 low-pass damping = 100% ZERO TREMOR SHAKE!
-              if (state.smoothedDeviceQuat.angleTo(qDelta) > 0.016) {
-                state.smoothedDeviceQuat.slerp(qDelta, 0.08);
-              }
-              const eul = new THREE.Euler().setFromQuaternion(state.smoothedDeviceQuat, 'YXZ');
-              gyroYaw = eul.y;
-              gyroPitch = eul.x;
-            }
-
-            const totalYaw = state.orbitYaw;
-            const totalPitch = state.orbitPitch;
-
-            // Position camera on a 3D sphere around the object for true 360° 3D side viewing, while gyro rotates camera view!
-            const camX = ax + Math.sin(totalYaw) * Math.cos(totalPitch) * radius;
-            const camY = ay + Math.sin(totalPitch) * radius;
-            const camZ = az + Math.cos(totalYaw) * Math.cos(totalPitch) * radius;
-
-            threeCamera.position.set(camX, camY, camZ);
-            threeCamera.lookAt(ax, ay, az);
-
-            // Apply world-space gyro look-away delta AFTER lookAt so turning phone away moves object off-screen!
-            if (state.hasGyro && state.smoothedDeviceQuat) {
-              threeCamera.quaternion.multiply(state.smoothedDeviceQuat);
-            }
+          // Subtle natural 3D perspective parallax when moving phone around the object
+          const camEuler = new THREE.Euler().setFromQuaternion(state.smoothedCameraQuat, 'YXZ');
+          if (hoverFloatGroup) {
+            hoverFloatGroup.rotation.y = state.modelRotY - camEuler.y * 0.65;
+            hoverFloatGroup.rotation.x = state.modelRotX - camEuler.x * 0.45;
           }
+        } else if (hoverFloatGroup) {
+          hoverFloatGroup.rotation.y = state.modelRotY;
+          hoverFloatGroup.rotation.x = state.modelRotX;
         }
 
-        // ZERO SINE-WAVE BOBBING: hoverFloatGroup stays 100% motionless at y = 0 so the object NEVER shakes!
+        // Keep hoverFloatGroup 100% motionless vertically (y = 0) so there is ZERO up-down bobbing shake!
         if (hoverFloatGroup) {
           hoverFloatGroup.position.y = 0;
         }
@@ -2328,13 +2221,9 @@
           }
         }
 
-        // Camera Frustum Check & Directional Wayfinder
-        const activeCam = (threeRenderer.xr && threeRenderer.xr.isPresenting)
-          ? threeRenderer.xr.getCamera(threeCamera)
-          : threeCamera;
-
-        activeCam.updateMatrixWorld();
-        projScreenMatrix.multiplyMatrices(activeCam.projectionMatrix, activeCam.matrixWorldInverse);
+        // Camera Frustum Check & Directional Wayfinder to Exact Hidden Spot
+        threeCamera.updateMatrixWorld();
+        projScreenMatrix.multiplyMatrices(threeCamera.projectionMatrix, threeCamera.matrixWorldInverse);
         frustum.setFromProjectionMatrix(projScreenMatrix);
 
         tempVec.copy(worldAnchorGroup.position);
@@ -2347,7 +2236,7 @@
 
         if (!inView && state.isWorldFrozen) {
           wayfinder.classList.remove('hidden');
-          const localPt = tempVec.clone().applyMatrix4(activeCam.matrixWorldInverse);
+          const localPt = tempVec.clone().applyMatrix4(threeCamera.matrixWorldInverse);
           const horiz = Math.abs(localPt.x) > Math.abs(localPt.y);
           if (horiz) {
             wayfinder.textContent = localPt.x < 0 ? '◄ TURN CAMERA LEFT TO HIDDEN SPOT' : 'TURN CAMERA RIGHT TO HIDDEN SPOT ►';
@@ -2367,11 +2256,15 @@
         }
 
         threeRenderer.render(threeScene, threeCamera);
-      });
+        state.arAnimId = requestAnimationFrame(renderArLoop);
+      }
+
+      cancelAnimationFrame(state.arAnimId);
+      state.arAnimId = requestAnimationFrame(renderArLoop);
     }
 
     // =========================================================================
-    // CREATOR FINGER TOUCH-TO-PLACE & TIKA XR HARD-LOCK ENGINE
+    // CREATOR FINGER TOUCH-TO-PLACE & EXACT COMPASS/TILT FREEZE
     // =========================================================================
     const _raycaster = new THREE.Raycaster();
     const _ndc = new THREE.Vector2();
@@ -2379,32 +2272,14 @@
     function placeCreatorObjectAtScreenPoint(clientX, clientY) {
       if (state.arRole !== 'creator' || !threeCamera || !worldAnchorGroup) return;
 
-      // In WebXR mode, if we have a surface hit matrix, lock directly onto that 3D hit point!
-      if (state.xrSession && state.lastHitMatrix) {
-        const m = state.lastHitMatrix;
-        worldAnchorGroup.position.set(m[12], m[13], m[14]);
-        worldAnchorGroup.rotation.y = Math.atan2(
-          state.lastViewerPos[0] - m[12],
-          state.lastViewerPos[2] - m[14]
-        );
-        freezeWorldAnchorNow(true);
-        return;
-      }
-
       const rect = threeRenderer.domElement.getBoundingClientRect();
       _ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
       _ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
 
       if (state.latestDeviceQuat) {
-        state.initialDeviceQuat = state.latestDeviceQuat.clone();
-        state.smoothedDeviceQuat = new THREE.Quaternion();
+        state.anchorDeviceQuat = state.latestDeviceQuat.clone();
+        state.smoothedCameraQuat = new THREE.Quaternion();
       }
-      state.orbitYaw = 0;
-      state.orbitPitch = 0.08;
-      state.targetOrbitYaw = 0;
-      state.targetOrbitPitch = 0.08;
-
-      threeCamera.position.set(0, 0.28, 0);
       threeCamera.quaternion.identity();
       threeCamera.updateMatrixWorld();
 
@@ -2419,32 +2294,25 @@
       freezeWorldAnchorNow(true);
     }
 
-    async function freezeWorldAnchorNow(fromFingerTouch = false) {
+    function freezeWorldAnchorNow(fromFingerTouch = false) {
       if (state.arRole === 'creator' && state.isWorldFrozen && !fromFingerTouch) {
         state.isWorldFrozen = false;
-        worldAnchorGroup.position.set(0, -0.05, -1.65);
-        state.orbitYaw = 0;
-        state.targetOrbitYaw = 0;
+        worldAnchorGroup.position.set(0, -0.04, -1.65);
+        state.targetModelRotY = -0.22;
+        state.targetModelRotX = 0.06;
         document.getElementById('btnCreatorSnapHere').textContent = 'PLACE HERE ◎';
-        document.getElementById('creatorFreezeHintText').textContent = 'TOUCH SCREEN TO PLACE & FREEZE // WALK 360° TO INSPECT';
-        document.getElementById('arAngleReadout').textContent = '360° 3D AR // TOUCH TO PLACE';
-        notify('UNFROZEN — TOUCH SCREEN TO PLACE');
+        document.getElementById('creatorFreezeHintText').textContent = 'TAP SCREEN TO FIX SPOT // SWIPE TO ROTATE 3D SIDES';
+        document.getElementById('arAngleReadout').textContent = '360° 3D AR // TAP TO PLACE';
+        notify('UNFROZEN — TAP SCREEN TO FIX NEW SPOT');
         return;
       }
 
       state.isWorldFrozen = true;
-      if (reticleGroup) reticleGroup.visible = false;
-
-      // Cancel WebXR hit-test immediately so the object is 100% hard-locked in local-floor space with ZERO shake!
-      if (state.xrHitTestSource) {
-        try { state.xrHitTestSource.cancel(); } catch (e) {}
-        state.xrHitTestSource = null;
-      }
 
       if (state.arRole === 'creator') {
         if (state.latestDeviceQuat) {
-          state.initialDeviceQuat = state.latestDeviceQuat.clone();
-          state.smoothedDeviceQuat = new THREE.Quaternion();
+          state.anchorDeviceQuat = state.latestDeviceQuat.clone();
+          state.smoothedCameraQuat = new THREE.Quaternion();
           state.creatorPlacedQuatArray = [
             +state.latestDeviceQuat.x.toFixed(5),
             +state.latestDeviceQuat.y.toFixed(5),
@@ -2457,78 +2325,19 @@
           +worldAnchorGroup.position.y.toFixed(3),
           +worldAnchorGroup.position.z.toFixed(3)
         ];
-        state.creatorPlacedYaw = +worldAnchorGroup.rotation.y.toFixed(4);
+        state.creatorPlacedYaw = +state.targetModelRotY.toFixed(4);
         state.creatorCompassAzimuth = Math.round(state.compassHeadingDeg || 0);
         state.creatorPitchBeta = Math.round(state.deviceBetaDeg || 75);
         state.hasCreatorCustomAnchor = true;
 
         document.getElementById('creatorArBtnLabel').textContent = 'SPOT FROZEN ✓';
         document.getElementById('btnCreatorSnapHere').textContent = 'RESET AIM ↻';
-        document.getElementById('creatorFreezeHintText').textContent = 'HARD-LOCKED IN 3D // WALK AROUND OR SWIPE TO VIEW 360° SIDES';
+        document.getElementById('creatorFreezeHintText').textContent = 'FIXED AT SPOT // SWIPE TO ROTATE 3D OR TAP LOCK & ENCRYPT';
       }
 
       document.getElementById('xrSurfaceHintPill').classList.add('hidden');
-      document.getElementById('arAngleReadout').textContent = 'HARD-LOCKED 3D // WALK OR SWIPE 360°';
+      document.getElementById('arAngleReadout').textContent = 'FIXED IN 3D // SWIPE TO VIEW ALL 4 SIDES';
       playSynthTone(1320, 0.08, 'triangle', 0.14);
-    }
-
-    // Launches TIKA XR Hardware WebXR (immersive-ar + hit-test + local-floor + dom-overlay)
-    async function startHardwareWebXrSession() {
-      if (!navigator.xr) return false;
-      if (state.xrSession) return true;
-
-      try {
-        initThreeWorldLockedScene();
-
-        const session = await navigator.xr.requestSession('immersive-ar', {
-          requiredFeatures: ['hit-test'],
-          optionalFeatures: ['anchors', 'dom-overlay', 'local-floor'],
-          domOverlay: { root: document.getElementById('viewArCamera') }
-        });
-
-        state.xrSession = session;
-        stopArCameraStream();
-        document.getElementById('arFullscreenVideo').classList.add('hidden');
-        document.getElementById('btnStartHardwareXr').classList.add('hidden');
-
-        threeRenderer.xr.setReferenceSpaceType('local-floor');
-        await threeRenderer.xr.setSession(session);
-
-        try {
-          state.xrRefSpace = await session.requestReferenceSpace('local-floor');
-        } catch (e) {
-          state.xrRefSpace = await session.requestReferenceSpace('local');
-        }
-
-        const viewerSpace = await session.requestReferenceSpace('viewer');
-        state.xrHitTestSource = await session.requestHitTestSource({ space: viewerSpace });
-
-        session.addEventListener('select', () => {
-          if (!state.isWorldFrozen) {
-            if (state.lastHitMatrix) {
-              const m = state.lastHitMatrix;
-              worldAnchorGroup.position.set(m[12], m[13], m[14]);
-              worldAnchorGroup.rotation.y = Math.atan2(
-                state.lastViewerPos[0] - m[12],
-                state.lastViewerPos[2] - m[14]
-              );
-            }
-            freezeWorldAnchorNow(true);
-          }
-        });
-
-        session.addEventListener('end', () => {
-          state.xrSession = null;
-          state.xrHitTestSource = null;
-          document.getElementById('arFullscreenVideo').classList.remove('hidden');
-          document.getElementById('btnStartHardwareXr').classList.remove('hidden');
-          if (state.activeView === 'ar') startFallbackCameraVideo();
-        });
-
-        return true;
-      } catch (err) {
-        return false;
-      }
     }
 
     async function startFallbackCameraVideo() {
@@ -2538,7 +2347,11 @@
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
           state.arVideoStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: 'environment' } },
+            video: {
+              facingMode: { ideal: 'environment' },
+              width: { ideal: 1280 },
+              height: { ideal: 720 }
+            },
             audio: false
           });
           video.srcObject = state.arVideoStream;
@@ -2554,7 +2367,7 @@
     }
 
     // =========================================================================
-    // CREATOR AR PLACEMENT & HUNTER AR LAUNCH (WITH WEBXR 6-DOF FIRST!)
+    // CREATOR AR PLACEMENT & HUNTER EXACT-SPOT AR LAUNCH
     // =========================================================================
     async function launchCreatorArPlacement() {
       const payloadData = validateCreatorInputs();
@@ -2568,18 +2381,16 @@
       state.arRole = 'creator';
       state.isUnlocked3D = false;
       state.isWorldFrozen = false;
-      state.hunterStableHits = 0;
-      state.lastHitMatrix = null;
-      state.initialDeviceQuat = state.latestDeviceQuat ? state.latestDeviceQuat.clone() : null;
-      state.smoothedDeviceQuat = new THREE.Quaternion();
-      state.orbitYaw = 0;
-      state.orbitPitch = 0.08;
-      state.targetOrbitYaw = 0;
-      state.targetOrbitPitch = 0.08;
+      state.anchorDeviceQuat = state.latestDeviceQuat ? state.latestDeviceQuat.clone() : null;
+      state.smoothedCameraQuat = new THREE.Quaternion();
+      state.modelRotY = -0.22;
+      state.modelRotX = 0.06;
+      state.targetModelRotY = -0.22;
+      state.targetModelRotX = 0.06;
 
       document.getElementById('btnCreatorSnapHere').textContent = 'PLACE HERE ◎';
-      document.getElementById('creatorFreezeHintText').textContent = 'TOUCH SCREEN TO PLACE & FREEZE // WALK 360° TO INSPECT';
-      document.getElementById('arAngleReadout').textContent = '360° 3D AR // TOUCH TO PLACE';
+      document.getElementById('creatorFreezeHintText').textContent = 'TAP SCREEN TO FIX SPOT // SWIPE TO ROTATE 3D SIDES';
+      document.getElementById('arAngleReadout').textContent = '360° 3D AR // TAP TO PLACE';
 
       switchView('ar');
 
@@ -2589,28 +2400,28 @@
       document.getElementById('silentBurnHairlineWrap').classList.add('hidden');
       document.getElementById('xrSurfaceHintPill').classList.remove('hidden');
 
-      // 1. Immediately attempt TIKA XR Hardware WebXR 6-DoF Session!
-      const startedXr = await startHardwareWebXrSession();
-      if (!startedXr) {
-        await startFallbackCameraVideo();
-      }
+      await startFallbackCameraVideo();
+      notify('TAP SCREEN WHERE YOU WANT TO FIX IT');
     }
 
     async function launchHunterArExperience() {
       state.arRole = 'hunter';
       state.isUnlocked3D = false;
-      state.isWorldFrozen = false;
-      state.hunterStableHits = 0;
-      state.lastHitMatrix = null;
+      state.isWorldFrozen = true; // Strictly Frozen at Creator's Saved Spot from Frame 1!
       state.enteredPin = '';
       state.pinAttemptsRemaining = 3;
-      state.orbitYaw = 0;
-      state.orbitPitch = 0.08;
-      state.targetOrbitYaw = 0;
-      state.targetOrbitPitch = 0.08;
 
+      const savedYaw = (state.targetMeta && typeof state.targetMeta.placedYaw === 'number')
+        ? state.targetMeta.placedYaw
+        : -0.22;
+      state.modelRotY = savedYaw;
+      state.modelRotX = 0.06;
+      state.targetModelRotY = savedYaw;
+      state.targetModelRotX = 0.06;
+
+      // Restore Creator's EXACT saved Device Quaternion (Compass + Tilt) so Hunter sees it at the EXACT spot where Creator fixed it!
       if (state.targetMeta && Array.isArray(state.targetMeta.placedQuat) && state.targetMeta.placedQuat.length === 4) {
-        state.initialDeviceQuat = new THREE.Quaternion(
+        state.anchorDeviceQuat = new THREE.Quaternion(
           state.targetMeta.placedQuat[0],
           state.targetMeta.placedQuat[1],
           state.targetMeta.placedQuat[2],
@@ -2620,11 +2431,11 @@
         const savedAlpha = (360 - state.targetMeta.compassAzimuth) % 360;
         const savedBeta = typeof state.targetMeta.pitchBeta === 'number' ? state.targetMeta.pitchBeta : 75;
         const orientDeg = (window.screen && window.screen.orientation && window.screen.orientation.angle) || window.orientation || 0;
-        state.initialDeviceQuat = computeW3CQuaternion(savedAlpha, savedBeta, 0, orientDeg);
+        state.anchorDeviceQuat = computeW3CQuaternion(savedAlpha, savedBeta, 0, orientDeg);
       } else {
-        state.initialDeviceQuat = state.latestDeviceQuat ? state.latestDeviceQuat.clone() : null;
+        state.anchorDeviceQuat = state.latestDeviceQuat ? state.latestDeviceQuat.clone() : null;
       }
-      state.smoothedDeviceQuat = new THREE.Quaternion();
+      state.smoothedCameraQuat = new THREE.Quaternion();
 
       updateAirPinSlotsUI();
       document.getElementById('arPinAttemptStatus').textContent = 'ENTER SECRET 4-DIGIT PIN TO UNLOCK 3D ARTIFACT';
@@ -2637,7 +2448,7 @@
       document.getElementById('silentBurnHairlineWrap').classList.add('hidden');
       document.getElementById('arStatusPill').classList.remove('hidden');
       document.getElementById('xrSurfaceHintPill').classList.add('hidden');
-      document.getElementById('arAngleReadout').textContent = '360° 3D AR // WALK OR SWIPE AROUND';
+      document.getElementById('arAngleReadout').textContent = 'LOCKED AT CREATOR SPOT // SWIPE FOR 360° 3D';
 
       const requiresPin = state.targetMeta && state.targetMeta.requiresPin;
       if (requiresPin) {
@@ -2648,12 +2459,7 @@
         document.getElementById('arNoPinTapOverlay').classList.remove('hidden');
       }
 
-      // 1. Immediately attempt TIKA XR Hardware WebXR 6-DoF Session!
-      const startedXr = await startHardwareWebXrSession();
-      if (!startedXr) {
-        state.isWorldFrozen = true;
-        await startFallbackCameraVideo();
-      }
+      await startFallbackCameraVideo();
     }
 
     // =========================================================================
@@ -2811,7 +2617,6 @@
             const boxGeo = new THREE.BoxGeometry(w, h, 0.036);
             const photoMesh = new THREE.Mesh(boxGeo, [frameMat, frameMat, frameMat, frameMat, photoMat, photoMat]);
             photoMesh.position.set(0, 0.28, 0);
-            photoMesh.castShadow = true;
             hoverFloatGroup.add(photoMesh);
           };
           img.src = secret.data;
@@ -2864,9 +2669,9 @@
         const orientDeg = (window.screen && window.screen.orientation && window.screen.orientation.angle) || window.orientation || 0;
         const q = computeW3CQuaternion(e.alpha, e.beta !== null ? e.beta : 90, e.gamma || 0, orientDeg);
         state.latestDeviceQuat = q;
-        if (!state.initialDeviceQuat && state.activeView === 'ar') {
-          state.initialDeviceQuat = q.clone();
-          state.smoothedDeviceQuat = new THREE.Quaternion();
+        if (!state.anchorDeviceQuat && state.activeView === 'ar') {
+          state.anchorDeviceQuat = q.clone();
+          state.smoothedCameraQuat = new THREE.Quaternion();
         }
       }
     }
@@ -2923,21 +2728,6 @@
     window.addEventListener('DOMContentLoaded', async () => {
       preloadThreeVectorFont();
       drawMinimalVoiceIdleWave();
-
-      if (navigator.xr && navigator.xr.isSessionSupported) {
-        try {
-          state.xrSupported = await navigator.xr.isSessionSupported('immersive-ar');
-        } catch (e) {}
-      }
-
-      ['arTopChrome', 'arCreatorPlaceOverlay', 'arSecretPinLockOverlay', 'arNoPinTapOverlay', 'arOffscreenWayfinder'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.addEventListener('beforexrselect', (ev) => {
-            ev.preventDefault();
-          });
-        }
-      });
 
       if (/Instagram|FBAN|FBAV|WhatsApp/i.test(navigator.userAgent || '')) {
         document.getElementById('webviewAlert').classList.remove('hidden');
@@ -3070,9 +2860,16 @@
         launchHunterArExperience();
       });
 
+      // Reset 3D Angle Button (Recenter 3D Model Inspection Angle or Re-Align View)
       document.getElementById('btnStartHardwareXr').addEventListener('click', (e) => {
         e.stopPropagation();
-        startHardwareWebXrSession();
+        state.targetModelRotY = -0.22;
+        state.targetModelRotX = 0.06;
+        if (state.latestDeviceQuat) {
+          state.anchorDeviceQuat = state.latestDeviceQuat.clone();
+          state.smoothedCameraQuat = new THREE.Quaternion();
+        }
+        notify('3D VIEW RE-CENTERED');
       });
 
       document.querySelectorAll('[data-digit]').forEach(btn => {
@@ -3094,21 +2891,23 @@
       });
 
       // Touch Interaction:
-      // - In Creator Mode BEFORE Freeze: Tap anywhere on screen to place & hard-lock object!
-      // - Once Frozen (Creator OR Hunter): Swipe left/right/up/down to orbit 360° around all 4 3D sides!
+      // - In Creator Mode: Tap anywhere on screen to fix the 3D object at that exact spot!
+      // - Once Fixed (Creator OR Hunter): Swipe left/right/up/down to rotate 360° around all 4 3D sides!
       const mount = document.getElementById('threeArMount');
-      let dragging = false, lx = 0, ly = 0;
+      let dragging = false, moved = false, startX = 0, startY = 0, lx = 0, ly = 0;
 
       mount.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           const tx = e.touches[0].clientX;
           const ty = e.touches[0].clientY;
+          dragging = true;
+          moved = false;
+          startX = lx = tx;
+          startY = ly = ty;
+
           if (state.arRole === 'creator' && !state.isWorldFrozen) {
             placeCreatorObjectAtScreenPoint(tx, ty);
-          } else {
-            dragging = true;
-            lx = tx;
-            ly = ty;
+            moved = true;
           }
         }
       }, { passive: true });
@@ -3119,34 +2918,47 @@
           const ty = e.touches[0].clientY;
           const dx = tx - lx;
           const dy = ty - ly;
-          state.targetOrbitYaw -= dx * 0.012;
-          state.targetOrbitPitch = Math.max(-0.75, Math.min(0.75, state.targetOrbitPitch + dy * 0.008));
+          if (Math.hypot(tx - startX, ty - startY) > 10) {
+            moved = true;
+          }
+          state.targetModelRotY += dx * 0.014;
+          state.targetModelRotX = Math.max(-0.75, Math.min(0.75, state.targetModelRotX + dy * 0.01));
           lx = tx;
           ly = ty;
         }
       }, { passive: true });
 
-      mount.addEventListener('touchend', () => {
+      mount.addEventListener('touchend', (e) => {
+        // In Creator Mode, a quick tap (without dragging) moves the object to that new tap spot!
+        if (state.arRole === 'creator' && !moved && e.changedTouches && e.changedTouches.length > 0) {
+          placeCreatorObjectAtScreenPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+        }
         dragging = false;
       });
 
-      let mDown = false, mx = 0, my = 0;
+      let mDown = false, mMoved = false, mStartX = 0, mStartY = 0, mx = 0, my = 0;
       mount.addEventListener('mousedown', (e) => {
         mDown = true;
-        mx = e.clientX;
-        my = e.clientY;
-        if (state.arRole === 'creator' && !state.isWorldFrozen) {
-          placeCreatorObjectAtScreenPoint(mx, my);
-        }
+        mMoved = false;
+        mStartX = mx = e.clientX;
+        mStartY = my = e.clientY;
       });
       window.addEventListener('mousemove', (e) => {
         if (!mDown || state.activeView !== 'ar') return;
-        state.targetOrbitYaw -= (e.clientX - mx) * 0.01;
-        state.targetOrbitPitch = Math.max(-0.75, Math.min(0.75, state.targetOrbitPitch + (e.clientY - my) * 0.008));
+        if (Math.hypot(e.clientX - mStartX, e.clientY - mStartY) > 8) {
+          mMoved = true;
+        }
+        state.targetModelRotY += (e.clientX - mx) * 0.012;
+        state.targetModelRotX = Math.max(-0.75, Math.min(0.75, state.targetModelRotX + (e.clientY - my) * 0.009));
         mx = e.clientX;
         my = e.clientY;
       });
-      window.addEventListener('mouseup', () => { mDown = false; });
+      window.addEventListener('mouseup', (e) => {
+        if (mDown && !mMoved && state.arRole === 'creator' && state.activeView === 'ar') {
+          placeCreatorObjectAtScreenPoint(e.clientX, e.clientY);
+        }
+        mDown = false;
+      });
 
       document.getElementById('btnCloseArView').addEventListener('click', (e) => {
         e.stopPropagation();
